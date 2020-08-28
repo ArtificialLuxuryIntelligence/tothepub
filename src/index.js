@@ -11,15 +11,17 @@ import drawMap from "./scripts/drawMap";
     //Get current position
     const { coords } = await geolocate();
     const { latitude, longitude } = coords;
-    const start = [longitude, latitude]; //switched for API format
-    // const start = [-0.021526, 51.50243]; //for testing
+
+    // const start = [longitude, latitude]; //switched for API format
+    const start = [-0.021526, 51.50243]; //for testing
 
     //Find nearest pubs
     const nearest = await findNearest(start, 3);
     const end = nearest[0].coords;
+    const name = nearest[0].name
 
     //Draw route to pub
-    drawMap(start, end);
+    drawMap(start, end, name );
 
     //add button to choose next pub in list of nearest
   } catch (error) {

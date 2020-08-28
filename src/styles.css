@@ -23,3 +23,26 @@ body {
   font-size: 0.8em;
   line-height: 2em;
 }
+
+.marker {
+  display: block;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  /* background-image: url(/src/assets/beer_destination.png); */
+  background-size: contain;
+}
+
+.mapboxgl-popup {
+  max-width: 200px;
+}
+.mapboxgl-popup h3 {
+  margin: 0.3rem;
+}
+
+.mapboxgl-popup-content {
+  text-align: center;
+  font-family: "Open Sans", sans-serif;
+  padding: 10px;
+}

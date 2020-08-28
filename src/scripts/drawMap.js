@@ -1,11 +1,9 @@
-// import getRoute from "./getRoute";
-
 const { MAPBOX_TOKEN } = process.env;
 // create a function to make a directions request
 
 //style
 
-export default function (start, end) {
+export default function (start, end, end_message) {
   //
   mapboxgl.accessToken = MAPBOX_TOKEN;
   var map = new mapboxgl.Map({
@@ -31,7 +29,7 @@ export default function (start, end) {
 
   //
 
-  const getRoute = async (start, end) => {
+  const getRoute = async (start, end, end_message = "") => {
     // make a directions request using cycling profile
     // an arbitrary start will always be the same
 
@@ -46,8 +44,6 @@ export default function (start, end) {
       end[1] +
       "?steps=true&geometries=geojson&access_token=" +
       mapboxgl.accessToken;
-
-    //fetch version
 
     let response = await fetch(url);
     let json = await response.json();
@@ -115,43 +111,82 @@ export default function (start, end) {
     await getRoute(start, end);
 
     // Add starting point to the map
-    map.addSource("points", {
+    map.addSource("start", {
       type: "geojson",
       data: {
-        type: "FeatureCollection",
-        features: [
-          {
-            type: "Feature",
-            geometry: {
-              type: "Point",
-              coordinates: start,
-            },
-            // properties: {
-            //   title: "start",
-            // },
-          },
-          {
-            type: "Feature",
-            geometry: {
-              type: "Point",
-              coordinates: end,
-            },
-            // properties: {
-            //   title: "end",
-            // },
-          },
-        ],
+        type: "Feature",
+
+        geometry: {
+          type: "Point",
+          coordinates: start,
+        },
+        properties: {
+          title: "start",
+        },
       },
     });
+    // map.addSource("end", {
+    //   type: "geojson",
+    //   data: {
+    //     type: "Feature",
+
+    //     geometry: {
+    //       type: "Point",
+    //       coordinates: end,
+    //     },
+    //     properties: {
+    //       title: "end",
+    //     },
+    //   },
+    // });
+
     map.addLayer({
-      id: "points",
+      id: "point_start",
       type: "circle",
-      source: "points",
+      source: "start",
       paint: {
         "circle-radius": 10,
         "circle-color": "#3887be",
       },
     });
+    // map.addLayer({
+    //   id: "point_end",
+    //   type: "circle",
+    //   source: "end",
+    //   paint: {
+    //     "circle-radius": 10,
+    //     "circle-color": "#3887be",
+    //   },
+    // });
+
+    //create marker for endpoint
+
+    ///
+    var el = document.createElement("div");
+    el.className = "marker";
+    el.style.backgroundImage = `url(./src/assets/beer_destination.png)`;
+    el.style.width = "60px";
+    el.style.height = "60px";
+
+    // add marker to map
+    new mapboxgl.Marker(el)
+      .setLngLat(end)
+      .setPopup(
+        new mapboxgl.Popup({ offset: 25 }) // add popups
+          .setHTML("<h3>" + end_message + "</h3>")
+      )
+      .addTo(map);
+
+    ////
+
+    map.addControl(
+      new mapboxgl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true,
+        },
+        trackUserLocation: true,
+      })
+    );
 
     // map.addLayer({
     //   id: "point",
