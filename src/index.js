@@ -12,16 +12,17 @@ import drawMap from "./scripts/drawMap";
     const { coords } = await geolocate();
     const { latitude, longitude } = coords;
 
-    // const start = [longitude, latitude]; //switched for API format
-    const start = [-0.021526, 51.50243]; //for testing
+    // const start = [longitude, latitude]; //API format
+    const start = [-0.1301679, 51.5168583]; //for testing
 
     //Find nearest pubs
-    const nearest = await findNearest(start, 3);
-    const end = nearest[0].coords;
-    const name = nearest[0].name
+    const results = 6;
+    const nearest = await findNearest(start, results);
+    // const end = nearest[0].coords;
+    // const name = nearest[0].name;
 
     //Draw route to pub
-    drawMap(start, end, name );
+    drawMap(start, nearest);
 
     //add button to choose next pub in list of nearest
   } catch (error) {
@@ -29,8 +30,3 @@ import drawMap from "./scripts/drawMap";
     console.error(error);
   }
 })();
-
-// (async () => {
-//   let nearest = await findNearest([-0.121526, 51.517243], 2);
-//   console.log(nearest);
-// })();

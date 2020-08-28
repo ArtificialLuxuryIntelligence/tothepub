@@ -10,6 +10,7 @@ body {
   width: 100%;
 }
 
+/* directions  */
 #instructions {
   position: absolute;
   margin: 20px;
@@ -24,6 +25,9 @@ body {
   line-height: 2em;
 }
 
+
+/* marker  */
+
 .marker {
   display: block;
   border: none;
@@ -33,6 +37,8 @@ body {
   /* background-image: url(/src/assets/beer_destination.png); */
   background-size: contain;
 }
+
+/* popup */
 
 .mapboxgl-popup {
   max-width: 200px;

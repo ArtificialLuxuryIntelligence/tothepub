@@ -1,9 +1,11 @@
 const { MAPBOX_TOKEN } = process.env;
-// create a function to make a directions request
 
-//style
-
-export default function (start, end, end_message) {
+// let i = 0; //move into fn?
+export default function drawMap(start, nearest) {
+  //initiall shows
+  // let total = nearest.length;
+  let end = nearest[0].coords;
+  let end_message = nearest[0].name;
   //
   mapboxgl.accessToken = MAPBOX_TOKEN;
   var map = new mapboxgl.Map({
@@ -12,29 +14,18 @@ export default function (start, end, end_message) {
     center: start, // starting position
     zoom: 12,
   });
-
   // set the bounds of the map
   var bounds = [
     [start[0] - 0.3, start[1] - 0.3],
     [start[0] + 0.3, start[1] + 0.3],
   ];
-
   map.setMaxBounds(bounds);
-
   // initialize the map canvas to interact with later
   var canvas = map.getCanvasContainer();
-
-  // an arbitrary start will always be the same
-  // only the end or destination will change
-
-  //
-
   const getRoute = async (start, end, end_message = "") => {
-    // make a directions request using cycling profile
-    // an arbitrary start will always be the same
-
+    // make a directions request using walking profile
     var url =
-      "https://api.mapbox.com/directions/v5/mapbox/cycling/" +
+      "https://api.mapbox.com/directions/v5/mapbox/walking/" +
       start[0] +
       "," +
       start[1] +
@@ -47,7 +38,7 @@ export default function (start, end, end_message) {
 
     let response = await fetch(url);
     let json = await response.json();
-    var data = json.routes[0];
+    var data = json.routes[0]; //quickest route
     var route = data.geometry.coordinates;
     var geojson = {
       type: "Feature",
@@ -91,15 +82,14 @@ export default function (start, end, end_message) {
     // get the sidebar and add the instructions
     var instructions = document.getElementById("instructions");
     var steps = data.legs[0].steps;
-
     var tripInstructions = [];
     for (var i = 0; i < steps.length; i++) {
       tripInstructions.push("<br><li>" + steps[i].maneuver.instruction) +
         "</li>";
       instructions.innerHTML =
-        '<br><span class="duration">Trip duration: ' +
+        `<h1>${end_message}</h1><br><span class="duration">Trip duration: ` +
         Math.floor(data.duration / 60) +
-        " min 🚴 </span>" +
+        " min  </span>" +
         tripInstructions;
     }
   };
@@ -107,15 +97,14 @@ export default function (start, end, end_message) {
   map.on("load", async function () {
     // make an initial directions request that
     // starts and ends at the same location
-    await getRoute(start, start); //async not neccessary here..? - had some loading issues
-    await getRoute(start, end);
+    await getRoute(start, start); //seems to be neccessary for the API to init..(?)
+    await getRoute(start, end, end_message);
 
     // Add starting point to the map
     map.addSource("start", {
       type: "geojson",
       data: {
         type: "Feature",
-
         geometry: {
           type: "Point",
           coordinates: start,
@@ -125,21 +114,6 @@ export default function (start, end, end_message) {
         },
       },
     });
-    // map.addSource("end", {
-    //   type: "geojson",
-    //   data: {
-    //     type: "Feature",
-
-    //     geometry: {
-    //       type: "Point",
-    //       coordinates: end,
-    //     },
-    //     properties: {
-    //       title: "end",
-    //     },
-    //   },
-    // });
-
     map.addLayer({
       id: "point_start",
       type: "circle",
@@ -149,36 +123,42 @@ export default function (start, end, end_message) {
         "circle-color": "#3887be",
       },
     });
-    // map.addLayer({
-    //   id: "point_end",
-    //   type: "circle",
-    //   source: "end",
-    //   paint: {
-    //     "circle-radius": 10,
-    //     "circle-color": "#3887be",
-    //   },
-    // });
 
-    //create marker for endpoint
+    //create and addmarkers for nearest pubs
+    nearest.forEach((pub) => {
+      var el = document.createElement("div");
+      el.className = "marker";
+      el.style.backgroundImage = `url(./src/assets/beer_destination.png)`;
+      el.style.width = "60px";
+      el.style.height = "60px";
+      el.dataset.coords = pub.coords;
+      el.dataset.name = pub.name;
 
-    ///
-    var el = document.createElement("div");
-    el.className = "marker";
-    el.style.backgroundImage = `url(./src/assets/beer_destination.png)`;
-    el.style.width = "60px";
-    el.style.height = "60px";
+      el.addEventListener("click", (e) => markerListener(e));
 
-    // add marker to map
-    new mapboxgl.Marker(el)
-      .setLngLat(end)
-      .setPopup(
-        new mapboxgl.Popup({ offset: 25 }) // add popups
-          .setHTML("<h3>" + end_message + "</h3>")
-      )
-      .addTo(map);
+      new mapboxgl.Marker(el)
+        .setLngLat(pub.coords)
+        .setPopup(
+          new mapboxgl.Popup({ offset: 25 }) // add popup
+            .setHTML("<h3>" + pub.name + "</h3>")
+        )
+        .addTo(map);
+    });
 
-    ////
+    // sets new route to marker
+    function markerListener(e) {
+      var coords = e.target.dataset.coords.split(",").map((n) => parseFloat(n));
 
+      let name = e.target.dataset.name;
+      canvas.style.cursor = "";
+      // var coords = Object.keys(coordsObj).map(function (key) {
+      //   return coordsObj[key];
+      // });
+
+      getRoute(start, coords, name);
+    }
+
+    // Geolocate button
     map.addControl(
       new mapboxgl.GeolocateControl({
         positionOptions: {
@@ -187,82 +167,5 @@ export default function (start, end, end_message) {
         trackUserLocation: true,
       })
     );
-
-    // map.addLayer({
-    //   id: "point",
-    //   type: "circle",
-    //   source: {
-    //     type: "geojson",
-    //     data: {
-    //       type: "FeatureCollection",
-    //       features: [
-    //         {
-    //           type: "Feature",
-    //           properties: {},
-    //           geometry: {
-    //             type: "Point",
-    //             coordinates: start,
-    //           },
-    //         },
-    //       ],
-    //     },
-    //   },
-    //   paint: {
-    //     "circle-radius": 10,
-    //     "circle-color": "#3887be",
-    //   },
-    // });
-    // Add end point to the map
-
-    //allows users to click // not going to use this
-    // map.on("click", function (e) {
-    //   var coordsObj = e.lngLat;
-    //   canvas.style.cursor = "";
-    //   var coords = Object.keys(coordsObj).map(function (key) {
-    //     return coordsObj[key];
-    //   });
-    //   var end = {
-    //     type: "FeatureCollection",
-    //     features: [
-    //       {
-    //         type: "Feature",
-    //         properties: {},
-    //         geometry: {
-    //           type: "Point",
-    //           coordinates: coords,
-    //         },
-    //       },
-    //     ],
-    //   };
-    //   if (map.getLayer("end")) {
-    //     map.getSource("end").setData(end);
-    //   } else {
-    //     // map.addLayer({
-    //     //   id: "end",
-    //     //   type: "circle",
-    //     //   source: {
-    //     //     type: "geojson",
-    //     //     data: {
-    //     //       type: "FeatureCollection",
-    //     //       features: [
-    //     //         {
-    //     //           type: "Feature",
-    //     //           properties: {},
-    //     //           geometry: {
-    //     //             type: "Point",
-    //     //             coordinates: coords,
-    //     //           },
-    //     //         },
-    //     //       ],
-    //     //     },
-    //     //   },
-    //     //   paint: {
-    //     //     "circle-radius": 10,
-    //     //     "circle-color": "#f30",
-    //     //   },
-    //     // });
-    //   }
-    //   getRoute(start, coords);
-    // });
   });
 }
