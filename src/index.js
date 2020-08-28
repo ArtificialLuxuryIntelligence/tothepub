@@ -11,8 +11,8 @@ import drawMap from "./scripts/drawMap";
     //Get current position
     const { coords } = await geolocate();
     const { latitude, longitude } = coords;
-    // const start = [longitude, latitude];
-    const start = [-0.021526, 51.50243];
+    const start = [longitude, latitude]; //switched for API format
+    // const start = [-0.021526, 51.50243]; //for testing
 
     //Find nearest pubs
     const nearest = await findNearest(start, 3);
@@ -32,4 +32,3 @@ import drawMap from "./scripts/drawMap";
 //   let nearest = await findNearest([-0.121526, 51.517243], 2);
 //   console.log(nearest);
 // })();
-

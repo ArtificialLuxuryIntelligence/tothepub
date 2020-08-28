@@ -51,7 +51,6 @@ export default function (start, end) {
 
     let response = await fetch(url);
     let json = await response.json();
-    console.log(json);
     var data = json.routes[0];
     var route = data.geometry.coordinates;
     var geojson = {

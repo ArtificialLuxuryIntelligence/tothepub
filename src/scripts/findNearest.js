@@ -31,7 +31,6 @@ const findNearestTime = async (start, pubs) => {
   let pub_duration = await Promise.all(
     pubs.map(async (pub) => {
       let duration = await getRouteTime(start, pub.coords);
-      console.log(duration);
       return {
         ...pub,
         duration,
@@ -70,6 +69,5 @@ const getRouteTime = async (start, end) => {
 export default async function findNearest(start, num_results) {
   let pubs_dist = findNearestDist(start, num_results);
   let pubs_time = await findNearestTime(start, pubs_dist);
-  console.log(pubs_time);
   return pubs_time;
 }
