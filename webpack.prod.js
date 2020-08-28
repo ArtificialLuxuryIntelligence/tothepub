@@ -25,6 +25,18 @@ module.exports = {
     path: buildPath,
   },
 
+  // https://webpack.js.org/concepts/plugins/
+  plugins: [
+    new Dotenv(),
+    new MiniCssExtractPlugin(),
+    new CleanWebpackPlugin(), // cleans output.path by default
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+      inject: "body",
+      chunks: ["index"],
+      filename: "index.html",
+    }),
+  ],
   // https://webpack.js.org/concepts/loaders/
   module: {
     rules: [
@@ -38,22 +50,10 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: ["css-loader"], // MiniCssExtractPlugin.loader removed..
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
     ],
   },
-
-  // https://webpack.js.org/concepts/plugins/
-  plugins: [
-    new Dotenv(),
-    new CleanWebpackPlugin(), // cleans output.path by default
-    new HtmlWebpackPlugin({
-      template: "./src/index.html",
-      inject: "body",
-      chunks: ["index"],
-      filename: "index.html",
-    }),
-  ],
 
   // https://webpack.js.org/configuration/optimization/
   optimization: {
