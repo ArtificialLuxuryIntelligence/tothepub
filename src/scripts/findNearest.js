@@ -4,7 +4,7 @@ const { MAPBOX_TOKEN } = process.env;
 
 //EXPLANTION:
 // some of the geographically nearest pubs are found first in order to minimise API calls. this list is then refined by using the
-// mapbox API to determine the nearest in travel time. [currently finds n+2 geographically nearest then returns n]
+// mapbox API to determine the nearest in travel time. [currently finds n+2 geographically nearest then returns n (num_results)]
 
 //find absolute distance closest
 function findNearestDist(start, num_results) {
@@ -67,9 +67,9 @@ const getRouteTime = async (start, end) => {
 //combined closest in time and distance as explained above
 export default async function findNearest(start, num_results) {
   let pubs_dist = findNearestDist(start, num_results);
-  console.log(pubs_dist);
+  // console.log(pubs_dist);
   let pubs_time = await findNearestTime(start, pubs_dist, num_results);
-  console.log(pubs_time);
+  // console.log(pubs_time);
 
   return pubs_time;
 }

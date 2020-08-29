@@ -1,30 +1,30 @@
+// use https://docs.mapbox.com/search-playground/ for coordinates
+
 let pubs = [
-  { name: "Princess Louise", coords: [51.5172923, -0.1238149] },
-  { name: "The Bricklayers Arms", coords: [51.5177743, -0.1355814] },
-  { name: "Angel", coords: [51.5006419, -0.0612343] },
-  { name: "Lyceum Tavern", coords: [51.5113067, -0.1219113, 17] },
-  { name: "Fitzroy Tavern", coords: [51.5186572, -0.1369183] },
-  { name: "The Crown", coords: [51.5168499, -0.1285845] },
-  { name: "The Champion", coords: [51.5168583, -0.1394679] },
-  { name: "The Chandos", coords: [51.5095517, -0.1289697] },
-  { name: "The Captain Kidd", coords: [51.5034528, -0.060197] },
-  { name: "Cittie of Yorke", coords: [51.5184589, -0.1149756] },
-  { name: "Yorkshire Grey", coords: [51.5189633, -0.1435736] },
-  { name: "The Crown and Sugarloaf", coords: [51.5140163, -0.1071826] },
-  { name: "Cittie of Yorke", coords: [51.5184589, -0.1149756] },
-  { name: "Ye Olde Cheshire Cheese", coords: [51.5143141, -0.1093527] },
-  { name: "Cittie of Yorke", coords: [51.5184589, -0.1149756] },
+  { name: "Princess Louise", coords: [-0.12158759352587367,51.51737806936217] },
+  { name: "The Bricklayers Arms", coords: [-0.21669108467699516,51.466075477959265] },
+  { name: "Angel", coords: [-0.059105635565401826,51.50061280307207] },
+  { name: "Lyceum Tavern", coords: [-0.11972930560534678,51.51129329974236] },
+  { name: "Fitzroy Tavern", coords: [-0.13461719027088748,51.51861352695556] },
+  { name: "The Crown", coords: [-0.12638936536700385,51.51684490338778] },
+  { name: "The Champion", coords: [-0.13727587051334922,51.516871727419755] },
+  { name: "The Chandos", coords: [-0.12678413515232023,51.509530002787784] },
+  { name: "The Captain Kidd", coords: [-0.05807251024953075,51.503430193866336] },
+  { name: "Cittie of Yorke", coords: [-0.11279127372790754,51.518523084613946] },
+  { name: "Yorkshire Grey", coords: [0.14132382207696992,51.51890455605272] },
+  { name: "The Crown and Sugarloaf", coords: [-0.10498661234180418,51.51408782407938] },
+  { name: "Ye Olde Cheshire Cheese", coords: [-0.10717814581153107,51.51446783462424] },
 ];
 
 //NOTE:
 
 //reverse order of coordinates for mapbox API format ...
 
-pubs = pubs.map((pub) => {
-  return {
-    ...pub,
-    coords: [pub.coords[1], pub.coords[0]],
-  };
-});
+// pubs = pubs.map((pub) => {
+//   return {
+//     ...pub,
+//     coords: [pub.coords[1], pub.coords[0]],
+//   };
+// });
 
 export { pubs };
