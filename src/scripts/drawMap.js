@@ -1,3 +1,4 @@
+import beerPic from "./../assets/beer_destination.png";
 const { MAPBOX_TOKEN } = process.env;
 
 // let i = 0; //move into fn?
@@ -8,23 +9,23 @@ export default function drawMap(start, nearest) {
   let end_message = nearest[0].name;
   //
   mapboxgl.accessToken = MAPBOX_TOKEN;
-  var map = new mapboxgl.Map({
+  let map = new mapboxgl.Map({
     container: "map",
     style: "mapbox://styles/mapbox/streets-v10",
     center: start, // starting position
     zoom: 12,
   });
   // set the bounds of the map
-  var bounds = [
+  let bounds = [
     [start[0] - 0.3, start[1] - 0.3],
     [start[0] + 0.3, start[1] + 0.3],
   ];
   map.setMaxBounds(bounds);
   // initialize the map canvas to interact with later
-  var canvas = map.getCanvasContainer();
+  let canvas = map.getCanvasContainer();
   const getRoute = async (start, end, end_message = "") => {
     // make a directions request using walking profile
-    var url =
+    let url =
       "https://api.mapbox.com/directions/v5/mapbox/walking/" +
       start[0] +
       "," +
@@ -38,9 +39,9 @@ export default function drawMap(start, nearest) {
 
     let response = await fetch(url);
     let json = await response.json();
-    var data = json.routes[0]; //quickest route
-    var route = data.geometry.coordinates;
-    var geojson = {
+    let data = json.routes[0]; //quickest route
+    let route = data.geometry.coordinates;
+    let geojson = {
       type: "Feature",
       properties: {},
       geometry: {
@@ -80,10 +81,10 @@ export default function drawMap(start, nearest) {
     }
 
     // get the sidebar and add the instructions
-    var instructions = document.getElementById("instructions");
-    var steps = data.legs[0].steps;
-    var tripInstructions = [];
-    for (var i = 0; i < steps.length; i++) {
+    let instructions = document.getElementById("instructions");
+    let steps = data.legs[0].steps;
+    let tripInstructions = [];
+    for (let i = 0; i < steps.length; i++) {
       tripInstructions.push("<br><li>" + steps[i].maneuver.instruction) +
         "</li>";
       instructions.innerHTML =
@@ -126,9 +127,9 @@ export default function drawMap(start, nearest) {
 
     //create and addmarkers for nearest pubs
     nearest.forEach((pub) => {
-      var el = document.createElement("div");
+      let el = document.createElement("div");
       el.className = "marker";
-      el.style.backgroundImage = `url(./src/assets/beer_destination.png)`;
+      el.style.backgroundImage = `url(${beerPic})`;
       el.style.width = "60px";
       el.style.height = "60px";
       el.dataset.coords = pub.coords;
@@ -147,11 +148,11 @@ export default function drawMap(start, nearest) {
 
     // sets new route to marker
     function markerListener(e) {
-      var coords = e.target.dataset.coords.split(",").map((n) => parseFloat(n));
+      let coords = e.target.dataset.coords.split(",").map((n) => parseFloat(n));
 
       let name = e.target.dataset.name;
       canvas.style.cursor = "";
-      // var coords = Object.keys(coordsObj).map(function (key) {
+      // let coords = Object.keys(coordsObj).map(function (key) {
       //   return coordsObj[key];
       // });
 
