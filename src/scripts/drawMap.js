@@ -1,9 +1,9 @@
 import beerPic from "./../assets/beer_destination.png";
 const { MAPBOX_TOKEN } = process.env;
 
-// let i = 0; //move into fn?
 export default function drawMap(start, nearest) {
-  //initiall shows
+  //note arg 'nearest' is sorted array of nearest pubs
+  //initial shows
   // let total = nearest.length;
   let end = nearest[0].coords;
   let end_message = nearest[0].name;
@@ -39,6 +39,7 @@ export default function drawMap(start, nearest) {
 
     let response = await fetch(url);
     let json = await response.json();
+    // console.log(json);
     let data = json.routes[0]; //quickest route
     let route = data.geometry.coordinates;
     let geojson = {
@@ -149,13 +150,8 @@ export default function drawMap(start, nearest) {
     // sets new route to marker
     function markerListener(e) {
       let coords = e.target.dataset.coords.split(",").map((n) => parseFloat(n));
-
       let name = e.target.dataset.name;
       canvas.style.cursor = "";
-      // let coords = Object.keys(coordsObj).map(function (key) {
-      //   return coordsObj[key];
-      // });
-
       getRoute(start, coords, name);
     }
 
