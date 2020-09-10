@@ -30,13 +30,13 @@ async function takeMeToThePub() {
     // const start = [longitude, latitude]; //API format - production
     const start = [-0.0701679, 51.4868583]; //for testing
     //Find nearest pubs
-    const results = 6;
+    const results = 1; //set to six
     const nearest = await findNearest(start, results);
     //Draw route to pub
     drawMap(start, nearest);
     //add button to choose next pub in list of nearest
   } catch (error) {
-    // Handle error
+    // Handle error (i.e. user denies geolocation)
     console.error(error);
   }
 }
