@@ -6,6 +6,9 @@ export default function geolocate(options = {}) {
   });
 }
 
+
+//standard call for reference: 
+
 // export default function geolocate() {
 //   function success(position) {
 //     const latitude = position.coords.latitude;

@@ -1,6 +1,13 @@
 import beerPic from "./../assets/beer_destination.png";
 const { MAPBOX_TOKEN } = process.env;
 
+function toggleMapView() {
+  const mapPage = document.getElementById("map-page");
+  const welcomePage = document.getElementById("welcome-page");
+  welcomePage.style.display = "none";
+  mapPage.style.visibility = "visible"; // so that map loads to size
+}
+
 export default function drawMap(start, nearest) {
   //note arg 'nearest' is sorted array of nearest pubs
   //initial shows
@@ -15,7 +22,7 @@ export default function drawMap(start, nearest) {
     center: start, // starting position
     zoom: 12,
   });
-  // set the bounds of the map
+  // set the bounds of the map //this could be fixed (to bounds on london pubs) and not dynamic as it currently is
   let bounds = [
     [start[0] - 0.3, start[1] - 0.3],
     [start[0] + 0.3, start[1] + 0.3],
@@ -97,6 +104,8 @@ export default function drawMap(start, nearest) {
   };
 
   map.on("load", async function () {
+    // console.log("map loaded!!! (time to hide loader/button)");
+    toggleMapView();
     // make an initial directions request that
     // starts and ends at the same location
     await getRoute(start, start); //seems to be neccessary for the API to init..(?)

@@ -25,7 +25,7 @@ function findNearestDist(start, num_results) {
   return pub_abs.slice(0, num_results);
 }
 
-//find nearest in travel time from collection of location objects (pubs)
+//find nearest in travel time from collection of location objects (pubs) - pubs currently loaded clientside (API might be better if functionality/locations extended)
 const findNearestTime = async (start, pubs, num_results) => {
   let pub_duration = await Promise.all(
     pubs.map(async (pub) => {
@@ -41,7 +41,7 @@ const findNearestTime = async (start, pubs, num_results) => {
   return pub_duration.slice(0, num_results);
 };
 
-//helper - get time for a given route
+//helper get time for a given route
 const getRouteTime = async (start, end) => {
   // make a directions request using cycling profile
   mapboxgl.accessToken = MAPBOX_TOKEN;
@@ -67,7 +67,7 @@ const getRouteTime = async (start, end) => {
 //combined closest in time and distance as explained above
 export default async function findNearest(start, num_results) {
   //returns two more than results requested to allow for different order of nearest by time and nearest by distance
-  let pubs_dist = findNearestDist(start, num_results + 2); 
+  let pubs_dist = findNearestDist(start, num_results + 2);
   // console.log(pubs_dist);
   let pubs_time = await findNearestTime(start, pubs_dist, num_results);
   // console.log(pubs_time);
