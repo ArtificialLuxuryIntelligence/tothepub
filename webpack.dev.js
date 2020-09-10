@@ -1,5 +1,5 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const Dotenv = require('dotenv-webpack');
+const Dotenv = require("dotenv-webpack");
 
 const webpack = require("webpack");
 
@@ -28,14 +28,14 @@ module.exports = {
         },
       },
       {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
+        test: /\.(sc|c)ss$/i,
+        use: ["style-loader", "css-loader", "sass-loader"], //use postcss-loader?
       },
       {
         test: /\.(png|jpe?g|gif)$/i,
         use: [
           {
-            loader: 'file-loader',
+            loader: "file-loader",
           },
         ],
       },
@@ -49,7 +49,6 @@ module.exports = {
       chunks: ["index"],
       filename: "index.html",
     }),
-    new Dotenv()
-
+    new Dotenv(),
   ],
 };
