@@ -182,7 +182,7 @@ export default function drawMap(start, nearest) {
         trackUserLocation: true,
       })
     );
-    map.addControl(new mapboxgl.NavigationControl(), "top-right");
+    // map.addControl(new mapboxgl.NavigationControl(), "top-right");
     map.addControl(new ToggleDirectionsControl(), "bottom-right");
   });
 }
