@@ -27,8 +27,8 @@ async function takeMeToThePub() {
     //Get current position
     const { coords } = await geolocate();
     const { latitude, longitude } = coords;
-    // const start = [longitude, latitude]; //API format - production
-    const start = [-0.0701679, 51.4868583]; //for testing
+    const start = [longitude, latitude]; //API format - production
+    // const start = [-0.0701679, 51.4868583]; //for testing if not in london
     //Find nearest pubs
     const results = 1; //set to six
     const nearest = await findNearest(start, results);

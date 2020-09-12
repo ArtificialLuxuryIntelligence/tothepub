@@ -1,8 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans&display=swap");
 * {
   box-sizing: border-box;
 }
 
 body {
+  font-family: "Work Sans", sans-serif;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -82,8 +84,7 @@ body {
 }
 #instructions {
   display: block;
-  transition: height ease 1s, bottom ease 0.2s;
-
+  transition: height ease 0.4s;
   // margin: 20px;
   position: absolute;
   // width: 29px;
@@ -99,14 +100,63 @@ body {
   border-radius: 1rem;
   background-color: rgba(255, 255, 255, 0.9);
   overflow-y: scroll;
-  font-family: sans-serif;
   font-size: 0.8em;
   line-height: 2em;
 
   &.instructions-active {
+    transition: height ease 0.4s;
+
     width: auto;
     height: 40%;
-    bottom: 0px;
+    bottom: 1rem;
+  }
+
+  //icons for maneuvre types
+  li {
+    display: flex;
+    align-items: center;
+    margin: 0.2rem 0;
+    &::before {
+      content: "";
+      display: inline-block;
+      // background-size: 10px 10px;
+      background-size: contain !important;
+      background-repeat: no-repeat !important;
+      margin-right: 1.2rem;
+      width: 20px;
+      height: 20px;
+    }
+
+    &.depart::before {
+      background: url("https://banner2.cleanpng.com/20181202/hqg/kisspng-beer-corona-drawing-clip-art-image-5c04461dbae313.1371814415437839657655.jpg");
+    }
+    &.arrive::before {
+      background: url("./assets/beer_destination.png");
+    }
+    &.uturn::before {
+      // background: url();
+    }
+    &.left::before {
+      background: url("./assets/arrows/left-icon_1.svg");
+    }
+    &.slightleft::before {
+      background: url("./assets/arrows/slight-left-icon_1.svg");
+    }
+    &.sharpleft::before {
+      background: url("./assets/arrows/left-icon_1.svg"); //same as left
+    }
+    &.right::before {
+      background: url("./assets/arrows/right-icon_1.svg");
+    }
+    &.slightright::before {
+      background: url("./assets/arrows/slight-right-icon_1.svg");
+    }
+    &.sharpright::before {
+      background: url("./assets/arrows/right-icon_1.svg"); //same as right
+    }
+    &.straight::before {
+      background: url("./assets/arrows/straight-icon_1.svg");
+    }
   }
 }
 

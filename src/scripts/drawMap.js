@@ -93,7 +93,16 @@ export default function drawMap(start, nearest) {
     let steps = data.legs[0].steps;
     let tripInstructions = [];
     for (let i = 0; i < steps.length; i++) {
-      tripInstructions.push("<br><li>" + steps[i].maneuver.instruction) +
+      let symbolType = "";
+      if (steps[i].maneuver.type == "depart") {
+        symbolType = "depart";
+      } else if (steps[i].maneuver.type == "arrive") {
+        symbolType = "arrive";
+      } else {
+        symbolType = steps[i].maneuver.modifier.replace(/\s/g, ''); //remove spaces for css class
+      }
+
+      tripInstructions.push(`<br><li class="${symbolType}">` + steps[i].maneuver.instruction) +
         "</li>";
       instructions.innerHTML =
         `<h1>${end_message}</h1><span class="duration">Trip duration: ` +
@@ -178,7 +187,7 @@ export default function drawMap(start, nearest) {
   });
 }
 
-// Control implemented as ES6 class
+// custom button (directions)
 class ToggleDirectionsControl {
   constructor() {
     this.toggled = true;
