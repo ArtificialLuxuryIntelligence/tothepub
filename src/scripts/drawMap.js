@@ -183,7 +183,7 @@ export default function drawMap(start, nearest) {
       })
     );
     // map.addControl(new mapboxgl.NavigationControl(), "top-right");
-    map.addControl(new ToggleDirectionsControl(), "bottom-right");
+    map.addControl(new ToggleDirectionsControl(), "top-right");
   });
 }
 

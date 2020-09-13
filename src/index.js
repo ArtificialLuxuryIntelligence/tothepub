@@ -11,18 +11,18 @@ import drawMap from "./scripts/drawMap";
 
 //
 
-function toggleLoader() {
-  const content = document.getElementById("content");
-  const loader = document.getElementById("loader");
-  content.style.display = "none";
-  loader.style.display = "flex";
+const takeMeButton = document.getElementById("take-me");
+
+function toggleLoading() {
+  takeMeButton.classList.add("animate")
+
   //toggle map display block to give it a size to load into;
   const mapPage = document.getElementById("map-page");
   mapPage.style.display = "block"; // so that map loads to size
 }
 
 async function takeMeToThePub() {
-  toggleLoader();
+  toggleLoading();
   try {
     //Get current position
     const { coords } = await geolocate();
@@ -30,7 +30,8 @@ async function takeMeToThePub() {
     const start = [longitude, latitude]; //API format - production
     // const start = [-0.0701679, 51.4868583]; //for testing if not in london
     //Find nearest pubs
-    const results = 6; //set to six
+    // const results = 6; 
+    const results = 1;
     const nearest = await findNearest(start, results);
     //Draw route to pub
     drawMap(start, nearest);
@@ -42,5 +43,4 @@ async function takeMeToThePub() {
 }
 
 // Button event listener
-const takeMeButton = document.getElementById("take-me");
 takeMeButton.addEventListener("click", takeMeToThePub);
