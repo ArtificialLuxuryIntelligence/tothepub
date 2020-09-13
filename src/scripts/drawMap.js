@@ -2,10 +2,16 @@ import beerPic from "./../assets/beer_destination.png";
 const { MAPBOX_TOKEN } = process.env;
 
 function toggleMapView() {
+  const home = document.getElementById("welcome-page");
+  console.log("toggling");
+  home.classList.add("fade");
   const mapPage = document.getElementById("map-page");
-  const welcomePage = document.getElementById("welcome-page");
-  welcomePage.style.display = "none";
-  mapPage.style.visibility = "visible"; // visibility set so that map loads to size ()
+  // mapPage.style.visibility = "visible"; // visibility used  so that map loads to size ()
+  setTimeout(() => {
+    console.log("togged");
+    const welcomePage = document.getElementById("welcome-page");
+    welcomePage.style.display = "none";
+  }, 1300);
 }
 
 export default function drawMap(start, nearest) {
@@ -18,7 +24,7 @@ export default function drawMap(start, nearest) {
   mapboxgl.accessToken = MAPBOX_TOKEN;
   let map = new mapboxgl.Map({
     container: "map",
-    style: "mapbox://styles/mapbox/streets-v10",
+    style: "mapbox://styles/mapbox/dark-v10",
     center: start, // starting position
     zoom: 12,
   });
@@ -81,8 +87,8 @@ export default function drawMap(start, nearest) {
           "line-cap": "round",
         },
         paint: {
-          "line-color": "#3887be",
-          "line-width": 5,
+          "line-color": "white",
+          "line-width": 6,
           "line-opacity": 0.75,
         },
       });
@@ -99,11 +105,12 @@ export default function drawMap(start, nearest) {
       } else if (steps[i].maneuver.type == "arrive") {
         symbolType = "arrive";
       } else {
-        symbolType = steps[i].maneuver.modifier.replace(/\s/g, ''); //remove spaces for css class
+        symbolType = steps[i].maneuver.modifier.replace(/\s/g, ""); //remove spaces for css class
       }
 
-      tripInstructions.push(`<br><li class="${symbolType}">` + steps[i].maneuver.instruction) +
-        "</li>";
+      tripInstructions.push(
+        `<br><li class="${symbolType}">` + steps[i].maneuver.instruction
+      ) + "</li>";
       instructions.innerHTML =
         `<h1>${end_message}</h1><span class="duration">Trip duration: ` +
         Math.floor(data.duration / 60) +
@@ -139,8 +146,8 @@ export default function drawMap(start, nearest) {
       type: "circle",
       source: "start",
       paint: {
-        "circle-radius": 10,
-        "circle-color": "#3887be",
+        "circle-radius": 11,
+        "circle-color": "white",
       },
     });
 
@@ -182,7 +189,7 @@ export default function drawMap(start, nearest) {
         trackUserLocation: true,
       })
     );
-    // map.addControl(new mapboxgl.NavigationControl(), "top-right");
+    map.addControl(new mapboxgl.NavigationControl(), "top-right");
     map.addControl(new ToggleDirectionsControl(), "top-right");
   });
 }
