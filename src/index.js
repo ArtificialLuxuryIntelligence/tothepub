@@ -30,7 +30,7 @@ async function takeMeToThePub() {
     const start = [longitude, latitude]; //API format - production
     // const start = [-0.0701679, 51.4868583]; //for testing if not in london
     //Find nearest pubs
-    const results = 1; //set to six
+    const results = 6; //set to six
     const nearest = await findNearest(start, results);
     //Draw route to pub
     drawMap(start, nearest);
