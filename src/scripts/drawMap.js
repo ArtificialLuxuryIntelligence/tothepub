@@ -5,7 +5,7 @@ function toggleMapView() {
   const mapPage = document.getElementById("map-page");
   const welcomePage = document.getElementById("welcome-page");
   welcomePage.style.display = "none";
-  mapPage.style.visibility = "visible"; // so that map loads to size
+  mapPage.style.visibility = "visible"; // visibility set so that map loads to size ()
 }
 
 export default function drawMap(start, nearest) {

@@ -33,7 +33,22 @@ module.exports = {
       },
       {
         test: /\.(sc|c)ss$/i,
-        use: ["style-loader", "css-loader", "sass-loader"], //use postcss-loader?
+        use: [
+          "style-loader",
+          {
+            loader: "css-loader",
+            options: {
+              sourceMap: true,
+            },
+          },
+
+          {
+            loader: "sass-loader",
+            options: {
+              sourceMap: true,
+            },
+          },
+        ], //use postcss-loader?
       },
       {
         test: /\.(png|jpe?g|gif|svg)$/i,
