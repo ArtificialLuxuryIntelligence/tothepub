@@ -36,5 +36,5 @@ async function takeMeToThePub(results) {
 }
 
 // Button event listener
-// takeMeButton.addEventListener("click", () => takeMeToThePub(6));
-takeMeButton.addEventListener("click", () => takeMeToThePub(1)); //testing (saves api calls)
+takeMeButton.addEventListener("click", () => takeMeToThePub(6));
+// takeMeButton.addEventListener("click", () => takeMeToThePub(1)); //testing (saves api calls)
