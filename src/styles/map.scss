@@ -1,12 +1,14 @@
 // ------------------------------------------------------------------------------------------------------------------
+$dark-bg: rgb(17, 35, 55);
+
 /* map page */
 
 #map-page {
   position: absolute;
   top: 0;
   left: 0;
-//   display: none;
-//   visibility: hidden;
+  //   display: none;
+  //   visibility: hidden;
   height: 100vh;
   max-height: 100%;
   width: 100vw;
@@ -30,7 +32,7 @@
   transition: height ease 0.4s;
   // margin: 20px;
   position: absolute;
-  background-color: rgb(17, 35, 55);
+  background-color: rgba($color: $dark-bg, $alpha: 0.8);
   color: white;
 
   // width: 29px;
@@ -118,7 +120,7 @@
   border-radius: 50%;
   cursor: pointer;
   padding: 0;
-  /* background-image: url(/src/assets/beer_destination.png); */
+  /* background-image: url(/src/assets/beer_destination.png); */ //set in js
   background-size: contain;
 }
 
@@ -131,7 +133,8 @@
     text-align: center;
     font-family: "Open Sans", sans-serif;
     padding: 6px;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba($color: $dark-bg, $alpha: 0.8);
+    color: white;
 
     h3 {
       margin: 0.3rem;

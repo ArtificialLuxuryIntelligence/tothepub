@@ -1,6 +1,7 @@
 /* welcome page */
-
+$dark-bg: rgb(17, 35, 55);
 $transition-time: 1.3s;
+
 #welcome-page {
   z-index: 2;
   transition: all $transition-time ease;

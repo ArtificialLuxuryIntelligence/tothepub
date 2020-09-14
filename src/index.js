@@ -6,11 +6,6 @@ import geolocate from "./scripts/geolocate";
 import findNearest from "./scripts/findNearest";
 import drawMap from "./scripts/drawMap";
 
-//load in image assets
-// import beerLoader from "./assets/beer_destination.png";
-
-//
-
 const takeMeButton = document.getElementById("take-me");
 
 function toggleLoading() {
@@ -21,7 +16,7 @@ function toggleLoading() {
   mapPage.style.display = "block"; // so that map loads to size
 }
 
-async function takeMeToThePub() {
+async function takeMeToThePub(results) {
   toggleLoading();
   try {
     //Get current position
@@ -30,8 +25,6 @@ async function takeMeToThePub() {
     const start = [longitude, latitude]; //API format - production
     // const start = [-0.0701679, 51.4868583]; //for testing if not in london
     //Find nearest pubs
-    const results = 6;
-    // const results = 1;
     const nearest = await findNearest(start, results);
     //Draw route to pub
     drawMap(start, nearest);
@@ -43,4 +36,5 @@ async function takeMeToThePub() {
 }
 
 // Button event listener
-takeMeButton.addEventListener("click", takeMeToThePub);
+// takeMeButton.addEventListener("click", () => takeMeToThePub(6));
+takeMeButton.addEventListener("click", () => takeMeToThePub(1)); //testing (saves api calls)
