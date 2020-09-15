@@ -1,5 +1,9 @@
 // ------------------------------------------------------------------------------------------------------------------
 $dark-bg: rgb(17, 35, 55);
+$light-bg: rgb(255, 255, 255);
+
+$dark-text: rgb(255, 255, 255);
+$light-text: rgb(17, 35, 55);
 
 /* map page */
 
@@ -32,8 +36,6 @@ $dark-bg: rgb(17, 35, 55);
   transition: height ease 0.4s;
   // margin: 20px;
   position: absolute;
-  background-color: rgba($color: $dark-bg, $alpha: 0.8);
-  color: white;
 
   // width: 29px;
   width: auto;
@@ -133,8 +135,6 @@ $dark-bg: rgb(17, 35, 55);
     text-align: center;
     font-family: "Open Sans", sans-serif;
     padding: 6px;
-    background-color: rgba($color: $dark-bg, $alpha: 0.8);
-    color: white;
 
     h3 {
       margin: 0.3rem;
@@ -143,5 +143,31 @@ $dark-bg: rgb(17, 35, 55);
 
   .mapboxgl-popup-tip {
     display: none;
+  }
+}
+
+.page-container.dark {
+  #instructions {
+    color: $dark-text;
+    background-color: rgba($color: $dark-bg, $alpha: 0.8);
+  }
+  .mapboxgl-popup {
+    .mapboxgl-popup-content {
+      color: $dark-text;
+      background-color: rgba($color: $dark-bg, $alpha: 0.8);
+    }
+  }
+}
+
+.page-container.light {
+  #instructions {
+    color: $light-text;
+    background-color: rgba($color: $light-bg, $alpha: 0.8);
+  }
+  .mapboxgl-popup {
+    .mapboxgl-popup-content {
+      color: $light-text;
+      background-color: rgba($color: $light-bg, $alpha: 0.8);
+    }
   }
 }
