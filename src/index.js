@@ -10,7 +10,6 @@ const takeMeButton = document.getElementById("take-me");
 
 function toggleLoading() {
   takeMeButton.classList.add("animate");
-
   //toggle map display block to give it a size to load into;
   const mapPage = document.getElementById("map-page");
   mapPage.style.display = "block"; // so that map loads to size

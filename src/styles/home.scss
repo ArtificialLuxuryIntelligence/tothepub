@@ -22,65 +22,119 @@ $transition-time: 1.3s;
     justify-content: center;
     align-items: center;
 
-    .fancy-button {
-      transition: opacity $transition-time ease;
+    // .fancy-button {
+    //   transition: opacity $transition-time ease;
+    //   font-size: 1.8rem;
+    //   cursor: pointer;
+    //   position: relative;
+    //   display: flex;
+    //   justify-content: center;
+    //   align-items: center;
+    //   width: 40vw;
+    //   height: 40vw;
+    //   border: 2px solid rgb(31, 0, 0);
+    //   background-image: radial-gradient(rgb(209, 56, 56), rgb(114, 9, 9));
+    //   border-radius: 50%;
+    //   padding: 4vw;
+    //   &:focus {
+    //     outline: none;
+    //   }
 
-      font-size: 1.8rem;
-      cursor: pointer;
+    //   /*   display: none; */
+
+    //   svg {
+    //     // position: absolute;
+    //     width: 100%;
+    //     height: 100%;
+    //     top: 0;
+    //     left: 0;
+    //     overflow: visible;
+
+    //     text {
+    //       fill: white;
+    //       stroke: black;
+    //       stroke-width: 0.01em;
+    //       // letter-spacing: 0.3rem;
+    //       // word-spacing: 0.2rem;
+    //     }
+    //   }
+    //   img {
+    //     // z-index: -1;
+    //     position: absolute;
+    //     width: 45%;
+    //     height: 45%;
+    //     // top: 0;
+    //     // left: 0;
+    //   }
+    // }
+
+    .button-container {
+      z-index: 1;
       position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 40vw;
-      height: 40vw;
-      border: 2px solid rgb(31, 0, 0);
-      background-image: radial-gradient(rgb(209, 56, 56), rgb(114, 9, 9));
-      border-radius: 50%;
-      padding: 4vw;
-      &:focus {
-        outline: none;
-      }
-
-      /*   display: none; */
-
-      svg {
-        // position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
+      padding: 1rem;
+      button {
+        cursor: pointer;
         overflow: visible;
+        position: relative;
+        padding: 1rem;
+        width: 10rem;
+        height: 10rem;
+        border-radius: 50%;
+        border: none;
+        background-color: orangered;
+        color: white;
+        font-size: 1.3rem;
 
-        text {
-          fill: white;
-          stroke: black;
-          stroke-width: 0.01em;
-          // letter-spacing: 0.3rem;
-          // word-spacing: 0.2rem;
+        &::after {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+
+          content: "";
+          display: block;
+          border-radius: 50%;
+
+          z-index: -1;
+          background-color: orangered;
+          border: 5px solid red;
+        }
+        &:focus {
+          outline: none;
+          border: 10px solid red;
+          border-radius: 50%;
         }
       }
-      img {
-        // z-index: -1;
-        position: absolute;
-        width: 45%;
-        height: 45%;
-        // top: 0;
-        // left: 0;
-      }
     }
 
-    //animation
-    @keyframes spin {
+    @keyframes pulse {
       from {
-        transform: rotateZ(0deg);
+        transform: scale(0.9);
+        opacity: 0.6;
       }
       to {
-        transform: rotateZ(-720deg);
+        opacity: 0;
+        transform: scale(5.4);
       }
     }
 
+    // //animation
+    // @keyframes spin {
+    //   from {
+    //     transform: rotateZ(0deg);
+    //   }
+    //   to {
+    //     transform: rotateZ(-720deg);
+    //   }
+    // }
+
     .animate {
-      animation: spin 6s ease infinite;
+      outline: none;
+      border: none !important;
+      &::after {
+        animation: pulse ease 2s infinite;
+      }
     }
   }
 }
