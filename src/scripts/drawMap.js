@@ -323,6 +323,8 @@ class ToggleDarkModeControl {
 
     //rerender map
     drawMap(this.start, this.nearest);
+    // note map.setStyle() doesn't rerender all layers (line for route
+    // ) etc so whole map rerender is needed (there may be some solutions but not really needed here)
   }
 
   onAdd(map) {

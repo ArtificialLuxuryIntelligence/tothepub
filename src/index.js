@@ -1,10 +1,12 @@
 import "normalize.css";
 import "./styles.scss";
-
 import regeneratorRuntime from "regenerator-runtime"; // makes async await etc work
 import geolocate from "./scripts/geolocate";
 import findNearest from "./scripts/findNearest";
 import drawMap from "./scripts/drawMap";
+
+// const DEV = true;
+const DEV = false;
 
 const takeMeButton = document.getElementById("take-me");
 
@@ -21,8 +23,8 @@ async function takeMeToThePub(results) {
     //Get current position
     const { coords } = await geolocate();
     const { latitude, longitude } = coords;
-    const start = [longitude, latitude]; //API format - production
-    // const start = [-0.0701679, 51.4868583]; //for testing if not in london
+
+    const start = DEV ? [-0.0701679, 51.4868583] : [longitude, latitude]; //API format - production
     //Find nearest pubs
     const nearest = await findNearest(start, results);
     //Draw route to pub
@@ -35,5 +37,7 @@ async function takeMeToThePub(results) {
 }
 
 // Button event listener
-takeMeButton.addEventListener("click", () => takeMeToThePub(6));
-// takeMeButton.addEventListener("click", () => takeMeToThePub(1)); //testing (saves api calls)
+//
+
+// takeMeButton.addEventListener("click", () => takeMeToThePub(6));
+takeMeButton.addEventListener("click", () => takeMeToThePub(DEV ? 2 : 6)); //testing (saves api calls)

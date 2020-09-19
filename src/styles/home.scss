@@ -76,9 +76,9 @@ $transition-time: 1.3s;
         cursor: pointer;
         overflow: visible;
         position: relative;
-        padding: 1rem;
-        width: 10rem;
-        height: 10rem;
+        padding: 2rem;
+        width: 12rem;
+        height: 12rem;
         border-radius: 50%;
         border: none;
         background-color: orangered;
@@ -100,9 +100,10 @@ $transition-time: 1.3s;
           background-color: orangered;
           border: 5px solid red;
         }
-        &:focus {
+        &:focus,&:active {
           outline: none;
           border: 10px solid red;
+          background-color: none;
           border-radius: 50%;
         }
       }
