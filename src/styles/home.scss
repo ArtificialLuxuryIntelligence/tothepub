@@ -73,12 +73,13 @@ $transition-time: 1.3s;
       position: relative;
       padding: 1rem;
       button {
+        box-sizing: content-box;
         cursor: pointer;
         overflow: visible;
         position: relative;
-        padding: 2rem;
-        width: 12rem;
-        height: 12rem;
+        padding: 3rem;
+        width: 7rem;
+        height: 7rem;
         border-radius: 50%;
         border: none;
         background-color: orangered;
@@ -98,9 +99,11 @@ $transition-time: 1.3s;
 
           z-index: -1;
           background-color: orangered;
-          border: 5px solid red;
+          border: 1rem solid red;
         }
-        &:focus,&:active {
+        &:focus,
+        &:active,
+        &:hover {
           outline: none;
           border: 10px solid red;
           background-color: none;

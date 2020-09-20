@@ -5,8 +5,8 @@ import geolocate from "./scripts/geolocate";
 import findNearest from "./scripts/findNearest";
 import drawMap from "./scripts/drawMap";
 
-// const DEV = true;
-const DEV = false;
+const DEV = true;
+// const DEV = false;
 
 const takeMeButton = document.getElementById("take-me");
 
