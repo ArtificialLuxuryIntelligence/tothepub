@@ -4,9 +4,33 @@ const PointLocation = require('../../models/pointLocation');
 const router = Router();
 
 router.get('/', async (req, res) => {
-  const r = await PointLocation.find();
-  res.json(r);
+  const { long, lat } = req.query;
+
+  try {
+    const doc = await PointLocation.find({
+      geometry: {
+        $near: {
+          $maxDistance: 900,
+          $geometry: {
+            type: 'Point',
+            coordinates: [long, lat],
+          },
+        },
+      },
+    });
+
+    console.log(doc);
+    res.json({ doc });
+
+    // console.log(doc);
+  } catch (err) {
+    console.error(err);
+  }
+
+  // console.log(long, lat);
+  // const r = await PointLocation.find();
 });
+
 router.post('/', async (req, res, next) => {
   try {
     const pointLocation = new PointLocation(req.body);

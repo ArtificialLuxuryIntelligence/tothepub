@@ -17,6 +17,10 @@ const pointLocationSchema = new Schema({
   },
 });
 
+// it seems both are needed?
+pointLocationSchema.index({ 'geometry.coordinates': '2dsphere' });
+pointLocationSchema.index({ geometry: '2dsphere' });
+
 // name: { type: String },
 // amenity: { type: String },
 // phone: { type: String },
