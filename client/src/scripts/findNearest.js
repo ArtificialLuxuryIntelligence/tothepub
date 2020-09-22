@@ -42,8 +42,7 @@ const findNearestDist = async (start, num_results) => {
 //find nearest in travel time from collection of location objects (pubs) - pubs currently loaded clientside (API might be better if functionality/locations extended)
 const findNearestTime = async (start, pubs) => {
   let pub_duration = await Promise.all(
-    pubs.map(async (pub, i) => {
-      console.log(i);
+    pubs.map(async (pub) => {
       let duration = await getRouteTime(start, pub.geometry.coordinates);
       return {
         ...pub,

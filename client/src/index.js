@@ -40,4 +40,4 @@ async function takeMeToThePub(results) {
 //
 
 // takeMeButton.addEventListener("click", () => takeMeToThePub(6));
-takeMeButton.addEventListener('click', () => takeMeToThePub(DEV ? 30 : 8)); //testing (saves api calls)
+takeMeButton.addEventListener('click', () => takeMeToThePub(DEV ? 300 : 8)); //testing (saves api calls)

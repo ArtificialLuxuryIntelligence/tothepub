@@ -1,3 +1,5 @@
+//note: currently 5 mapbox API directions requests on page load
+
 import beerPic from './../assets/beer_destination.png';
 import directionsArrow from './../assets/arrows/directions-arrow.svg';
 import moonIcon from './../assets/icons/brightness_3-24px.svg';
@@ -23,12 +25,10 @@ const colourScheme = {
 
 function toggleMapView() {
   const home = document.getElementById('welcome-page');
-  console.log('toggling');
   home.classList.add('fade');
   const mapPage = document.getElementById('map-page');
   // mapPage.style.visibility = "visible"; // visibility used  so that map loads to size ()
   setTimeout(() => {
-    console.log('togged');
     const welcomePage = document.getElementById('welcome-page');
     welcomePage.style.display = 'none';
   }, 1300);
@@ -39,7 +39,6 @@ export default function drawMap(start, nearest) {
   //note arg 'nearest' is sorted array of nearest pubs
   //initial shows
   // let total = nearest.length;
-  console.log('nearest', nearest);
   let end = nearest[0].geometry.coordinates;
   let location_name = nearest[0].properties.name;
   //
@@ -193,6 +192,7 @@ export default function drawMap(start, nearest) {
         ? pub.properties.name
         : '...name unavailable';
       //
+      // console.log(pub.properties);
       pub.properties?.tags?.map((n) => console.log(n)); //only maps if tags exists
 
       let el = document.createElement('div');
