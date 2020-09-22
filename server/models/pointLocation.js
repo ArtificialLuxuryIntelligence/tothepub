@@ -10,6 +10,7 @@ const pointLocationSchema = new Schema({
     name: { type: String },
     amenity: { type: String },
     phone: { type: String },
+    tags: { type: Array },
   },
   geometry: {
     type: { type: String },

@@ -1,26 +1,42 @@
-const { Router } = require('express');
+const { Router, response } = require('express');
 const PointLocation = require('../../models/pointLocation');
 
 const router = Router();
-const SEARCH_RADIUS = 1000;
+const SEARCH_RADIUS = 3000;
 
 router.get('/', async (req, res) => {
-  const { long, lat } = req.query;
+  const { long, lat, tag } = req.query;
 
   try {
-    const doc = await PointLocation.find({
-      geometry: {
-        $near: {
-          $maxDistance: SEARCH_RADIUS,
-          $geometry: {
-            type: 'Point',
-            coordinates: [long, lat],
+    let doc;
+    if (tag) {
+      doc = await PointLocation.find({
+        geometry: {
+          $near: {
+            $maxDistance: SEARCH_RADIUS,
+            $geometry: {
+              type: 'Point',
+              coordinates: [long, lat],
+            },
           },
         },
-      },
-    });
-
-    console.log(doc);
+        'properties.tags': tag,
+      });
+    } else {
+      doc = await PointLocation.find({
+        geometry: {
+          $near: {
+            $maxDistance: SEARCH_RADIUS,
+            $geometry: {
+              type: 'Point',
+              coordinates: [long, lat],
+            },
+          },
+        },
+      });
+    }
+    // console.log(doc);
+    // console.log(doc);
     res.json({ doc });
 
     // console.log(doc);
