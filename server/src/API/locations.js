@@ -2,6 +2,7 @@ const { Router } = require('express');
 const PointLocation = require('../../models/pointLocation');
 
 const router = Router();
+const SEARCH_RADIUS = 1000;
 
 router.get('/', async (req, res) => {
   const { long, lat } = req.query;
@@ -10,7 +11,7 @@ router.get('/', async (req, res) => {
     const doc = await PointLocation.find({
       geometry: {
         $near: {
-          $maxDistance: 900,
+          $maxDistance: SEARCH_RADIUS,
           $geometry: {
             type: 'Point',
             coordinates: [long, lat],
