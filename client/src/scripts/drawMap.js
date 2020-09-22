@@ -36,6 +36,16 @@ function toggleMapView() {
 
 export default function drawMap(start, nearest) {
   console.log(nearest);
+  if (nearest.length == 0) {
+    const takeMeButton = document.getElementById('take-me');
+    takeMeButton.classList.toggle('animate');
+    const errorBox = document.getElementById('error');
+    const dropDown = document.getElementById('tag-dropdown');
+    errorBox.innerText = `No ${dropDown.value} nearby 😢`;
+    return;
+  }
+  //TODO: may be an empty array
+
   //note arg 'nearest' is sorted array of nearest pubs
   //initial shows
   // let total = nearest.length;
@@ -53,7 +63,7 @@ export default function drawMap(start, nearest) {
       ? 'mapbox://styles/mapbox/dark-v10'
       : 'mapbox://styles/mapbox/streets-v10',
     center: start, // starting position
-    zoom: 13,
+    zoom: 14,
     // pitch: 60, //pitched angle of view
   });
   // set the bounds of the map //this could be fixed (to bounds on london pubs) and not dynamic as it currently is

@@ -19,59 +19,15 @@ $transition-time: 1.3s;
   #content {
     height: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-
-    // .fancy-button {
-    //   transition: opacity $transition-time ease;
-    //   font-size: 1.8rem;
-    //   cursor: pointer;
-    //   position: relative;
-    //   display: flex;
-    //   justify-content: center;
-    //   align-items: center;
-    //   width: 40vw;
-    //   height: 40vw;
-    //   border: 2px solid rgb(31, 0, 0);
-    //   background-image: radial-gradient(rgb(209, 56, 56), rgb(114, 9, 9));
-    //   border-radius: 50%;
-    //   padding: 4vw;
-    //   &:focus {
-    //     outline: none;
-    //   }
-
-    //   /*   display: none; */
-
-    //   svg {
-    //     // position: absolute;
-    //     width: 100%;
-    //     height: 100%;
-    //     top: 0;
-    //     left: 0;
-    //     overflow: visible;
-
-    //     text {
-    //       fill: white;
-    //       stroke: black;
-    //       stroke-width: 0.01em;
-    //       // letter-spacing: 0.3rem;
-    //       // word-spacing: 0.2rem;
-    //     }
-    //   }
-    //   img {
-    //     // z-index: -1;
-    //     position: absolute;
-    //     width: 45%;
-    //     height: 45%;
-    //     // top: 0;
-    //     // left: 0;
-    //   }
-    // }
 
     .button-container {
       z-index: 1;
       position: relative;
       padding: 1rem;
+      display: block;
       button {
         box-sizing: content-box;
         cursor: pointer;
@@ -81,9 +37,10 @@ $transition-time: 1.3s;
         width: 7rem;
         height: 7rem;
         border-radius: 50%;
-        border: none;
+        border: 0px solid red;
         background-color: orangered;
         color: white;
+        transition: border 0.2s ease;
         font-size: 1.3rem;
 
         &::after {
@@ -93,7 +50,7 @@ $transition-time: 1.3s;
           right: 0;
           bottom: 0;
 
-          content: "";
+          content: '';
           display: block;
           border-radius: 50%;
 
@@ -105,11 +62,14 @@ $transition-time: 1.3s;
         &:active,
         &:hover {
           outline: none;
-          border: 10px solid red;
-          background-color: none;
-          border-radius: 50%;
+          border: 0.4rem solid red;
+          // background-color: none;
+          transition: border 0.2s ease;
         }
       }
+    }
+    .dropdown-container {
+      text-align: center;
     }
 
     @keyframes pulse {

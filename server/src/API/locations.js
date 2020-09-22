@@ -1,8 +1,10 @@
 const { Router, response } = require('express');
 const PointLocation = require('../../models/pointLocation');
+const Tags = require('../../models/tags');
 
 const router = Router();
-const SEARCH_RADIUS = 3000;
+const SEARCH_RADIUS = 1500;
+const MAX_RESULTS = 25;
 
 router.get('/', async (req, res) => {
   const { long, lat, tag } = req.query;
@@ -21,7 +23,7 @@ router.get('/', async (req, res) => {
           },
         },
         'properties.tags': tag,
-      });
+      }).limit(MAX_RESULTS);
     } else {
       doc = await PointLocation.find({
         geometry: {
@@ -33,7 +35,7 @@ router.get('/', async (req, res) => {
             },
           },
         },
-      });
+      }).limit(MAX_RESULTS);
     }
     // console.log(doc);
     // console.log(doc);
@@ -62,4 +64,13 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+router.get('/tags', async (req, res) => {
+  try {
+    const doc = await Tags.findOne();
+
+    res.json({ doc, res: 'hi' });
+  } catch (err) {
+    console.error(err);
+  }
+});
 module.exports = router;

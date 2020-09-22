@@ -8,25 +8,47 @@ import drawMap from './scripts/drawMap';
 const DEV = true;
 // const DEV = false;
 
+const dropDown = document.getElementById('tag-dropdown');
 const takeMeButton = document.getElementById('take-me');
 
+async function populateDrowdown() {
+  //call api for list of tags
+
+  let url = `http://localhost:5000/api/location/tags`;
+  let response = await fetch(url);
+  let result = await response.json();
+  let tags = result.doc.tags;
+  tags.forEach((tag) => {
+    let op = document.createElement('option');
+    op.value = tag;
+    op.innerText = tag;
+    dropDown.appendChild(op);
+  });
+
+  //populate list with these tags
+}
+populateDrowdown();
+
 function toggleLoading() {
-  takeMeButton.classList.add('animate');
+  takeMeButton.classList.toggle('animate');
   //toggle map display block to give it a size to load into;
-  const mapPage = document.getElementById('map-page');
-  mapPage.style.display = 'block'; // so that map loads to size
+  // const mapPage = document.getElementById('map-page');
+  // mapPage.style.display = 'block'; // so that map loads to size
 }
 
-async function takeMeToThePub(results) {
+async function takeMeToThePub(maxResults) {
   toggleLoading();
   try {
     //Get current position
     const { coords } = await geolocate();
     const { latitude, longitude } = coords;
 
-    const start = DEV ? [-0.0701679, 51.4868583] : [longitude, latitude]; //API format - production
+    const start = DEV
+      ? [-0.13703469999999998, 51.510621633333336]
+      : [longitude, latitude]; //API format - production
+    const tag = dropDown.value;
     //Find nearest pubs
-    const nearest = await findNearest(start, results);
+    const nearest = await findNearest(start, tag, maxResults);
     //Draw route to pub
     drawMap(start, nearest);
     //add button to choose next pub in list of nearest
@@ -37,7 +59,5 @@ async function takeMeToThePub(results) {
 }
 
 // Button event listener
-//
-
 // takeMeButton.addEventListener("click", () => takeMeToThePub(6));
-takeMeButton.addEventListener('click', () => takeMeToThePub(DEV ? 300 : 8)); //testing (saves api calls)
+takeMeButton.addEventListener('click', () => takeMeToThePub(DEV ? 300 : 8)); //testing

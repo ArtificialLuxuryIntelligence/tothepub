@@ -26,17 +26,18 @@ const { MAPBOX_TOKEN } = process.env;
 // };
 
 //find absolute distance closest
-const findNearestDist = async (start, num_results) => {
+const findNearestDist = async (start, tag, num_results) => {
   let [s_long, s_lat] = start;
 
   let url = `http://localhost:5000/api/location?long=${s_long}&lat=${s_lat}`;
+  tag ? (url += `&tag=${tag}`) : null;
 
   let response = await fetch(url);
 
   let nearest = await response.json();
 
   //return nearest
-  return nearest.doc.slice(0, num_results);
+  return nearest.doc.slice(0, num_results); //API sends all this data back... (the results are also  filtered servside by range) 
 };
 
 //find nearest in travel time from collection of location objects (pubs) - pubs currently loaded clientside (API might be better if functionality/locations extended)
@@ -79,9 +80,9 @@ const getRouteTime = async (start, end) => {
 };
 
 //combined closest in time and distance as explained above
-export default async function findNearest(start, num_results) {
+export default async function findNearest(start, tag, num_results) {
   //returns two more than results requested to allow for different order of nearest by time and nearest by distance
-  let pubs_dist = await findNearestDist(start, num_results);
+  let pubs_dist = await findNearestDist(start, tag, num_results);
   //sort only nearest 3 to find actual nearest by time
   //this saves unneccessary mapbox api calls
   let nearest3 = await findNearestTime(start, pubs_dist.slice(0, 3));
