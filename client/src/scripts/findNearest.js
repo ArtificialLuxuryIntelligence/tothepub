@@ -40,9 +40,10 @@ const findNearestDist = async (start, num_results) => {
 };
 
 //find nearest in travel time from collection of location objects (pubs) - pubs currently loaded clientside (API might be better if functionality/locations extended)
-const findNearestTime = async (start, pubs, num_results) => {
+const findNearestTime = async (start, pubs) => {
   let pub_duration = await Promise.all(
-    pubs.map(async (pub) => {
+    pubs.map(async (pub, i) => {
+      console.log(i);
       let duration = await getRouteTime(start, pub.geometry.coordinates);
       return {
         ...pub,
@@ -52,7 +53,7 @@ const findNearestTime = async (start, pubs, num_results) => {
   );
 
   pub_duration.sort((a, b) => a.duration - b.duration);
-  return pub_duration.slice(0, num_results);
+  return pub_duration;
 };
 
 //helper get time for a given route
@@ -81,14 +82,9 @@ const getRouteTime = async (start, end) => {
 //combined closest in time and distance as explained above
 export default async function findNearest(start, num_results) {
   //returns two more than results requested to allow for different order of nearest by time and nearest by distance
-  let pubs_dist = await findNearestDist(start, num_results + 2);
-  // console.log(pubs_dist);
-  let pubs_time = await findNearestTime(start, pubs_dist, num_results);
-  // console.log(pubs_time);
-
-  //NOTE: should only sort the 3? nearest pubs in terms of time then splice them back into nearest by distance
+  let pubs_dist = await findNearestDist(start, num_results);
+  //sort only nearest 3 to find actual nearest by time
   //this saves unneccessary mapbox api calls
-
-  return pubs_time;
-  console.log(pubs_time);
+  let nearest3 = await findNearestTime(start, pubs_dist.slice(0, 3));
+  return [...nearest3, ...pubs_dist.slice(3)];
 }
