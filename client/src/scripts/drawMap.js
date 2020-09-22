@@ -215,7 +215,7 @@ export default function drawMap(start, nearest) {
 
       el.addEventListener('click', (e) => markerListener(e));
 
-      new mapboxgl.Marker(el)
+      new mapboxgl.Marker(el, { anchor: 'bottom' })
         .setLngLat(pub.geometry.coordinates)
         .setPopup(
           new mapboxgl.Popup({ offset: 25 }) // add popup
@@ -226,6 +226,8 @@ export default function drawMap(start, nearest) {
 
     // sets new route to marker
     function markerListener(e) {
+      // e.target.style.opacity = '0.4';
+      // setTimeout(() => (e.target.style.opacity = '1'), 2000);
       let coords = e.target.dataset.coords.split(',').map((n) => parseFloat(n));
       let name = e.target.dataset.name;
       canvas.style.cursor = '';

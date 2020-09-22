@@ -60,4 +60,4 @@ async function takeMeToThePub(maxResults) {
 
 // Button event listener
 // takeMeButton.addEventListener("click", () => takeMeToThePub(6));
-takeMeButton.addEventListener('click', () => takeMeToThePub(DEV ? 300 : 8)); //testing
+takeMeButton.addEventListener('click', () => takeMeToThePub(25)); //note: server limit is currently 25 results
