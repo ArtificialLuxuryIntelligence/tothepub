@@ -35,12 +35,13 @@ function toggleMapView() {
 }
 
 export default function drawMap(start, nearest) {
+  console.log(nearest);
   //note arg 'nearest' is sorted array of nearest pubs
   //initial shows
   // let total = nearest.length;
   console.log('nearest', nearest);
   let end = nearest[0].geometry.coordinates;
-  let end_message = nearest[0].name;
+  let location_name = nearest[0].properties.name;
   //
   mapboxgl.accessToken = MAPBOX_TOKEN;
   if (!mapboxgl.supported()) {
@@ -53,7 +54,7 @@ export default function drawMap(start, nearest) {
       ? 'mapbox://styles/mapbox/dark-v10'
       : 'mapbox://styles/mapbox/streets-v10',
     center: start, // starting position
-    zoom: 11,
+    zoom: 13,
     // pitch: 60, //pitched angle of view
   });
   // set the bounds of the map //this could be fixed (to bounds on london pubs) and not dynamic as it currently is
@@ -64,7 +65,7 @@ export default function drawMap(start, nearest) {
   map.setMaxBounds(bounds);
   // initialize the map canvas to interact with later
   let canvas = map.getCanvasContainer();
-  const getRoute = async (start, end, end_message = '') => {
+  const getRoute = async (start, end, location_name = '') => {
     // make a directions request using walking profile
     let url =
       'https://api.mapbox.com/directions/v5/mapbox/walking/' +
@@ -143,7 +144,7 @@ export default function drawMap(start, nearest) {
         `<br><li class="${symbolType}">` + steps[i].maneuver.instruction
       ) + '</li>';
       instructions.innerHTML =
-        `<h1>${end_message}</h1><span class="duration">Trip duration: ` +
+        `<h1>${location_name}</h1><span class="duration">Trip duration: ` +
         Math.floor(data.duration / 60) +
         ' min  </span>' +
         tripInstructions;
@@ -156,7 +157,7 @@ export default function drawMap(start, nearest) {
     // make an initial directions request that
     // starts and ends at the same location
     await getRoute(start, start); //seems to be neccessary for the API to init..(?)
-    await getRoute(start, end, end_message);
+    await getRoute(start, end, location_name);
 
     // Add starting point to the map
     map.addSource('start', {
@@ -187,13 +188,20 @@ export default function drawMap(start, nearest) {
 
     //create and addmarkers for nearest pubs
     nearest.forEach((pub) => {
+      //fill in any empty properties:
+      pub.properties.name = pub.properties.name
+        ? pub.properties.name
+        : '...name unavailable';
+      //
+      pub.properties?.tags?.map((n) => console.log(n)); //only maps if tags exists
+
       let el = document.createElement('div');
       el.className = 'marker';
       el.style.backgroundImage = `url(${beerPic})`;
       el.style.width = '60px';
       el.style.height = '60px';
       el.dataset.coords = pub.geometry.coordinates;
-      el.dataset.name = pub.name;
+      el.dataset.name = pub.properties.name;
 
       el.addEventListener('click', (e) => markerListener(e));
 
@@ -201,7 +209,7 @@ export default function drawMap(start, nearest) {
         .setLngLat(pub.geometry.coordinates)
         .setPopup(
           new mapboxgl.Popup({ offset: 25 }) // add popup
-            .setHTML('<h3>' + pub.name + '</h3>')
+            .setHTML('<h3>' + pub.properties.name + '</h3>')
         )
         .addTo(map);
     });

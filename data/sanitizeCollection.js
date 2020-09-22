@@ -1,12 +1,19 @@
+//cleans up OSM geojson data and strips out unused data for use in the apps database
 // to run: node sanitzeCollection WRITEFILE READFILE1 READFILE2 READFILE3 (etc.)
 
 const fs = require('fs');
+// const { features } = require('process');
 
 // read file and write file from arguments
 const [, , write, ...read] = process.argv; //
 // console.log('write', write, 'read', read[0]);
 
-const acceptedProps = ['amenity', 'phone', 'name']; //what else -add to model
+const acceptedProps = ['amenity', 'phone', 'name', 'tags']; //properties not deleted (tags added by me)
+const acceptedTagProps = ['operator', 'brand', 'brewery']; //properties to be manipulated and turned into tags property (array)
+const accepetedTagData = [
+  { regex: new RegExp('samuel s', 'gi'), tag: `Samuel Smith's` },
+  { regex: new RegExp('wetherspoon', 'gi'), tag: 'Wetherspoons' },
+]; //array of objects: regex used to find useful data from geojson properties and tag value given
 // const requiredProps = ['name'];
 
 // import file
@@ -41,6 +48,11 @@ let result = [];
 //helper functions
 
 function sanitizeFeature(feature) {
+  feature.properties.tags = extractTags(
+    feature.properties,
+    acceptedTagProps,
+    accepetedTagData
+  ); // add tag property
   return {
     type: 'Feature',
     properties: filterObject(feature.properties, acceptedProps),
@@ -65,6 +77,26 @@ function filterObject(t, acceptedProps = []) {
   //   return {};
   // }
   return t;
+}
+
+function extractTags(object, acceptedTagProps = [], accepetedTagData = []) {
+  let tags = [];
+  let clone = JSON.parse(JSON.stringify(object));
+  filterObject(clone, acceptedTagProps); //remove unwanted properties before searching for useful tag data;
+  /// useful tag data to extract..
+  Object.values(clone).forEach((v) => {
+    //loop over all accepted tag data
+    accepetedTagData.forEach((o) => {
+      matcher(v, o.regex) ? tags.push(o.tag) : null;
+    });
+
+    //if it is found then add relevant tag
+  });
+  function matcher(s, re) {
+    return s.match(re) ? true : false;
+  }
+
+  return [...new Set(tags)]; //remove dupes
 }
 
 //find central point (mean) of array of 2d arrays x
