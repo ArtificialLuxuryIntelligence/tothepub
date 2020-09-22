@@ -1,4 +1,4 @@
-import { pubs } from "./../data/pubs";
+import { pubs } from './../data/pubs';
 
 const { MAPBOX_TOKEN } = process.env;
 
@@ -7,29 +7,43 @@ const { MAPBOX_TOKEN } = process.env;
 // mapbox API to determine the nearest in travel time.
 
 //find absolute distance closest
-function findNearestDist(start, num_results) {
+// const findNearestDist = async (start, num_results) => {
+//   let [s_long, s_lat] = start;
+
+//   //add abs key to pub objects (absolute distance to start)
+//   let pub_abs = pubs.map((pub) => {
+//     let [p_long, p_lat] = pub.coords;
+
+//     return {
+//       ...pub,
+//       abs: Math.sqrt(Math.pow(p_long - s_long, 2) + Math.pow(p_lat - s_lat, 2)),
+//     };
+//   });
+
+//   pub_abs.sort((a, b) => a.abs - b.abs);
+//   //return nearest
+//   return pub_abs.slice(0, num_results);
+// };
+
+//find absolute distance closest
+const findNearestDist = async (start, num_results) => {
   let [s_long, s_lat] = start;
 
-  //add abs key to pub objects (absolute distance to start)
-  let pub_abs = pubs.map((pub) => {
-    let [p_long, p_lat] = pub.coords;
+  let url = `http://localhost:5000/api/location?long=${s_long}&lat=${s_lat}`;
 
-    return {
-      ...pub,
-      abs: Math.sqrt(Math.pow(p_long - s_long, 2) + Math.pow(p_lat - s_lat, 2)),
-    };
-  });
+  let response = await fetch(url);
 
-  pub_abs.sort((a, b) => a.abs - b.abs);
+  let nearest = await response.json();
+
   //return nearest
-  return pub_abs.slice(0, num_results);
-}
+  return nearest.doc.slice(0, num_results);
+};
 
 //find nearest in travel time from collection of location objects (pubs) - pubs currently loaded clientside (API might be better if functionality/locations extended)
 const findNearestTime = async (start, pubs, num_results) => {
   let pub_duration = await Promise.all(
     pubs.map(async (pub) => {
-      let duration = await getRouteTime(start, pub.coords);
+      let duration = await getRouteTime(start, pub.geometry.coordinates);
       return {
         ...pub,
         duration,
@@ -46,15 +60,15 @@ const getRouteTime = async (start, end) => {
   // make a directions request using cycling profile
   mapboxgl.accessToken = MAPBOX_TOKEN;
   var url =
-    "https://api.mapbox.com/directions/v5/mapbox/walking/" +
+    'https://api.mapbox.com/directions/v5/mapbox/walking/' +
     start[0] +
-    "," +
+    ',' +
     start[1] +
-    ";" +
+    ';' +
     end[0] +
-    "," +
+    ',' +
     end[1] +
-    "?steps=true&geometries=geojson&access_token=" +
+    '?steps=true&geometries=geojson&access_token=' +
     mapboxgl.accessToken;
 
   //fetch version
@@ -67,10 +81,14 @@ const getRouteTime = async (start, end) => {
 //combined closest in time and distance as explained above
 export default async function findNearest(start, num_results) {
   //returns two more than results requested to allow for different order of nearest by time and nearest by distance
-  let pubs_dist = findNearestDist(start, num_results + 2);
+  let pubs_dist = await findNearestDist(start, num_results + 2);
   // console.log(pubs_dist);
   let pubs_time = await findNearestTime(start, pubs_dist, num_results);
   // console.log(pubs_time);
 
+  //NOTE: should only sort the 3? nearest pubs in terms of time then splice them back into nearest by distance
+  //this saves unneccessary mapbox api calls
+
   return pubs_time;
+  console.log(pubs_time);
 }

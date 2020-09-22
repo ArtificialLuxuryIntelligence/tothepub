@@ -84,6 +84,9 @@ function reduceGeometryToPoint(geometry = {}) {
     case 'polygon':
       coordinates = centralPoint(geometry.coordinates[0]);
       break;
+    case 'linestring':
+      coordinates = centralPoint(geometry.coordinates);
+      break;
     case 'multipolygon':
       coordinates = centralPoint(
         geometry.coordinates.map((a) => centralPoint(a[0]))

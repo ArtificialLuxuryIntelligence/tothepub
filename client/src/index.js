@@ -1,20 +1,20 @@
-import "normalize.css";
-import "./styles.scss";
-import regeneratorRuntime from "regenerator-runtime"; // makes async await etc work
-import geolocate from "./scripts/geolocate";
-import findNearest from "./scripts/findNearest";
-import drawMap from "./scripts/drawMap";
+import 'normalize.css';
+import './styles.scss';
+import regeneratorRuntime from 'regenerator-runtime'; // makes async await etc work
+import geolocate from './scripts/geolocate';
+import findNearest from './scripts/findNearest';
+import drawMap from './scripts/drawMap';
 
 const DEV = true;
 // const DEV = false;
 
-const takeMeButton = document.getElementById("take-me");
+const takeMeButton = document.getElementById('take-me');
 
 function toggleLoading() {
-  takeMeButton.classList.add("animate");
+  takeMeButton.classList.add('animate');
   //toggle map display block to give it a size to load into;
-  const mapPage = document.getElementById("map-page");
-  mapPage.style.display = "block"; // so that map loads to size
+  const mapPage = document.getElementById('map-page');
+  mapPage.style.display = 'block'; // so that map loads to size
 }
 
 async function takeMeToThePub(results) {
@@ -40,4 +40,4 @@ async function takeMeToThePub(results) {
 //
 
 // takeMeButton.addEventListener("click", () => takeMeToThePub(6));
-takeMeButton.addEventListener("click", () => takeMeToThePub(DEV ? 2 : 6)); //testing (saves api calls)
+takeMeButton.addEventListener('click', () => takeMeToThePub(DEV ? 2 : 8)); //testing (saves api calls)

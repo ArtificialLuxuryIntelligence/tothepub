@@ -1,27 +1,27 @@
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const Dotenv = require("dotenv-webpack");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
-const webpack = require("webpack");
+const webpack = require('webpack');
 
 module.exports = {
   entry: {
-    index: "./src/index.js",
+    index: './src/index.js',
   },
   devServer: {
-    port: 8080,
+    port: 3000,
   },
   module: {
     rules: [
       {
         test: /\.js$/i,
         exclude: /node_modules/,
-        loader: "babel-loader",
+        loader: 'babel-loader',
         options: {
           presets: [
             [
-              "@babel/preset-env",
+              '@babel/preset-env',
               {
-                useBuiltIns: "entry",
+                useBuiltIns: 'entry',
               },
             ],
           ],
@@ -29,21 +29,21 @@ module.exports = {
       },
       {
         test: /\.html$/i,
-        loader: "html-loader",
+        loader: 'html-loader',
       },
       {
         test: /\.(sc|c)ss$/i,
         use: [
-          "style-loader",
+          'style-loader',
           {
-            loader: "css-loader",
+            loader: 'css-loader',
             options: {
               sourceMap: true,
             },
           },
 
           {
-            loader: "sass-loader",
+            loader: 'sass-loader',
             options: {
               sourceMap: true,
             },
@@ -54,7 +54,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif|svg)$/i,
         use: [
           {
-            loader: "file-loader",
+            loader: 'file-loader',
           },
         ],
       },
@@ -63,10 +63,10 @@ module.exports = {
 
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./src/index.html",
+      template: './src/index.html',
       inject: true,
-      chunks: ["index"],
-      filename: "index.html",
+      chunks: ['index'],
+      filename: 'index.html',
     }),
     new Dotenv(),
   ],
