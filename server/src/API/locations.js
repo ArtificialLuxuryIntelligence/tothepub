@@ -1,4 +1,9 @@
 const { Router, response } = require('express');
+
+const multer = require('multer');
+
+const upload = multer();
+
 const PointLocation = require('../../models/pointLocation');
 const Tags = require('../../models/tags');
 
@@ -72,5 +77,9 @@ router.get('/tags', async (req, res) => {
   } catch (err) {
     console.error(err);
   }
+});
+
+router.post('/tags', upload.array(), async (req, res) => {
+  console.log(req.body);
 });
 module.exports = router;

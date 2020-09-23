@@ -6,14 +6,14 @@ const PointLocations = require('../models/pointLocation');
 const Tags = require('../models/tags');
 require('dotenv').config();
 
-const TAGS = ['Wetherspoons', "Samuel Smith's"];
+const TAGS = ['Wetherspoons', "Samuel Smith's"]; // TODO :autodetect
 mongoose.connect('mongodb://localhost/tothepub', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 (async () => {
-  const json = await readFile('./../../data/pointLocations.js');
+  const json = await readFile('./../../data/pointLocations.json');
   const locations = JSON.parse(json);
   PointLocations.insertMany(locations, (err, docs) => {
     if (err) {
