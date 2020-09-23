@@ -210,9 +210,10 @@ export default function drawMap(start, nearest) {
       el.style.backgroundImage = `url(${beerPic})`;
       el.style.width = '60px';
       el.style.height = '60px';
-      el.dataset.coords = pub.geometry.coordinates;
-      el.dataset.name = pub.properties.name;
-
+      // el.dataset.coords = pub.geometry.coordinates;
+      // el.dataset.name = pub.properties.name;
+      // console.log(pub);
+      el.dataset.id = pub._id;
       el.addEventListener('click', (e) => markerListener(e));
 
       new mapboxgl.Marker(el, { anchor: 'bottom' })
@@ -226,10 +227,18 @@ export default function drawMap(start, nearest) {
 
     // sets new route to marker
     function markerListener(e) {
+      console.log(e.target);
+      let id = e.target.dataset.id;
+      console.log(id);
+      console.log(pub);
+      let pub = nearest.filter((p) => p._id == id)[0];
+      // console.log(nearest); //!!! TODO use this instead of saving all data in dataset - only save id in dataset and find object in nearest
       // e.target.style.opacity = '0.4';
       // setTimeout(() => (e.target.style.opacity = '1'), 2000);
-      let coords = e.target.dataset.coords.split(',').map((n) => parseFloat(n));
-      let name = e.target.dataset.name;
+      // let coords = e.target.dataset.coords.split(',').map((n) => parseFloat(n));
+      // let name = e.target.dataset.name;
+      let coords = pub.geometry.coordinates;
+      let name = pub.name;
       canvas.style.cursor = '';
       getRoute(start, coords, name);
     }
