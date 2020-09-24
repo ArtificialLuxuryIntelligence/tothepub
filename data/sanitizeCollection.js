@@ -9,10 +9,28 @@ const [, , write, ...read] = process.argv; //
 // console.log('write', write, 'read', read[0]);
 
 const acceptedProps = ['amenity', 'phone', 'name', 'tags']; //properties not deleted (tags added by me)
-const acceptedTagProps = ['operator', 'brand', 'brewery']; //properties to be manipulated and turned into tags property (array)
+const acceptedTagProps = ['operator', 'brand', 'brewery', 'real_ale', 'camra']; //properties to be manipulated and turned into tags property (array)
 const accepetedTagData = [
-  { regex: new RegExp('samuel s', 'gi'), tag: `Samuel Smith's` },
-  { regex: new RegExp('wetherspoon', 'gi'), tag: 'Wetherspoons' },
+  {
+    regex: new RegExp('samuel s', 'gi'),
+    tag: `Samuel Smith's`,
+    category: 'operator',
+  },
+  {
+    regex: new RegExp('wetherspoon', 'gi'),
+    tag: 'Wetherspoons',
+    category: 'operator',
+  },
+  {
+    regex: new RegExp('real_ale', 'gi'),
+    tag: 'real ale',
+    category: 'real_ale',
+  },
+  {
+    regex: new RegExp('camra', 'gi'),
+    tag: 'real ale', //no separte tag for CAMRA ...yet?
+    category: 'real ale',
+  },
 ]; //array of objects: regex used to find useful data from geojson properties and tag value given
 // const requiredProps = ['name'];
 
@@ -87,10 +105,18 @@ function extractTags(object, acceptedTagProps = [], accepetedTagData = []) {
   Object.values(clone).forEach((v) => {
     //loop over all accepted tag data
     accepetedTagData.forEach((o) => {
+      //if it is found then add relevant tag
       matcher(v, o.regex) ? tags.push(o.tag) : null;
     });
-
-    //if it is found then add relevant tag
+  });
+  // loop over keys to check for existence of keys like real_ale: yes (here useful info is in key..
+  //- note: tag is added no matter what the value is!!)
+  Object.keys(clone).forEach((v) => {
+    //loop over all accepted tag data
+    accepetedTagData.forEach((o) => {
+      //if it is found then add relevant tag
+      matcher(v, o.regex) ? tags.push(o.tag) : null;
+    });
   });
   function matcher(s, re) {
     return s.match(re) ? true : false;
