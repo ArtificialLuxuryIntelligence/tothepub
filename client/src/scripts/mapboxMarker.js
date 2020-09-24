@@ -11,7 +11,7 @@ function markerContent(pub, allTags, allLocationInfo) {
   content.appendChild(h3);
   //tags
   pub.properties.tags.forEach((tag) => {
-    let p = createEC('p', tag, 'marker-tag');
+    let p = createEC('p', tag, 'popup-tag');
     content.appendChild(p);
   });
   //additional information
@@ -20,7 +20,7 @@ function markerContent(pub, allTags, allLocationInfo) {
       return allLocationInfoDisplay.includes(key); //include this info
     })
     .forEach((key) => {
-      let p = createEC('p', pub.properties[key], 'marker-info');
+      let p = createEC('p', pub.properties[key], 'popup-info');
       content.appendChild(p);
     });
   let toggle = createEC('button', 'edit');

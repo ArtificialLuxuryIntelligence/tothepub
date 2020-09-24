@@ -112,58 +112,26 @@ $dark-text: rgb(17, 35, 55);
   }
 }
 
-// light and dark themes
-
-.page-container.light {
-  #instructions {
-    color: $light-text;
-    background-color: rgba($color: $dark-bg, $alpha: 0.8);
-    li::before {
-      filter: invert(1);
-    }
-    li.arrive::before,
-    li.depart::before {
-      filter: invert(
-        0
-      ); // can use function to change svg background colour from black (original svg colour) //https://stackoverflow.com/questions/42966641/how-to-transform-black-into-any-given-color-using-only-css-filters
-    }
-  }
-  .mapboxgl-popup {
-    .mapboxgl-popup-content {
-      color: $light-text;
-      background-color: rgba($color: $dark-bg, $alpha: 0.8);
-    }
-  }
-}
-
-.page-container.dark {
-  #instructions {
-    color: $dark-text;
-    background-color: rgba($color: $light-bg, $alpha: 0.8);
-  }
-  .mapboxgl-popup {
-    .mapboxgl-popup-content {
-      color: $dark-text;
-      background-color: rgba($color: $light-bg, $alpha: 0.8);
-    }
-  }
-}
-
 /* popup */
 
 .mapboxgl-popup {
   max-width: 200px;
 
   .mapboxgl-popup-content {
-    text-align: center;
+    // max-width: 60vw; //max view width for lots of tags?
+    // text-align: center;
     font-family: 'Open Sans', sans-serif;
     padding: 6px;
 
     h3 {
       margin: 0.3rem;
     }
-    .hidden {
-      display: none;
+    .popup-tag {
+      display: inline-block;
+      padding: 0.2em 0.5em;
+      margin: 0 0.2em;
+    }
+    .popup-info {
     }
   }
 
@@ -213,4 +181,61 @@ $dark-text: rgb(17, 35, 55);
   to {
     opacity: 0;
   }
+}
+
+// ------------- light and dark themes
+
+.page-container.light {
+  #instructions {
+    color: $light-text;
+    background-color: rgba($color: $dark-bg, $alpha: 0.8);
+    li::before {
+      filter: invert(1);
+    }
+    li.arrive::before,
+    li.depart::before {
+      filter: invert(
+        0
+      ); // can use function to change svg background colour from black (original svg colour) //https://stackoverflow.com/questions/42966641/how-to-transform-black-into-any-given-color-using-only-css-filters
+    }
+  }
+  .mapboxgl-popup {
+    .mapboxgl-popup-content {
+      color: $light-text;
+      background-color: rgba($color: $dark-bg, $alpha: 0.8);
+
+      .popup-tag {
+        color: $light-text;
+        border: 1px solid $light-text;
+        background-color: $dark-bg;
+      }
+      .popup-info {
+      }
+    }
+  }
+}
+
+.page-container.dark {
+  #instructions {
+    color: $dark-text;
+    background-color: rgba($color: $light-bg, $alpha: 0.8);
+  }
+  .mapboxgl-popup {
+    .mapboxgl-popup-content {
+      color: $dark-text;
+      background-color: rgba($color: $light-bg, $alpha: 0.8);
+      .popup-tag {
+        color: $dark-text;
+        border: 1px solid $dark-text;
+        background-color: $light-bg;
+      }
+      .popup-info {
+      }
+    }
+  }
+}
+
+// ---helpers
+.hidden {
+  display: none;
 }

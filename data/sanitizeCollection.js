@@ -111,6 +111,8 @@ function extractTags(object, acceptedTagProps = [], accepetedTagData = []) {
   });
   // loop over keys to check for existence of keys like real_ale: yes (here useful info is in key..
   //- note: tag is added no matter what the value is!!)
+  // TODO better way of doing this (i.e. searching for specific values within specific keys)
+  // currently may get false positives
   Object.keys(clone).forEach((v) => {
     //loop over all accepted tag data
     accepetedTagData.forEach((o) => {
