@@ -5,7 +5,7 @@ function markerContent(pub, allTags, allLocationInfo) {
 
   let content = document.createElement('div');
 
-  // DISPLAYED CONTENT
+  // ----------------------- DEFAULT DISPLAYED CONTENT
   //title
   let h3 = createEC('h3', pub.properties.name);
   content.appendChild(h3);
@@ -23,10 +23,16 @@ function markerContent(pub, allTags, allLocationInfo) {
       let p = createEC('p', pub.properties[key], 'marker-info');
       content.appendChild(p);
     });
+  let toggle = createEC('button', 'edit');
+  toggle.addEventListener('click', (e) => {
+    e.target.nextElementSibling.classList.toggle('hidden');
+  });
+  content.appendChild(toggle);
 
-  //EDIT LOCATION FORM
-  let form = document.createElement('form');
-
+  // ----------------------- EDIT FORM DEFAULT HIDDEN CONTENT
+  let form = createEC('form', null, 'hidden');
+  let id = createEC('input', null, null, null, 'hidden', 'id', pub._id);
+  form.appendChild(id);
   // --------------------edit location tags
   let h4 = createEC('h4', 'edit tags');
   form.appendChild(h4);
@@ -56,31 +62,49 @@ function markerContent(pub, allTags, allLocationInfo) {
 
   // ------------------------addition comments//
 
-  let comment = createEC('p', 'Other tag suggestion or comments? :');
+  let comment = createEC('p', 'Other tag suggestions or comments? :');
   form.appendChild(comment);
   let textarea = createEC('textarea', null, null, null, null, 'comments');
   form.appendChild(textarea);
 
   //-------------------------  submit
-  let submit = createEC('input', 'submit', null, null, 'submit');
+  let submit = createEC('input', 'submit', null, null, 'submit', 'submitb');
   form.appendChild(submit);
 
   form.addEventListener('submit', async (e) => {
     const url = `http://localhost:5000/api/location/tags`;
     e.preventDefault();
+    e.target.submitb.disabled = true;
     const formdata = new FormData(e.target);
     // Testing: display the values
     console.log('data', ...formdata);
     try {
-      await fetch(url, {
+      let response = await fetch(url, {
         body: formdata,
         // headers: {
         //      "Content-Type": "multipart/form-data",
         // },
         method: 'post',
       });
+      let json = await response.json();
+      if (response.status === 200) {
+        e.target.submitb.disabled = false;
+
+        e.target.classList.toggle('hidden');
+        let body = document.querySelector('body');
+        let tm = createEC('div', null, 'temp-modal');
+        let message = createEC('h3', 'Thank you for your help!');
+        tm.appendChild(message);
+        body.appendChild(tm);
+
+        setTimeout(() => tm.classList.add('fadeOut'), 1000);
+        setTimeout(() => body.removeChild(tm), 1500);
+      }
     } catch (err) {
+      e.target.submitb.disabled = false;
+
       //HANDLE ERROR!
+      //TODP -display some text at bottom of form
       console.err(err);
     }
   });

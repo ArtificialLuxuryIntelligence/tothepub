@@ -23,20 +23,9 @@ const colourScheme = {
   },
 };
 
-//need route for these (not the same as the homepage dropdown or are they...?)
-//pass into draw maps fn from index.js initial request (for dropdown)
-
-// const allTags = [
-//   { value: 'Wetherspoons', category: 'operator' },
-//   { value: `Sam Smith's`, category: 'operator' },
-//   { value: `Real ale`, category: 'real ale' },
-// ];
-
-// // how to present tag editing options
-// const tagDisplayOptions = [
-//   { category: 'operator', display: 'dropdown' },
-//   { category: 'real ale', display: 'checkbox' },
-// ];
+//need route for these (same as the homepage dropdown but dropdown only shows a subsection - or does it??) //TODO
+//pass alltags into draw maps fn from index.js initial request (for dropdown) - no duplicate requests
+//see sanitizeCollection.js (it will be the same at first but then grow as users add new tags..)
 
 const allTags = [
   {
@@ -44,10 +33,10 @@ const allTags = [
     display: 'dropdown',
     tags: [`Unknown`, `Independent`, `Samuel Smith's`, `Weatherspoons`],
   },
-  { category: 'real-ale', display: 'boolean', tags: ['real-ale'] },
-  { category: 'parking', display: 'boolean', tags: ['parking'] },
+  { category: 'real ale', display: 'boolean', tags: ['real ale'] },
+  // { category: 'parking', display: 'boolean', tags: ['parking'] },
 
-  //if boolean then just use the value for the tag -  hardcoded for convenience
+  //if boolean then just use the value for the tag -  hardcoded for convenience //is it still used?
 ];
 
 // information about the location [non-tag data - not filterable]
@@ -253,7 +242,7 @@ export default function drawMap(start, nearest) {
       ? 'mapbox://styles/mapbox/dark-v10'
       : 'mapbox://styles/mapbox/streets-v10',
     center: start, // starting position
-    zoom: 14,
+    zoom: 15,
     // pitch: 60, //pitched angle of view
   });
   // set the bounds of the map //this could be fixed (to bounds on london pubs) and not dynamic as it currently is

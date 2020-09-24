@@ -69,7 +69,7 @@ $dark-text: rgb(17, 35, 55);
     margin: 0.4em 0;
     font-size: 1.2em;
     &::before {
-      content: "";
+      content: '';
       display: inline-block;
       // background-size: 10px 10px;
       background-size: contain !important;
@@ -80,34 +80,34 @@ $dark-text: rgb(17, 35, 55);
     }
 
     &.depart::before {
-      background: url("./assets/beer_destination.png");
+      background: url('./assets/beer_destination.png');
     }
     &.arrive::before {
-      background: url("./assets/beer_destination.png");
+      background: url('./assets/beer_destination.png');
     }
     &.uturn::before {
       // background: url();
     }
     &.left::before {
-      background: url("./assets/arrows/left-icon_1.svg");
+      background: url('./assets/arrows/left-icon_1.svg');
     }
     &.slightleft::before {
-      background: url("./assets/arrows/slight-left-icon_1.svg");
+      background: url('./assets/arrows/slight-left-icon_1.svg');
     }
     &.sharpleft::before {
-      background: url("./assets/arrows/left-icon_1.svg"); //same as left
+      background: url('./assets/arrows/left-icon_1.svg'); //same as left
     }
     &.right::before {
-      background: url("./assets/arrows/right-icon_1.svg");
+      background: url('./assets/arrows/right-icon_1.svg');
     }
     &.slightright::before {
-      background: url("./assets/arrows/slight-right-icon_1.svg");
+      background: url('./assets/arrows/slight-right-icon_1.svg');
     }
     &.sharpright::before {
-      background: url("./assets/arrows/right-icon_1.svg"); //same as right
+      background: url('./assets/arrows/right-icon_1.svg'); //same as right
     }
     &.straight::before {
-      background: url("./assets/arrows/straight-icon_1.svg");
+      background: url('./assets/arrows/straight-icon_1.svg');
     }
   }
 }
@@ -156,11 +156,14 @@ $dark-text: rgb(17, 35, 55);
 
   .mapboxgl-popup-content {
     text-align: center;
-    font-family: "Open Sans", sans-serif;
+    font-family: 'Open Sans', sans-serif;
     padding: 6px;
 
     h3 {
       margin: 0.3rem;
+    }
+    .hidden {
+      display: none;
     }
   }
 
@@ -179,4 +182,35 @@ $dark-text: rgb(17, 35, 55);
   padding: 0;
   /* background-image: url(/src/assets/beer_destination.png); */ //set in js
   background-size: contain;
+}
+
+// temp modal
+.temp-modal {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0);
+  &.fadeOut {
+    animation: fadeOut 0.6s ease;
+  }
+  h3 {
+    background-color: white;
+    color: orangered;
+    text-align: center;
+    padding: 2rem;
+    width: 50%;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }

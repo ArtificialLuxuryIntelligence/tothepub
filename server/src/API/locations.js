@@ -81,5 +81,17 @@ router.get('/tags', async (req, res) => {
 
 router.post('/tags', upload.array(), async (req, res) => {
   console.log(req.body);
+  // DO SOME DATABASE MAGIC
+  // probably save this data is a separate collection (reviewPointLocationEdits) to check manually
+  // then after checking the data can be saved to a new collection (updatedPointLocations) and the
+  // original can be tagged as
+  // 'edited' and only the updated document can be served.
+  // (i.e two collections are queried when the client searches for locations)
+  //--
+  // REASON:  by having a separate collection with data different from OSM, it will be easier to
+  // submit changes to it.
+  setTimeout(() => {
+    res.status(200).json({ message: 'thanks buddy' });
+  }, 4000);
 });
 module.exports = router;
