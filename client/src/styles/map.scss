@@ -31,20 +31,20 @@ $dark-text: rgb(17, 35, 55);
 
 #instructions {
   display: block;
+  overflow: hidden;
   transition: height ease 0.4s;
   // margin: 20px;
   position: absolute;
 
   // width: 29px;
   width: auto;
-  padding: 20px;
   right: 10px !important;
   left: 10px !important;
   // top: 50%;
   // height: 29px;
   height: 0px;
   // bottom: 50px; //to do breakpoint at 960px
-  bottom: -40px;
+  bottom: 1rem;
   border-radius: 1rem;
   overflow-y: scroll;
   font-size: 0.8em;
@@ -58,58 +58,61 @@ $dark-text: rgb(17, 35, 55);
     bottom: 1rem;
   }
 
-  h1 {
-    margin-top: 0;
+  #instructions-content {
+    padding: 20px;
+    h1 {
+      margin-top: 0;
+    }
+    li {
+      display: flex;
+      align-items: center;
+      margin: 0.4em 0;
+      font-size: 1.2em;
+      &::before {
+        content: '';
+        display: inline-block;
+        // background-size: 10px 10px;
+        background-size: contain !important;
+        background-repeat: no-repeat !important;
+        margin-right: 1.2em;
+        width: 20px;
+        height: 20px;
+      }
+
+      &.depart::before {
+        background: url('./assets/beer_destination.png');
+      }
+      &.arrive::before {
+        background: url('./assets/beer_destination.png');
+      }
+      &.uturn::before {
+        // background: url();
+      }
+      &.left::before {
+        background: url('./assets/arrows/left-icon_1.svg');
+      }
+      &.slightleft::before {
+        background: url('./assets/arrows/slight-left-icon_1.svg');
+      }
+      &.sharpleft::before {
+        background: url('./assets/arrows/left-icon_1.svg'); //same as left
+      }
+      &.right::before {
+        background: url('./assets/arrows/right-icon_1.svg');
+      }
+      &.slightright::before {
+        background: url('./assets/arrows/slight-right-icon_1.svg');
+      }
+      &.sharpright::before {
+        background: url('./assets/arrows/right-icon_1.svg'); //same as right
+      }
+      &.straight::before {
+        background: url('./assets/arrows/straight-icon_1.svg');
+      }
+    }
   }
 
   //icons for maneuvre types
-  li {
-    display: flex;
-    align-items: center;
-    margin: 0.4em 0;
-    font-size: 1.2em;
-    &::before {
-      content: '';
-      display: inline-block;
-      // background-size: 10px 10px;
-      background-size: contain !important;
-      background-repeat: no-repeat !important;
-      margin-right: 1.2em;
-      width: 20px;
-      height: 20px;
-    }
-
-    &.depart::before {
-      background: url('./assets/beer_destination.png');
-    }
-    &.arrive::before {
-      background: url('./assets/beer_destination.png');
-    }
-    &.uturn::before {
-      // background: url();
-    }
-    &.left::before {
-      background: url('./assets/arrows/left-icon_1.svg');
-    }
-    &.slightleft::before {
-      background: url('./assets/arrows/slight-left-icon_1.svg');
-    }
-    &.sharpleft::before {
-      background: url('./assets/arrows/left-icon_1.svg'); //same as left
-    }
-    &.right::before {
-      background: url('./assets/arrows/right-icon_1.svg');
-    }
-    &.slightright::before {
-      background: url('./assets/arrows/slight-right-icon_1.svg');
-    }
-    &.sharpright::before {
-      background: url('./assets/arrows/right-icon_1.svg'); //same as right
-    }
-    &.straight::before {
-      background: url('./assets/arrows/straight-icon_1.svg');
-    }
-  }
 }
 
 /* popup */

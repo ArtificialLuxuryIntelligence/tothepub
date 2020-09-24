@@ -230,6 +230,7 @@ export default function drawMap(start, nearest) {
 
   let end = nearest[0].geometry.coordinates;
   let location_name = nearest[0].properties.name;
+  console.log(location_name);
   //
   mapboxgl.accessToken = MAPBOX_TOKEN;
   if (!mapboxgl.supported()) {
@@ -269,7 +270,7 @@ export default function drawMap(start, nearest) {
 
     let response = await fetch(url);
     let json = await response.json();
-    // console.log(json);
+    // console.log('JSON', json);
     let data = json.routes[0]; //quickest route
     let route = data.geometry.coordinates;
     let geojson = {
@@ -314,7 +315,7 @@ export default function drawMap(start, nearest) {
     }
 
     // get the sidebar and add the instructions
-    let instructions = document.getElementById('instructions');
+    let instructions = document.getElementById('instructions-content');
 
     let steps = data.legs[0].steps;
     let tripInstructions = [];
@@ -419,7 +420,7 @@ export default function drawMap(start, nearest) {
       // let coords = e.target.dataset.coords.split(',').map((n) => parseFloat(n));
       // let name = e.target.dataset.name;
       let coords = pub.geometry.coordinates;
-      let name = pub.name;
+      let name = pub.properties.name;
       canvas.style.cursor = '';
       getRoute(start, coords, name);
     }
