@@ -1,3 +1,5 @@
+// note: actually more accurately should be called popup content..
+
 function markerContent(pub, allTags, allLocationInfo) {
   const allLocationInfoDisplay = allLocationInfo.map(
     (o) => o.display && o.value
@@ -37,11 +39,11 @@ function markerContent(pub, allTags, allLocationInfo) {
   let h4 = createEC('h4', 'edit tags');
   form.appendChild(h4);
 
-  //add appropriate input for all tags
+  //add appropriate input for ALL tags
   allTags.forEach((cat) => {
-    let h = createEC('h5', cat.category);
-    form.appendChild(h);
-    switch (cat.display) {
+    // let h = createEC('h5', cat.category);
+    // form.appendChild(h);
+    switch (cat.editDisplay) {
       case 'dropdown':
         addDropdown(pub, cat.category, cat.tags, form);
         break;
@@ -53,7 +55,6 @@ function markerContent(pub, allTags, allLocationInfo) {
       // addDropdown(cat.tags, form);
     }
   });
-  // addDropdown(allTags, form);
 
   // ------------------------add location specific content
   h4 = createEC('h4', 'edit info');
@@ -116,15 +117,21 @@ function markerContent(pub, allTags, allLocationInfo) {
 function addDropdown(pub, category, tags = [], parent) {
   // .filter((tag) => tag.category == "real ale")
   let group = createEC('div', null, 'input-group');
-  let dd = createEC('select', null, null, null, null, category);
+  let dd = createEC('select', null, null, category, null, category);
+  let l = createEC('label', category, null, null, null, null, null, category);
+  let i = createEC('option', ''); //empty first option
+  dd.appendChild(i);
 
-  tags.forEach(function (tag) {
+  tags.forEach((tag) => {
     let i = createEC('option', tag);
     pub.properties.tags.includes(tag) ? (i.selected = 'selected') : null;
     dd.appendChild(i);
-    group.appendChild(dd);
-    parent.appendChild(group);
   });
+
+  group.appendChild(l);
+  group.appendChild(dd);
+
+  parent.appendChild(group);
 }
 
 function addBoolean(pub, tag, parent) {
@@ -132,8 +139,8 @@ function addBoolean(pub, tag, parent) {
   let i = createEC('input', tag, null, tag, 'checkbox', tag, 'true');
   pub.properties.tags.includes(tag) ? (i.checked = true) : null;
   let l = createEC('label', tag, null, null, null, null, tag, tag);
-  group.appendChild(i);
   group.appendChild(l);
+  group.appendChild(i);
   parent.appendChild(group);
 }
 

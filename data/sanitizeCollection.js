@@ -8,38 +8,83 @@ const fs = require('fs');
 const [, , write, ...read] = process.argv; //
 // console.log('write', write, 'read', read[0]);
 
-const acceptedProps = ['amenity', 'phone', 'name', 'tags']; //properties not deleted (tags added by me)
-const acceptedTagProps = ['operator', 'brand', 'brewery', 'real_ale', 'camra']; //properties to be manipulated and turned into tags property (array)
+// *************** this coincides with allLocationInfo in drawMap.js (plus tags)
+const acceptedProps = ['name', 'phone', 'website', 'opening_hours', 'tags']; //properties not deleted and displayed as general location info (except for tags) ('tags' extra prop added)
+//
+const acceptedTagProps = [
+  'operator',
+  'brand',
+  'brewery',
+  'real_ale',
+  'camra',
+  'amenity',
+  'food',
+]; //properties to be manipulated/searched through and turned into tags property (array)
+
+//NOTE display and  category are not used here (this will be part of an API)
+// *************this coincides with allTags in drawMap.js [***** NOW exported to tags.json (better name needed)]
 const accepetedTagData = [
+  //  key: "ANY": will add tag if regex matches with any value in any property(from accepted list above)  (general search)
+  // key: "NONE" will add tag to tag list but will not add it to any entry in database (this will make it available for users to add)
+  // key: someValue : will only look for regex match in that specific property
   {
+    key: 'ANY',
     regex: new RegExp('samuel s', 'gi'),
     tag: `Samuel Smith's`,
     category: 'operator',
+    editDisplay: 'dropdown',
   },
   {
-    regex: new RegExp('wetherspoon', 'gi'),
+    key: 'ANY',
+    regex: new RegExp('wetherspoon|weatherspoon', 'gi'),
     tag: 'Wetherspoons',
     category: 'operator',
+    editDisplay: 'dropdown',
   },
   {
-    regex: new RegExp('weatherspoon', 'gi'), //yep
-    tag: 'Wetherspoons',
+    key: 'NONE',
+    // regex: new RegExp('bar', 'gi'),
+    tag: 'Independent',
     category: 'operator',
+    editDisplay: 'dropdown',
+  },
+
+  {
+    key: 'food',
+    regex: new RegExp(`yes`, 'gi'),
+    tag: 'food',
+    category: 'food',
+    editDisplay: 'boolean',
   },
   {
-    regex: new RegExp('real_ale', 'gi'),
+    key: 'real_ale',
+    regex: new RegExp(`yes|\d`, 'gi'),
     tag: 'real ale',
     category: 'real_ale',
+    editDisplay: 'boolean',
   },
   {
-    regex: new RegExp('camra', 'gi'),
-    tag: 'real ale', //no separte tag for CAMRA ...yet?
-    category: 'real ale',
+    key: 'camra',
+    regex: new RegExp('yes', 'gi'),
+    tag: 'real ale',
+    category: 'real_ale', //no separate display for CAMRA ..yet
+    editDisplay: 'boolean',
   },
-]; //array of objects: regex used to find useful data from geojson properties and tag value given
-// const requiredProps = ['name'];
-
-// import file
+  {
+    key: 'amenity',
+    regex: new RegExp('pub', 'gi'),
+    tag: 'pub',
+    category: 'amenity',
+    editDisplay: 'dropdown',
+  },
+  {
+    key: 'amenity',
+    regex: new RegExp('bar', 'gi'),
+    tag: 'bar',
+    category: 'amenity',
+    editDisplay: 'dropdown',
+  },
+];
 
 const readFile = async (filePath) => {
   try {
@@ -62,6 +107,12 @@ let result = [];
   }
   // console.log(result);
   fs.writeFile(write, JSON.stringify(result), function (err) {
+    if (err) throw err;
+    console.log('Saved!');
+  });
+
+  let formattedTagData = formatTagData(accepetedTagData);
+  fs.writeFile('tags.json', JSON.stringify(formattedTagData), function (err) {
     if (err) throw err;
     console.log('Saved!');
   });
@@ -107,24 +158,30 @@ function extractTags(object, acceptedTagProps = [], accepetedTagData = []) {
   let clone = JSON.parse(JSON.stringify(object));
   filterObject(clone, acceptedTagProps); //remove unwanted properties before searching for useful tag data;
   /// useful tag data to extract..
+
+  const accepetedTagDataByValue = accepetedTagData.filter(
+    (tag) => tag.key === 'ANY'
+  ); // filter out tags that need to searched for within specific properties
+  const accepetedTagDataByKey = accepetedTagData.filter(
+    (tag) => tag.key !== 'ANY'
+  );
+
   Object.values(clone).forEach((v) => {
     //loop over all accepted tag data
-    accepetedTagData.forEach((o) => {
+    accepetedTagDataByValue.forEach((o) => {
       //if it is found then add relevant tag
       matcher(v, o.regex) ? tags.push(o.tag) : null;
     });
   });
-  // loop over keys to check for existence of keys like real_ale: yes (here useful info is in key..
-  //- note: tag is added no matter what the value is!!)
-  // TODO better way of doing this (i.e. searching for specific values within specific keys)
-  // currently may get false positives
-  Object.keys(clone).forEach((v) => {
-    //loop over all accepted tag data
-    accepetedTagData.forEach((o) => {
-      //if it is found then add relevant tag
-      matcher(v, o.regex) ? tags.push(o.tag) : null;
+
+  Object.keys(clone).forEach((k) => {
+    accepetedTagDataByKey.forEach((o) => {
+      if (k == o.key) {
+        matcher(clone[k], o.regex) ? tags.push(o.tag) : null;
+      }
     });
   });
+
   function matcher(s, re) {
     return s.match(re) ? true : false;
   }
@@ -162,4 +219,30 @@ function reduceGeometryToPoint(geometry = {}) {
       break;
   }
   return { type: 'Point', coordinates: coordinates };
+}
+
+// formats the unstructured array of tagdata to more useable object clientside (grouped by category and stripped of regex )
+function formatTagData(accepetedTagData) {
+  let result = [];
+  let categories = []; //track all cats added so far
+  accepetedTagData.forEach((tagO) => {
+    if (!categories.includes(tagO.category)) {
+      result.push({
+        category: tagO.category,
+        editDisplay: tagO.editDisplay,
+        tags: [tagO.tag],
+      });
+      categories.push(tagO.category);
+      return;
+    } else {
+      //category already exists
+      console.log('r', result);
+      let cat = result.filter((o) => o.category == tagO.category)[0];
+      if (!cat.tags.includes(tagO.tag)) {
+        cat.tags.push(tagO.tag);
+      }
+    }
+  });
+  //structures the acceptedTagData -sorts by category
+  return result;
 }

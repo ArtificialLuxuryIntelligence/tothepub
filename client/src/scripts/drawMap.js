@@ -26,17 +26,18 @@ const colourScheme = {
 //need route for these (same as the homepage dropdown but dropdown only shows a subsection - or does it??) //TODO
 //pass alltags into draw maps fn from index.js initial request (for dropdown) - no duplicate requests
 //see sanitizeCollection.js (it will be the same at first but then grow as users add new tags..)
+//however we do want the sanitize data function to keep in sync (more or less) with new tags added as the
+//tags will be fed back to OSM (correctly formatted for them) (and then we can reextract them from the OSM)
 
 const allTags = [
   {
     category: 'operator',
-    display: 'dropdown',
-    tags: [`Unknown`, `Independent`, `Samuel Smith's`, `Wetherspoons`],
+    editDisplay: 'dropdown',
+    tags: ["Samuel Smith's", 'Wetherspoons', 'Independent'],
   },
-  { category: 'real ale', display: 'boolean', tags: ['real ale'] },
-  // { category: 'parking', display: 'boolean', tags: ['parking'] },
-
-  //if boolean then just use the value for the tag -  hardcoded for convenience //is it still used?
+  { category: 'food', editDisplay: 'boolean', tags: ['food'] },
+  { category: 'real_ale', editDisplay: 'boolean', tags: ['real ale'] },
+  { category: 'amenity', editDisplay: 'dropdown', tags: ['pub', 'bar'] },
 ];
 
 // information about the location [non-tag data - not filterable]
@@ -45,9 +46,9 @@ const allTags = [
 //NOTE: this data coincides with the OSM properties
 const allLocationInfo = [
   { value: 'name', type: 'text', display: false }, //already displayed as title
-  { value: 'amenity', type: 'text', display: true },
   { value: 'phone', type: 'tel', display: true },
   { value: 'website', type: 'text', display: true },
+  { value: 'opening-hours', type: 'text', display: true },
 ];
 
 // "rgb(192, 17, 17)"
@@ -160,62 +161,8 @@ class ToggleDarkModeControl {
   }
 }
 
-// function markerContent(pub, allTags) {
-//   let content = document.createElement('div');
-//   let h3 = createEC('h3', pub.properties.name); //title
-//   content.appendChild(h3);
-//   pub.properties.tags.forEach((tag) => {
-//     let p = createEC('p', tag, 'marker-tag');
-//     content.appendChild(p);
-//   }); //tags
-
-//   //location edit form
-//   let form = document.createElement('form');
-//   form.addEventListener('submit', async (e) => {
-//     const url = `http://localhost:5000/api/location/tags`;
-//     e.preventDefault();
-//     const formdata = new FormData(e.target);
-//     // Testing: display the values
-//     console.log('data', ...formdata);
-
-//     await fetch(url, {
-//       body: formdata,
-//       // headers: {
-//       //      "Content-Type": "multipart/form-data",
-//       // },
-//       method: 'post',
-//     });
-//   });
-
-//   // --------------------edit location tags
-//   let h4 = createEC('h4', 'edit tags');
-//   form.appendChild(h4);
-//   //add appropriate input for all tags
-//   allTags.forEach((tag) => {
-//     let group = createEC('div', null, 'input-group');
-//     let i = createEC('input', tag, null, tag, 'checkbox', tag, 'true');
-//     pub.properties.tags.includes(tag) ? (i.checked = true) : null;
-//     let l = createEC('label', tag, null, null, null, null, tag, tag);
-//     group.appendChild(i);
-//     group.appendChild(l);
-//     form.appendChild(group);
-//   });
-//   let comment = createEC('p', 'Other tag suggestion or comments? :');
-//   form.appendChild(comment);
-//   let textarea = createEC('textarea', null, null, null, null, 'comments');
-//   form.appendChild(textarea);
-
-//   // ------------------------add location specific content
-//   h4 = createEC('h4', 'edit info');
-//   form.appendChild(h4);
-//   //---
-//   let submit = createEC('input', 'submit', null, null, 'submit');
-//   form.appendChild(submit);
-//   content.appendChild(form);
-//   return content;
-// }
-
 export default function drawMap(start, nearest) {
+  //'nearest' is sorted array of nearest pubs
   console.log(nearest);
   if (nearest.length == 0) {
     const takeMeButton = document.getElementById('take-me');
@@ -225,8 +172,6 @@ export default function drawMap(start, nearest) {
     errorBox.innerText = `No ${dropDown.value} nearby 😢`;
     return;
   }
-
-  //note arg 'nearest' is sorted array of nearest pubs
 
   let end = nearest[0].geometry.coordinates;
   let location_name = nearest[0].properties.name;

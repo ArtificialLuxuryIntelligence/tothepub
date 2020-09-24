@@ -6,13 +6,12 @@ const PointLocations = require('../models/pointLocation');
 const Tags = require('../models/tags');
 require('dotenv').config();
 
-const TAGS = ['Wetherspoons', "Samuel Smith's"]; // TODO :autodetect 
+const TAGS = ['Wetherspoons', "Samuel Smith's"]; // TODO :autodetect --->
 
 //  see drawMap.js hardcoded allTags and allLocationInfo
 //  change Tags model to take format of allTags
 
 // in async function below pull in sanitize data and extract accepted tag data
-
 
 mongoose.connect('mongodb://localhost/tothepub', {
   useNewUrlParser: true,
