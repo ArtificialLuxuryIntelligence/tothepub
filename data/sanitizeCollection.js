@@ -22,6 +22,11 @@ const accepetedTagData = [
     category: 'operator',
   },
   {
+    regex: new RegExp('weatherspoon', 'gi'), //yep
+    tag: 'Wetherspoons',
+    category: 'operator',
+  },
+  {
     regex: new RegExp('real_ale', 'gi'),
     tag: 'real ale',
     category: 'real_ale',

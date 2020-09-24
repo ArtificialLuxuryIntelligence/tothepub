@@ -31,7 +31,7 @@ const allTags = [
   {
     category: 'operator',
     display: 'dropdown',
-    tags: [`Unknown`, `Independent`, `Samuel Smith's`, `Weatherspoons`],
+    tags: [`Unknown`, `Independent`, `Samuel Smith's`, `Wetherspoons`],
   },
   { category: 'real ale', display: 'boolean', tags: ['real ale'] },
   // { category: 'parking', display: 'boolean', tags: ['parking'] },
