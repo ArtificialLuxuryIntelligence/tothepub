@@ -2,11 +2,10 @@
 // to run: node sanitzeCollection WRITEFILE READFILE1 READFILE2 READFILE3 (etc.)
 
 const fs = require('fs');
-// const { features } = require('process');
 
 // read file and write file from arguments
-const [, , write, ...read] = process.argv; //
-// console.log('write', write, 'read', read[0]);
+const [, , ...read] = process.argv; //
+console.log(read);
 
 // *************** this coincides with allLocationInfo in drawMap.js (plus tags)
 const acceptedProps = ['name', 'phone', 'website', 'opening_hours', 'tags']; //properties not deleted and displayed as general location info (except for tags) ('tags' extra prop added)
@@ -21,12 +20,12 @@ const acceptedTagProps = [
   'food',
 ]; //properties to be manipulated/searched through and turned into tags property (array)
 
-//NOTE display and  category are not used here (this will be part of an API)
+//NOTE display and  category are used clientside
 // *************this coincides with allTags in drawMap.js [***** NOW exported to tags.json (better name needed)]
 const accepetedTagData = [
   //  key: "ANY": will add tag if regex matches with any value in any property(from accepted list above)  (general search)
-  // key: "NONE" will add tag to tag list but will not add it to any entry in database (this will make it available for users to add)
-  // key: someValue : will only look for regex match in that specific property
+  //  key: "NONE" will add tag to tag list but will not add it to any entry in database (this will make it available for users to add)
+  //  key: someValue : will only look for regex match in that specific property
   {
     key: 'ANY',
     regex: new RegExp('samuel s', 'gi'),
@@ -48,7 +47,6 @@ const accepetedTagData = [
     category: 'operator',
     editDisplay: 'dropdown',
   },
-
   {
     key: 'food',
     regex: new RegExp(`yes`, 'gi'),
@@ -68,6 +66,13 @@ const accepetedTagData = [
     regex: new RegExp('yes', 'gi'),
     tag: 'real ale',
     category: 'real_ale', //no separate display for CAMRA ..yet
+    editDisplay: 'boolean',
+  },
+  {
+    key: 'real_cider',
+    regex: new RegExp(`yes|\d`, 'gi'),
+    tag: 'real cider',
+    category: 'real_cider',
     editDisplay: 'boolean',
   },
   {
@@ -106,16 +111,23 @@ let result = [];
     result = [...result, ...sanitized];
   }
   // console.log(result);
-  fs.writeFile(write, JSON.stringify(result), function (err) {
+  fs.writeFile('pointLocation.json', JSON.stringify(result), function (err) {
     if (err) throw err;
     console.log('Saved!');
   });
 
   let formattedTagData = formatTagData(accepetedTagData);
-  fs.writeFile('tags.json', JSON.stringify(formattedTagData), function (err) {
-    if (err) throw err;
-    console.log('Saved!');
-  });
+  //  ********note: these are starting values. if new tags are added that aren't in 'accepted tag data' then
+  //  this list will be outdated and shouldn't overwrite the tags in the database!
+  //  depends on whether or not I make a route to add new tags...
+  fs.writeFile(
+    'tagCategories.json',
+    JSON.stringify(formattedTagData),
+    function (err) {
+      if (err) throw err;
+      console.log('Saved!');
+    }
+  );
 })();
 
 //---------------------------------------------------

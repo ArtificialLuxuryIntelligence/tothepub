@@ -6,6 +6,7 @@ const upload = multer();
 
 const PointLocation = require('../../models/pointLocation');
 const Tags = require('../../models/tags');
+const TagCategory = require('../../models/tagCategory');
 
 const router = Router();
 const SEARCH_RADIUS = 1500;
@@ -71,16 +72,24 @@ router.post('/', async (req, res, next) => {
 
 router.get('/tags', async (req, res) => {
   try {
-    const doc = await Tags.findOne();
-
-    res.json({ doc, res: 'hi' });
+    const doc = await TagCategory.find();
+    res.json({ doc });
   } catch (err) {
     console.error(err);
   }
 });
 
 router.post('/tags', upload.array(), async (req, res) => {
+  // UPDATE METHOD - not POST..? //production is actually going go via 
+  // a moderator who will do the update
   console.log(req.body);
+
+  // get doc with id req.body.id
+
+  // compare the two
+
+  // update the found doc
+
   // DO SOME DATABASE MAGIC
   // probably save this data is a separate collection (reviewPointLocationEdits) to check manually
   // then after checking the data can be saved to a new collection (updatedPointLocations) and the

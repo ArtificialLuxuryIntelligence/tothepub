@@ -2,8 +2,10 @@
 
 const mongoose = require('mongoose');
 const fs = require('fs');
-const PointLocations = require('../models/pointLocation');
-const Tags = require('../models/tags');
+const PointLocation = require('../models/pointLocation');
+// const Tags = require('../models/tags');
+const TagCategory = require('../models/tagCategory');
+
 require('dotenv').config();
 
 const TAGS = ['Wetherspoons', "Samuel Smith's"]; // TODO :autodetect --->
@@ -19,9 +21,10 @@ mongoose.connect('mongodb://localhost/tothepub', {
 });
 
 (async () => {
-  const json = await readFile('./../../data/pointLocations.json');
-  const locations = JSON.parse(json);
-  PointLocations.insertMany(locations, (err, docs) => {
+  const locationJSON = await readFile('./../../data/pointLocations.json');
+  const locations = JSON.parse(locationJSON);
+
+  PointLocation.insertMany(locations, (err, docs) => {
     if (err) {
       console.log(err);
     } else {
@@ -30,7 +33,12 @@ mongoose.connect('mongodb://localhost/tothepub', {
       );
     }
   });
-  Tags.create({ tags: TAGS }, (err, doc) => {
+
+  const tagCatsJSON = await readFile('./../../data/tagCategories.json');
+  const tagCategories = JSON.parse(tagCatsJSON);
+
+  // Tags.create({ tags: TAGS }, (err, doc) => {
+  TagCategory.insertMany(tagCategories, (err, doc) => {
     if (err) {
       console.log(err);
     } else {

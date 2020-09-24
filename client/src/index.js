@@ -10,24 +10,13 @@ const DEV = true;
 
 const dropDown = document.getElementById('tag-dropdown');
 const takeMeButton = document.getElementById('take-me');
+const dropDownTags = ['operator', 'food'];
+let tagData;
 
-async function populateDrowdown() {
-  //call api for list of tags
-
-  let url = `http://localhost:5000/api/location/tags`;
-  let response = await fetch(url);
-  let result = await response.json();
-  let tags = result.doc.tags;
-  tags.forEach((tag) => {
-    let op = document.createElement('option');
-    op.value = tag;
-    op.innerText = tag;
-    dropDown.appendChild(op);
-  });
-
-  //populate list with these tags
-}
-populateDrowdown();
+(async () => {
+  tagData = await getTagData();
+  populateDropDown(tagData, dropDownTags);
+})();
 
 function toggleLoading() {
   takeMeButton.classList.toggle('animate');
@@ -50,7 +39,7 @@ async function takeMeToThePub(maxResults) {
     //Find nearest pubs
     const nearest = await findNearest(start, tag, maxResults);
     //Draw route to pub
-    drawMap(start, nearest);
+    drawMap(start, nearest, tagData);
     //add button to choose next pub in list of nearest
   } catch (error) {
     // Handle error (i.e. user denies geolocation)
@@ -61,3 +50,43 @@ async function takeMeToThePub(maxResults) {
 // Button event listener
 // takeMeButton.addEventListener("click", () => takeMeToThePub(6));
 takeMeButton.addEventListener('click', () => takeMeToThePub(25)); //note: server limit is currently 25 results
+
+// helper
+async function getTagData() {
+  let url = `http://localhost:5000/api/location/tags`;
+  let response = await fetch(url);
+  let result = await response.json();
+  return result.doc;
+}
+
+function populateDropDown(tagData, dropDownTags) {
+  //call api for list of tags
+
+  function capitalise(word) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  }
+
+  console.log(tagData);
+  let ddTagData = tagData.filter((o) => dropDownTags.includes(o.category));
+  ddTagData.forEach((cat) => {
+    let op = document.createElement('option');
+    op.disabled = 'disabled';
+    op.innerText = capitalise(cat.category);
+    dropDown.appendChild(op);
+    cat.tags.forEach((tag) => {
+      let op = document.createElement('option');
+      op.value = tag;
+      op.innerText = tag;
+      dropDown.appendChild(op);
+    });
+  });
+  // let tags = result.doc.tags;
+  // tags.forEach((tag) => {
+  //   let op = document.createElement('option');
+  //   op.value = tag;
+  //   op.innerText = tag;
+  //   dropDown.appendChild(op);
+  // });
+
+  //populate list with these tags
+}

@@ -29,16 +29,17 @@ const colourScheme = {
 //however we do want the sanitize data function to keep in sync (more or less) with new tags added as the
 //tags will be fed back to OSM (correctly formatted for them) (and then we can reextract them from the OSM)
 
-const allTags = [
-  {
-    category: 'operator',
-    editDisplay: 'dropdown',
-    tags: ["Samuel Smith's", 'Wetherspoons', 'Independent'],
-  },
-  { category: 'food', editDisplay: 'boolean', tags: ['food'] },
-  { category: 'real_ale', editDisplay: 'boolean', tags: ['real ale'] },
-  { category: 'amenity', editDisplay: 'dropdown', tags: ['pub', 'bar'] },
-];
+//call API for this data find() all
+// const allTags = [
+//   {
+//     category: 'operator',
+//     editDisplay: 'dropdown',
+//     tags: ["Samuel Smith's", 'Wetherspoons', 'Independent'],
+//   },
+//   { category: 'food', editDisplay: 'boolean', tags: ['food'] },
+//   { category: 'real_ale', editDisplay: 'boolean', tags: ['real ale'] },
+//   { category: 'amenity', editDisplay: 'dropdown', tags: ['pub', 'bar'] },
+// ];
 
 // information about the location [non-tag data - not filterable]
 //for this data to be searchable it could be possible add extra tags for the existence of this info] (or just use mongo query)
@@ -161,7 +162,7 @@ class ToggleDarkModeControl {
   }
 }
 
-export default function drawMap(start, nearest) {
+export default function drawMap(start, nearest, allTags) {
   //'nearest' is sorted array of nearest pubs
   console.log(nearest);
   if (nearest.length == 0) {

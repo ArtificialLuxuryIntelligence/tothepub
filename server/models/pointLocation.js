@@ -22,11 +22,6 @@ const pointLocationSchema = new Schema({
 pointLocationSchema.index({ 'geometry.coordinates': '2dsphere' });
 pointLocationSchema.index({ geometry: '2dsphere' });
 
-// name: { type: String },
-// amenity: { type: String },
-// phone: { type: String },
-// coordinates: { type: Array, required: true },
-
 const pointLocation = mongoose.model('pointLocation', pointLocationSchema);
 
 module.exports = pointLocation;

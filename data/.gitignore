@@ -1,4 +1,7 @@
 pointLocations.json
+pointLocation.json
+
 tags.json
+tagCategories.json
 greater_london_bars_OSM.geojson
 greater_london_pubs_OSM.geojson
