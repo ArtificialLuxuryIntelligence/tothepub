@@ -4,15 +4,16 @@ const { Schema } = mongoose;
 
 // note: no properties set as required: (??? -set placeholders to avoid missing props?)
 // must take care when returning serverside OR consuming this data clientside
-const pointLocationSchema = new Schema({
+const pointLocationEditSchema = new Schema({
+  refId: { type: String },
   type: { type: String },
   properties: {
     name: { type: String },
     phone: { type: String },
     website: { type: String },
-    "opening-hours": { type: String },
-
+    'opening-hours': { type: String },
     tags: { type: Array },
+    comments: { type: String },
   },
   geometry: {
     type: { type: String },
@@ -22,9 +23,12 @@ const pointLocationSchema = new Schema({
 });
 
 // it seems both are needed?
-pointLocationSchema.index({ 'geometry.coordinates': '2dsphere' });
-pointLocationSchema.index({ geometry: '2dsphere' });
+pointLocationEditSchema.index({ 'geometry.coordinates': '2dsphere' });
+pointLocationEditSchema.index({ geometry: '2dsphere' });
 
-const pointLocation = mongoose.model('pointLocation', pointLocationSchema);
+const pointLocationEdit = mongoose.model(
+  'pointLocationEdit',
+  pointLocationEditSchema
+);
 
-module.exports = pointLocation;
+module.exports = pointLocationEdit;

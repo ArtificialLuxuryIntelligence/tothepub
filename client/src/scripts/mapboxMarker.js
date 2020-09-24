@@ -78,16 +78,19 @@ function markerContent(pub, allTags, allLocationInfo) {
     e.target.submitb.disabled = true;
     const formdata = new FormData(e.target);
     // Testing: display the values
+    console.log('FORM DATA CLIENTSIDE');
     console.log('data', ...formdata);
     try {
       let response = await fetch(url, {
+        method: 'post',
         body: formdata,
         // headers: {
         //      "Content-Type": "multipart/form-data",
         // },
-        method: 'post',
       });
       let json = await response.json();
+      console.log('DATA FROM SERVER');
+      console.log(json);
       if (response.status === 200) {
         e.target.submitb.disabled = false;
 
@@ -134,13 +137,22 @@ function addDropdown(pub, category, tags = [], parent) {
   parent.appendChild(group);
 }
 
-function addBoolean(pub, tag, parent) {
+function addBoolean(pub, tag, parent = form) {
   let group = createEC('div', null, 'input-group');
   let i = createEC('input', tag, null, tag, 'checkbox', tag, 'true');
-  pub.properties.tags.includes(tag) ? (i.checked = true) : null;
+  let i_hidden = createEC('input', null, null, null, 'hidden', tag, 'false');
+  parent.addEventListener('submit', (e) => {
+    i.checked ? (i_hidden.disabled = true) : null;
+  });
+  if (pub.properties.tags.includes(tag)) {
+    i.checked = true;
+    i_hidden.checked = false;
+  }
   let l = createEC('label', tag, null, null, null, null, tag, tag);
   group.appendChild(l);
   group.appendChild(i);
+  group.appendChild(i_hidden);
+
   parent.appendChild(group);
 }
 
