@@ -17,10 +17,10 @@ function markerContent(pub, allTags, allLocationInfo) {
   //additional information
   Object.keys(pub.properties)
     .filter(function (key) {
-      return allLocationInfoDisplay.includes(key); //include this info
+      return allLocationInfoDisplay.includes(key); //filters information to display
     })
     .forEach((key) => {
-      let p = createEC('p', pub.properties[key], 'popup-info');
+      let p = createEC('p', `${key} : ${pub.properties[key]}`, 'popup-info');
       content.appendChild(p);
     });
   let toggle = createEC('button', 'edit');
@@ -142,6 +142,7 @@ function addBoolean(pub, tag, parent) {
 function addPropertiesEdit(properties = {}, parent, allLocationInfo) {
   allLocationInfo.forEach((info) => {
     //currently only allows for types of input ()
+    //TODO: allow for dropdowns?
     let group = createEC('div', null, 'input-group');
     let i = createEC(
       'input',
@@ -164,8 +165,8 @@ function addPropertiesEdit(properties = {}, parent, allLocationInfo) {
       info.value,
       info.value
     );
-    group.appendChild(i);
     group.appendChild(l);
+    group.appendChild(i);
     parent.appendChild(group);
   });
 }
