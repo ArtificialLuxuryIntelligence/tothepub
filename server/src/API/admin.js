@@ -45,7 +45,6 @@ router.get('/edits', async (req, res) => {
 });
 module.exports = router;
 
-// PUT METHOD ? ..
 router.post('/edit', upload.array(), async (req, res) => {
   //  this is probably overly complicated. it would be easier to create template json clientside
   //  and fill it in using the form data before sending it here
@@ -109,6 +108,7 @@ router.post('/edit', upload.array(), async (req, res) => {
       updatedDoc,
       { new: true }
     );
+    await PointLocationEdit.findOneAndDelete({ refId: id });
     // find.. editdoc (refId: updatedDoc.id) ???
     // and delete
 
@@ -116,5 +116,16 @@ router.post('/edit', upload.array(), async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(504); // service unavailable..? deal with it clientside
+  }
+});
+
+// DELETE METHOD?
+router.post('/deleteedit', upload.array(), async (req, res, next) => {
+  const { id } = req.query;
+  try {
+    const doc = await PointLocationEdit.findOneAndDelete({ refId: id });
+    res.status(200).json({ message: 'success', doc, id });
+  } catch (err) {
+    console.error(err);
   }
 });

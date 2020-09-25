@@ -8,14 +8,15 @@ const root = document.getElementById('root');
   let allTags = await getTagData();
   // console.log(edits);
 
+  //build display and update forms for all edit requests
   edits.forEach((pair) => {
     // console.log(pair.original);
     let cont = document.createElement('div');
     cont.classList.add('compare-container');
-
     let original = locationEditForm(pair.original, allTags, allLocationInfo);
     original.classList.add('original-form');
     cont.appendChild(original);
+
     let edited = locationEditForm(
       pair.edit,
       allTags,
@@ -24,9 +25,11 @@ const root = document.getElementById('root');
       pair.original._id
     );
     edited.classList.add('edited-form');
+
+    //highlight changed parts of the doc
     const changedLabels = [...edited.getElementsByTagName('label')];
     const changedSelects = [...edited.getElementsByTagName('option')];
-    let differences = getDifferences(pair.original, pair.edit); //mutates!
+    let differences = getDifferences(pair.original, pair.edit); //warning :mutates!
     changedLabels.forEach((l) => {
       differences.includes(l.textContent) ? l.classList.add('diff') : null;
     });
@@ -47,7 +50,39 @@ const root = document.getElementById('root');
         }
       });
 
+    // delete edit without updating
+    let delForm = document.createElement('form');
+    let hidden = document.createElement('input');
+    hidden.name = 'id';
+    hidden.value = pair.original._id;
+    hidden.type = 'hidden';
+    let submit = document.createElement('input');
+    submit.type = 'submit';
+    submit.value = 'delete without accepting changes';
+    delForm.classList.add('delete-form');
+    delForm.appendChild(hidden);
+    delForm.appendChild(submit);
+    delForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      console.log();
+      try {
+        let url = `http://localhost:5000/api/admin/deleteedit?id=${e.target.id.value}`;
+        let res = await fetch(url, { method: 'post' });
+        let json = await res.json();
+        console.log(res.status, json);
+        if (res.status == 200) {
+          //refresh page
+          location.reload();
+        } else {
+          throw new Error({ error: 'uh oh' });
+        }
+      } catch (err) {
+        console.err(err);
+        //show error
+      }
+    });
     cont.appendChild(edited);
+    cont.appendChild(delForm);
     root.appendChild(cont);
   });
 })();
