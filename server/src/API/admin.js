@@ -5,82 +5,47 @@ const multer = require('multer');
 const upload = multer();
 
 const PointLocation = require('../../models/pointLocation');
-const pointLocationEdit = require('../../models/pointLocationEdit');
 const PointLocationEdit = require('../../models/pointLocationEdit');
-
 const TagCategory = require('../../models/tagCategory');
 
 const router = Router();
-const SEARCH_RADIUS = 1500;
-const MAX_RESULTS = 25;
 
-router.get('/', async (req, res) => {
-  const { long, lat, tag } = req.query;
+// TODO AUTH middleware
 
-  try {
-    let doc;
-    if (tag) {
-      doc = await PointLocation.find({
-        geometry: {
-          $near: {
-            $maxDistance: SEARCH_RADIUS,
-            $geometry: {
-              type: 'Point',
-              coordinates: [long, lat],
-            },
-          },
-        },
-        'properties.tags': tag,
-      }).limit(MAX_RESULTS);
-    } else {
-      doc = await PointLocation.find({
-        geometry: {
-          $near: {
-            $maxDistance: SEARCH_RADIUS,
-            $geometry: {
-              type: 'Point',
-              coordinates: [long, lat],
-            },
-          },
-        },
-      }).limit(MAX_RESULTS);
-    }
-    // console.log(doc);
-    // console.log(doc);
-    res.json({ doc });
-
-    // console.log(doc);
-  } catch (err) {
-    console.error(err);
-  }
-
-  // console.log(long, lat);
-  // const r = await PointLocation.find();
+router.get('/', (req, res, next) => {
+  res.json({ welcome: 'to the admin server' });
 });
 
-router.post('/', async (req, res, next) => {
-  try {
-    const pointLocation = new PointLocation(req.body);
-    const newLocation = await pointLocation.save();
-    res.json(newLocation);
-    // console.log(req.body);
-  } catch (error) {
-    if (error.name === 'ValidationError') {
-      res.status(422);
-    }
-    next(error);
-  }
-});
+router.get('/edits', async (req, res) => {
+  const limit = 100;
+  const { page } = req.query;
 
-router.get('/tags', async (req, res) => {
+  async function fetchOriginals(edits) {
+    const response = [];
+    await Promise.all(
+      edits.map(async (edit) => {
+        const original = await PointLocation.findOne({ _id: edit.refId });
+        response.push({ original, edit });
+      })
+    );
+    return response;
+  }
+
   try {
-    const doc = await TagCategory.find();
-    res.json({ doc });
+    const edits = await PointLocationEdit.find()
+      .limit(limit)
+      .skip((page - 1) * limit);
+
+    const response = await fetchOriginals(edits);
+    res.json({ response });
+    // res.json({ edits });
   } catch (err) {
     console.error(err);
   }
 });
+module.exports = router;
 
+// PUT METHOD ? ..
 router.post('/edit', upload.array(), async (req, res) => {
   //  this is probably overly complicated. it would be easier to create template json clientside
   //  and fill it in using the form data before sending it here
@@ -99,15 +64,14 @@ router.post('/edit', upload.array(), async (req, res) => {
     const original = await PointLocation.findOne({
       _id: id,
     }).exec();
+    console.log(original);
 
     // ------------ create a proposal update object (clone original and update)
 
     const updatedDoc = JSON.parse(JSON.stringify(original)); // copy original
     // add all of form content in correct structure
 
-    delete updatedDoc._id;
-    updatedDoc.refId = id;
-
+    //  add properties:
     updatedDoc.properties.name = name;
     updatedDoc.properties.phone = phone;
     updatedDoc.properties.website = website;
@@ -137,13 +101,20 @@ router.post('/edit', upload.array(), async (req, res) => {
       }
     });
     updatedDoc.properties.tags = updatedTags;
+    console.log(updatedDoc);
 
     // ----------------------- save proposal to pointLocationEdit collection for review
-    const edit = await pointLocationEdit.create(updatedDoc);
-    res.status(200).json({ edit });
+    const updated = await PointLocation.findOneAndUpdate(
+      { _id: id },
+      updatedDoc,
+      { new: true }
+    );
+    // find.. editdoc (refId: updatedDoc.id) ???
+    // and delete
+
+    res.status(200).json({ updated });
   } catch (err) {
     console.error(err);
     res.status(504); // service unavailable..? deal with it clientside
   }
 });
-module.exports = router;

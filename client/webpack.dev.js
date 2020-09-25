@@ -1,11 +1,16 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+
 const Dotenv = require('dotenv-webpack');
 
 const webpack = require('webpack');
 
 module.exports = {
+  // mode: 'development',
+
   entry: {
-    index: './src/index.js',
+    main: './src/index.js',
+    admin: './src/admin/admin.js',
   },
   devServer: {
     port: 3000,
@@ -22,6 +27,7 @@ module.exports = {
               '@babel/preset-env',
               {
                 useBuiltIns: 'entry',
+                sourceMaps: true,
               },
             ],
           ],
@@ -62,12 +68,19 @@ module.exports = {
   },
 
   plugins: [
+    new CleanWebpackPlugin(),
+    new Dotenv(),
+    new HtmlWebpackPlugin({
+      template: './src/admin/admin.html',
+      inject: true,
+      chunks: ['admin'],
+      filename: './admin/index.html',
+    }),
     new HtmlWebpackPlugin({
       template: './src/index.html',
       inject: true,
-      chunks: ['index'],
+      chunks: ['main'],
       filename: 'index.html',
     }),
-    new Dotenv(),
   ],
 };

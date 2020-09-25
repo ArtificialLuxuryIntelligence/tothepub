@@ -1,6 +1,14 @@
 // note: actually more accurately should be called popup content..
 
-function markerContent(pub, allTags, allLocationInfo) {
+//call this something more generic (used in admin page too but with a different submit url)
+// function locationEditForm(pub,allTags,allLocationInfo, submitURL=null) [if ===null then don't include submitbutton or comments box]
+function locationEditForm(
+  pub,
+  allTags,
+  allLocationInfo,
+  submitURL = null,
+  pubId = null
+) {
   const allLocationInfoDisplay = allLocationInfo.map(
     (o) => o.display && o.value
   );
@@ -31,9 +39,9 @@ function markerContent(pub, allTags, allLocationInfo) {
   });
   content.appendChild(toggle);
 
-  // ----------------------- EDIT FORM DEFAULT HIDDEN CONTENT
+  // ----------------------- EDIT FORM DEFAULT HIDDEN CONTENT (doc id)
   let form = createEC('form', null, 'hidden');
-  let id = createEC('input', null, null, null, 'hidden', 'id', pub._id);
+  let id = createEC('input', null, null, 'docId', 'hidden', 'id', pubId);
   form.appendChild(id);
   // --------------------edit location tags
   let h4 = createEC('h4', 'edit tags');
@@ -48,7 +56,7 @@ function markerContent(pub, allTags, allLocationInfo) {
         addDropdown(pub, cat.category, cat.tags, form);
         break;
       case 'boolean':
-        addBoolean(pub, cat.category, form);
+        addBoolean(pub, cat.category, cat.tags[0], form);
         null;
         break;
       default:
@@ -63,55 +71,56 @@ function markerContent(pub, allTags, allLocationInfo) {
 
   // ------------------------addition comments//
 
-  let comment = createEC('p', 'Other tag suggestions or comments? :');
-  form.appendChild(comment);
-  let textarea = createEC('textarea', null, null, null, null, 'comments');
-  form.appendChild(textarea);
+  if (submitURL) {
+    let comment = createEC('p', 'Other tag suggestions or comments? :');
+    form.appendChild(comment);
+    let textarea = createEC('textarea', null, null, null, null, 'comments');
+    form.appendChild(textarea);
 
-  //-------------------------  submit
-  let submit = createEC('input', 'submit', null, null, 'submit', 'submitb');
-  form.appendChild(submit);
+    //-------------------------  submit
+    let submit = createEC('input', 'submit', null, null, 'submit', 'submitb');
+    form.appendChild(submit);
 
-  form.addEventListener('submit', async (e) => {
-    const url = `http://localhost:5000/api/location/tags`;
-    e.preventDefault();
-    e.target.submitb.disabled = true;
-    const formdata = new FormData(e.target);
-    // Testing: display the values
-    console.log('FORM DATA CLIENTSIDE');
-    console.log('data', ...formdata);
-    try {
-      let response = await fetch(url, {
-        method: 'post',
-        body: formdata,
-        // headers: {
-        //      "Content-Type": "multipart/form-data",
-        // },
-      });
-      let json = await response.json();
-      console.log('DATA FROM SERVER');
-      console.log(json);
-      if (response.status === 200) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      e.target.submitb.disabled = true;
+      const formdata = new FormData(e.target);
+      // Testing: display the values
+      console.log('FORM DATA CLIENTSIDE');
+      console.log('data', ...formdata);
+      try {
+        let response = await fetch(submitURL, {
+          method: 'post',
+          body: formdata,
+          // headers: {
+          //      "Content-Type": "multipart/form-data",
+          // },
+        });
+        let json = await response.json();
+        console.log('DATA FROM SERVER');
+        console.log(json);
+        if (response.status === 200) {
+          e.target.submitb.disabled = false;
+
+          e.target.classList.toggle('hidden');
+          let body = document.querySelector('body');
+          let tm = createEC('div', null, 'temp-modal');
+          let message = createEC('h3', 'Thank you for your help!');
+          tm.appendChild(message);
+          body.appendChild(tm);
+
+          setTimeout(() => tm.classList.add('fadeOut'), 1000);
+          setTimeout(() => body.removeChild(tm), 1500);
+        }
+      } catch (err) {
         e.target.submitb.disabled = false;
 
-        e.target.classList.toggle('hidden');
-        let body = document.querySelector('body');
-        let tm = createEC('div', null, 'temp-modal');
-        let message = createEC('h3', 'Thank you for your help!');
-        tm.appendChild(message);
-        body.appendChild(tm);
-
-        setTimeout(() => tm.classList.add('fadeOut'), 1000);
-        setTimeout(() => body.removeChild(tm), 1500);
+        //HANDLE ERROR!
+        //TODP -display some text at bottom of form
+        console.error(err);
       }
-    } catch (err) {
-      e.target.submitb.disabled = false;
-
-      //HANDLE ERROR!
-      //TODP -display some text at bottom of form
-      console.err(err);
-    }
-  });
+    });
+  }
   content.appendChild(form);
   return content;
 }
@@ -137,7 +146,7 @@ function addDropdown(pub, category, tags = [], parent) {
   parent.appendChild(group);
 }
 
-function addBoolean(pub, tag, parent = form) {
+function addBoolean(pub, category, tag, parent = form) {
   let group = createEC('div', null, 'input-group');
   let i = createEC('input', tag, null, tag, 'checkbox', tag, 'true');
   let i_hidden = createEC('input', null, null, null, 'hidden', tag, 'false');
@@ -213,4 +222,4 @@ function createEC(
   return e;
 }
 
-export default markerContent;
+export { addPropertiesEdit, locationEditForm };

@@ -1,0 +1,17 @@
+.diff {
+  color: white;
+  background-color: green;
+}
+.popup-info,
+.popup-tag,
+button {
+  display: none;
+}
+.compare-container {
+  display: flex;
+}
+.original-form,
+.edited-form {
+  // width: 50%;
+  flex: 1;
+}

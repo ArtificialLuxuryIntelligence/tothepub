@@ -11,8 +11,8 @@ const pointLocationSchema = new Schema({
     phone: { type: String },
     website: { type: String },
     "opening-hours": { type: String },
-
     tags: { type: Array },
+
   },
   geometry: {
     type: { type: String },

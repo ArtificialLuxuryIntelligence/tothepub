@@ -5,7 +5,7 @@ import directionsArrow from './../assets/arrows/directions-arrow.svg';
 import moonIcon from './../assets/icons/brightness_3-24px.svg';
 import sunIcon from './../assets/icons/wb_sunny-24px.svg';
 
-import markerContent from './mapboxMarker';
+import { locationEditForm } from './mapboxMarker';
 const { MAPBOX_TOKEN } = process.env;
 
 let darkMode = true;
@@ -349,7 +349,15 @@ export default function drawMap(start, nearest, allTags) {
         .setPopup(
           new mapboxgl.Popup({ offset: 25 }) // add popup
             // .setHTML('<h3>' + pub.properties.name + '</h3>')
-            .setDOMContent(markerContent(pub, allTags, allLocationInfo))
+            .setDOMContent(
+              locationEditForm(
+                pub,
+                allTags,
+                allLocationInfo,
+                `http://localhost:5000/api/location/edit`,
+                pub._id
+              )
+            )
         )
         .addTo(map);
     });
