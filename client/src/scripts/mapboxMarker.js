@@ -32,8 +32,19 @@ function locationEditForm(
     })
     .forEach((key) => {
       if (pub.properties[key] !== '') {
-        let p = createEC('p', `${key} : ${pub.properties[key]}`, 'popup-info');
-        content.appendChild(p);
+        console.log(key);
+        if (key == 'website') {
+          let a = createEC('a', ` ${pub.properties[key]}`, 'popup-info');
+          a.href = ` ${pub.properties[key]}`;
+          content.appendChild(a);
+        } else {
+          let p = createEC(
+            'p',
+            `${key} : ${pub.properties[key]}`,
+            'popup-info'
+          );
+          content.appendChild(p);
+        }
       }
     });
   let toggle = createEC('button', 'edit');

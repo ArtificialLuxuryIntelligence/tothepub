@@ -27,7 +27,7 @@ module.exports = {
               '@babel/preset-env',
               {
                 useBuiltIns: 'entry',
-                sourceMaps: true,
+                // sourceMaps: true,
               },
             ],
           ],
