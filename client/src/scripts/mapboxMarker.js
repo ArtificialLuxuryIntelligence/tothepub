@@ -7,7 +7,8 @@ function locationEditForm(
   allTags,
   allLocationInfo,
   submitURL = null,
-  pubId = null
+  pubId = null,
+  comments = false
 ) {
   const allLocationInfoDisplay = allLocationInfo.map(
     (o) => o.display && o.value
@@ -30,8 +31,10 @@ function locationEditForm(
       return allLocationInfoDisplay.includes(key); //filters information to display
     })
     .forEach((key) => {
-      let p = createEC('p', `${key} : ${pub.properties[key]}`, 'popup-info');
-      content.appendChild(p);
+      if (pub.properties[key] !== '') {
+        let p = createEC('p', `${key} : ${pub.properties[key]}`, 'popup-info');
+        content.appendChild(p);
+      }
     });
   let toggle = createEC('button', 'edit');
   toggle.addEventListener('click', (e) => {
@@ -71,12 +74,13 @@ function locationEditForm(
 
   // ------------------------addition comments//
 
-  if (submitURL) {
+  if (comments) {
     let comment = createEC('p', 'Other tag suggestions or comments? :');
     form.appendChild(comment);
     let textarea = createEC('textarea', null, null, null, null, 'comments');
     form.appendChild(textarea);
-
+  }
+  if (submitURL) {
     //-------------------------  submit
     let submit = createEC('input', 'submit', null, null, 'submit', 'submitb');
     form.appendChild(submit);
@@ -97,11 +101,10 @@ function locationEditForm(
           // },
         });
         let json = await response.json();
-        console.log('DATA FROM SERVER');
         console.log(json);
+
         if (response.status === 200) {
           e.target.submitb.disabled = false;
-
           e.target.classList.toggle('hidden');
           let body = document.querySelector('body');
           let tm = createEC('div', null, 'temp-modal');
@@ -111,6 +114,9 @@ function locationEditForm(
 
           setTimeout(() => tm.classList.add('fadeOut'), 1000);
           setTimeout(() => body.removeChild(tm), 1500);
+        }
+        if (json.updated) {
+          location.reload();
         }
       } catch (err) {
         e.target.submitb.disabled = false;

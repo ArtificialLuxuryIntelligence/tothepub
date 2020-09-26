@@ -115,6 +115,7 @@ router.post('/edit', upload.array(), async (req, res) => {
     updatedDoc.properties.comments = comments;
     updatedDoc.edited = true; // setting up for when the change is accepted
     //  and merged back into pointLocation collection
+    console.log(updatedDoc);
 
     delete req.body.id;
     delete req.body.name;

@@ -355,7 +355,8 @@ export default function drawMap(start, nearest, allTags) {
                 allTags,
                 allLocationInfo,
                 `http://localhost:5000/api/location/edit`,
-                pub._id
+                pub._id,
+                true
               )
             )
         )

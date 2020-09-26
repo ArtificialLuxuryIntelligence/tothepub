@@ -125,6 +125,7 @@ router.post('/deleteedit', upload.array(), async (req, res, next) => {
   try {
     const doc = await PointLocationEdit.findOneAndDelete({ refId: id });
     res.status(200).json({ message: 'success', doc, id });
+    // res.redirect('/admin');
   } catch (err) {
     console.error(err);
   }

@@ -10,7 +10,7 @@ const root = document.getElementById('root');
 
   //build display and update forms for all edit requests
   edits.forEach((pair) => {
-    // console.log(pair.original);
+    console.log(pair);
     let cont = document.createElement('div');
     cont.classList.add('compare-container');
     let original = locationEditForm(pair.original, allTags, allLocationInfo);
@@ -28,12 +28,12 @@ const root = document.getElementById('root');
 
     //highlight changed parts of the doc
     const changedLabels = [...edited.getElementsByTagName('label')];
-    const changedSelects = [...edited.getElementsByTagName('option')];
+    const changedOptions = [...edited.getElementsByTagName('option')];
     let differences = getDifferences(pair.original, pair.edit); //warning :mutates!
     changedLabels.forEach((l) => {
       differences.includes(l.textContent) ? l.classList.add('diff') : null;
     });
-    changedSelects.forEach((l) => {
+    changedOptions.forEach((l) => {
       differences.includes(l.textContent) && l.selected == true
         ? l.parentNode.previousSibling.classList.add('diff')
         : null;
@@ -44,13 +44,15 @@ const root = document.getElementById('root');
     optionsE
       .filter((o) => o.value == '')
       .forEach((o) => {
-        console.log(o);
         if (optionsO.filter((p) => p.name == o.name)[0].value !== o.value) {
           o.previousSibling.classList.add('diff');
         }
       });
+    //add new tags for dropdowns
+    // debugger;
+    optionsE.forEach((s) => addOption(s));
 
-    // delete edit without updating
+    // Delete edit without updating button:
     let delForm = document.createElement('form');
     let hidden = document.createElement('input');
     hidden.name = 'id';
@@ -64,7 +66,6 @@ const root = document.getElementById('root');
     delForm.appendChild(submit);
     delForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      console.log();
       try {
         let url = `http://localhost:5000/api/admin/deleteedit?id=${e.target.id.value}`;
         let res = await fetch(url, { method: 'post' });
@@ -77,7 +78,7 @@ const root = document.getElementById('root');
           throw new Error({ error: 'uh oh' });
         }
       } catch (err) {
-        console.err(err);
+        console.error(err);
         //show error
       }
     });
@@ -99,7 +100,6 @@ async function getEditData(page) {
   const url = `http://localhost:5000/api/admin/edits?page=${page}`;
   let response = await fetch(url);
   let json = await response.json();
-  // console.log(json.response);
   return json.response;
 }
 
@@ -108,11 +108,11 @@ const allLocationInfo = [
   { value: 'phone', type: 'tel', display: true },
   { value: 'website', type: 'text', display: true },
   { value: 'opening-hours', type: 'text', display: true },
+  { value: 'comments', display: false },
 ];
 
 //note: mutates objects
 function getDifferences(original, edited) {
-  // console.log(original, edited);
   const { tags: originalTags } = original.properties;
   const { tags: editedTags } = edited.properties;
   delete original.properties.tags;
@@ -120,7 +120,6 @@ function getDifferences(original, edited) {
   const originalProperties = Object.keys(original.properties);
   const editedProperties = Object.keys(edited.properties);
 
-  // console.log(originalTags);
   function compareArrays(a1, a2) {
     return a1.map((t) => (a2.includes(t) ? null : t)).filter((t) => t !== null);
   }
@@ -137,4 +136,33 @@ function getDifferences(original, edited) {
 
   // return [changedProperties, changedTags];
   return [...changedProperties, ...changedTags];
+}
+
+function addOption(selectNODE) {
+  let newOption = document.createElement('div');
+  newOption.classList.add('adder');
+  let t = document.createElement('p');
+  t.innerText = 'add new option for dropdown below:';
+  let input = document.createElement('input');
+  input.type = 'text';
+  let b = document.createElement('button');
+  b.innerText = 'add option';
+  b.addEventListener('click', (e) => {
+    // e.stopImmediatePropagation();
+    e.preventDefault();
+    let option = document.createElement('option');
+    option.innerText = input.value;
+    input.value = '';
+    selectNODE.appendChild(option);
+    console.log(selectNODE);
+  });
+  newOption.appendChild(t);
+  newOption.appendChild(input);
+  newOption.appendChild(b);
+  // console.log(newOption)
+
+  let i = selectNODE.parentNode.insertBefore(
+    newOption,
+    selectNODE.previousElementSibling
+  );
 }
