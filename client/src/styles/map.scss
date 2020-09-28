@@ -5,7 +5,7 @@ $light-bg: rgb(255, 255, 255);
 $light-text: rgb(255, 255, 255);
 $dark-text: rgb(17, 35, 55);
 
-/* map page */
+/* ---------------------------------------  map page ---------------------------------------*/
 
 #map-page {
   position: absolute;
@@ -27,7 +27,7 @@ $dark-text: rgb(17, 35, 55);
   right: 0;
 }
 
-/* directions  */
+/* --------------------------------------- directions  */
 
 #instructions {
   display: block;
@@ -115,7 +115,7 @@ $dark-text: rgb(17, 35, 55);
   //icons for maneuvre types
 }
 
-/* popup */
+/* --------------------------------------- popup */
 
 .mapboxgl-popup {
   max-width: 200px;
@@ -197,7 +197,7 @@ $dark-text: rgb(17, 35, 55);
   }
 }
 
-/* marker  */
+/* --------------------------------------- marker  */
 
 .marker {
   display: block;
@@ -209,7 +209,7 @@ $dark-text: rgb(17, 35, 55);
   background-size: contain;
 }
 
-// temp modal
+//---------------------------------------  temp modal
 .temp-modal {
   position: absolute;
   width: 100vw;
@@ -231,16 +231,13 @@ $dark-text: rgb(17, 35, 55);
   }
 }
 
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
+//---------------------------------------  map controls
+
+.teleport-active {
+  animation: teleport 0.7s linear alternate infinite;
 }
 
-// ------------- light and dark themes
+// --------------------------------------- light and dark themes
 
 .page-container.light {
   #instructions {
@@ -292,10 +289,25 @@ $dark-text: rgb(17, 35, 55);
   }
 }
 
-// ---helpers
+//  ---------------------------------------helpers
 .hidden {
   // transition: max-height 1s ease;
   max-height: 0 !important;
   // height: 0;
   // display: none;
+}
+
+//  --------------------------------------- animations
+
+@keyframes teleport {
+  from {
+    // opacity: 1;
+    // hue-rotate: (0deg);
+    filter: invert(0);
+  }
+  to {
+    // opacity: 0;
+    // hue-rotate: (100deg);
+    filter: invert(1);
+  }
 }

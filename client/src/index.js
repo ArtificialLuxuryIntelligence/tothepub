@@ -11,11 +11,11 @@ const DEV = true;
 const dropDown = document.getElementById('tag-dropdown');
 const takeMeButton = document.getElementById('take-me');
 const dropDownTags = ['operator', 'food'];
-let tagData;
+let allTags;
 
 (async () => {
-  tagData = await getTagData();
-  populateDropDown(tagData, dropDownTags);
+  allTags = await getallTags();
+  populateDropDown(allTags, dropDownTags);
 })();
 
 function toggleLoading() {
@@ -39,7 +39,7 @@ async function takeMeToThePub(maxResults) {
     //Find nearest pubs
     const nearest = await findNearest(start, tag, maxResults);
     //Draw route to pub
-    drawMap(start, nearest, tagData);
+    drawMap(start, nearest, allTags, tag);
     //add button to choose next pub in list of nearest
   } catch (error) {
     // Handle error (i.e. user denies geolocation)
@@ -52,23 +52,23 @@ async function takeMeToThePub(maxResults) {
 takeMeButton.addEventListener('click', () => takeMeToThePub(25)); //note: server limit is currently 25 results
 
 // helper
-async function getTagData() {
+async function getallTags() {
   let url = `http://localhost:5000/api/location/tags`;
   let response = await fetch(url);
   let result = await response.json();
   return result.doc;
 }
 
-function populateDropDown(tagData, dropDownTags) {
+function populateDropDown(allTags, dropDownTags) {
   //call api for list of tags
 
   function capitalise(word) {
     return word.charAt(0).toUpperCase() + word.slice(1);
   }
 
-  console.log(tagData);
-  let ddTagData = tagData.filter((o) => dropDownTags.includes(o.category));
-  ddTagData.forEach((cat) => {
+  console.log(allTags);
+  let ddallTags = allTags.filter((o) => dropDownTags.includes(o.category));
+  ddallTags.forEach((cat) => {
     let op = document.createElement('option');
     op.disabled = 'disabled';
     op.innerText = capitalise(cat.category);
@@ -80,13 +80,4 @@ function populateDropDown(tagData, dropDownTags) {
       dropDown.appendChild(op);
     });
   });
-  // let tags = result.doc.tags;
-  // tags.forEach((tag) => {
-  //   let op = document.createElement('option');
-  //   op.value = tag;
-  //   op.innerText = tag;
-  //   dropDown.appendChild(op);
-  // });
-
-  //populate list with these tags
 }

@@ -2,6 +2,8 @@
 
 //call this something more generic (used in admin page too but with a different submit url)
 // function locationEditForm(pub,allTags,allLocationInfo, submitURL=null) [if ===null then don't include submitbutton or comments box]
+const body = document.querySelector('body');
+
 function locationEditForm(
   pub,
   allTags,
@@ -134,14 +136,8 @@ function locationEditForm(
         if (response.status === 200) {
           e.target.submitb.disabled = false;
           e.target.classList.toggle('hidden');
-          let body = document.querySelector('body');
-          let tm = createEC('div', null, 'temp-modal');
-          let message = createEC('h3', 'Thank you for your help!');
-          tm.appendChild(message);
-          body.appendChild(tm);
 
-          setTimeout(() => tm.classList.add('fadeOut'), 1000);
-          setTimeout(() => body.removeChild(tm), 1500);
+          showTempModal('Thank you for your help', 1500);
         }
         if (json.updated) {
           location.reload();
@@ -278,4 +274,13 @@ function createEC(
   return e;
 }
 
-export { addPropertiesEdit, locationEditForm };
+function showTempModal(message, time) {
+  let tm = createEC('div', null, 'temp-modal');
+  let msg = createEC('h3', message);
+  tm.appendChild(msg);
+  body.appendChild(tm);
+
+  setTimeout(() => tm.classList.add('fadeOut'), time);
+  setTimeout(() => body.removeChild(tm), time + 500);
+}
+export { addPropertiesEdit, locationEditForm, showTempModal };

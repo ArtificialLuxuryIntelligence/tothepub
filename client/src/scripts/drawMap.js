@@ -1,6 +1,7 @@
 //note: currently 5 mapbox API directions requests on page load
 
 import beerPic from './../assets/beer_destination.png';
+import findNearest from './../scripts/findNearest';
 
 import { locationEditForm } from './mapboxMarker';
 import {
@@ -11,9 +12,11 @@ import {
 import allLocationInfo from './../data/allLocationInfo.js';
 
 const { MAPBOX_TOKEN } = process.env;
+const pageCont = document.querySelector('.page-container');
 
 let darkMode = true;
-const pageCont = document.querySelector('.page-container');
+let teleport = false;
+
 pageCont.classList.add(darkMode ? 'dark' : 'light');
 
 const colourScheme = {
@@ -38,7 +41,7 @@ function toggleMapView() {
   }, 1300); // hide after fade animation has finished
 }
 
-export default function drawMap(start, nearest, allTags) {
+export default function drawMap(start, nearest, allTags, tag) {
   //'nearest' is sorted array of nearest pubs
   console.log(nearest);
   if (nearest.length == 0) {
@@ -69,7 +72,7 @@ export default function drawMap(start, nearest, allTags) {
     // pitch: 60, //pitched angle of view
   });
   // set the bounds of the map //this could be fixed (to bounds on london pubs) and not dynamic as it currently is
-  let bounds = [
+  const bounds = [
     [start[0] - 0.3, start[1] - 0.3],
     [start[0] + 0.3, start[1] + 0.3],
   ];
@@ -255,31 +258,54 @@ export default function drawMap(start, nearest, allTags) {
       canvas.style.cursor = '';
       getRoute(start, coords, name);
     }
+  });
 
-    function toggleDarkMode() {
-      darkMode = !darkMode;
-      pageCont.classList.toggle('dark');
-      pageCont.classList.toggle('light');
+  function toggleDarkMode() {
+    darkMode = !darkMode;
+    pageCont.classList.toggle('dark');
+    pageCont.classList.toggle('light');
 
-      //rerender map
-      drawMap(start, nearest, allTags);
-      // note map.setStyle() doesn't rerender all layers (line for route
-      // ) etc so whole map rerender is needed (there may be some solutions but not really needed here)
+    //rerender map
+    drawMap(start, nearest, allTags);
+    // note map.setStyle() doesn't rerender all layers (line for route
+    // ) etc so whole map rerender is needed (there may be some solutions but not really needed here)
+  }
+  function toggleTeleport() {
+    teleport = !teleport;
+  }
+
+  // Geolocate button
+  map.addControl(
+    new mapboxgl.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true,
+      },
+      trackUserLocation: true,
+    })
+  );
+  map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+  map.addControl(new ToggleDirectionsControl(), 'top-right');
+  map.addControl(
+    new ToggleDarkModeControl(toggleDarkMode, darkMode),
+    'top-right'
+  );
+
+  map.addControl(
+    new ToggleTeleportControl(toggleTeleport, teleport),
+    'bottom-right'
+  );
+  map.on('click', async (e) => {
+    if (!teleport) {
+      return;
     }
-    // Geolocate button
-    map.addControl(
-      new mapboxgl.GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true,
-        },
-        trackUserLocation: true,
-      })
-    );
-    map.addControl(new mapboxgl.NavigationControl(), 'top-right');
-    map.addControl(new ToggleDirectionsControl(), 'top-right');
-    map.addControl(
-      new ToggleDarkModeControl(toggleDarkMode, darkMode),
-      'top-right'
-    );
+    console.log(e);
+    const { lng, lat } = e.lngLat;
+    let start = [lng, lat];
+    console.log(start);
+    const nearest = await findNearest(start, tag, 25);
+
+    teleport = false;
+    //Draw route to pub
+    drawMap(start, nearest, allTags, tag);
   });
 }

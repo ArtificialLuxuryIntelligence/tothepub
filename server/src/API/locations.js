@@ -11,7 +11,8 @@ const PointLocationEdit = require('../../models/pointLocationEdit');
 const TagCategory = require('../../models/tagCategory');
 
 const router = Router();
-const SEARCH_RADIUS = 1500;
+//  set high to ensure some results - the point of the query is to sort by distance
+const SEARCH_RADIUS = 3000;
 const MAX_RESULTS = 25;
 
 router.get('/', async (req, res) => {

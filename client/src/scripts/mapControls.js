@@ -1,6 +1,8 @@
 import directionsArrow from './../assets/arrows/directions-arrow.svg';
 import moonIcon from './../assets/icons/brightness_3-24px.svg';
 import sunIcon from './../assets/icons/wb_sunny-24px.svg';
+import teleportIcon from "./../assets/icons/teleport.svg"
+import { showTempModal } from './../scripts/mapboxMarker';
 
 // custom mapbox-gl buttons
 class ToggleDirectionsControl {
@@ -89,58 +91,44 @@ class ToggleDarkModeControl {
   }
 }
 
-const ToggleTeleportControl = {};
-// class ToggleTeleportControl {
-//   constructor(start, nearest) {
-//     this.start = start;
-//     this.nearest = nearest;
-//     // this.toggled = true;
-//     // this.directions = document.getElementById("instructions");
-//   }
+class ToggleTeleportControl {
+  constructor(toggleTeleport, teleport) {
+    this.teleport = teleport;
+    this.toggleTeleport = toggleTeleport;
+    this.active = false;
+  }
 
-//   toggleDarkMode(e) {
-//     darkMode = !darkMode;
-//     pageCont.classList.toggle('dark');
-//     pageCont.classList.toggle('light');
+  onAdd(map) {
+    this._map = map;
+    this._container = document.createElement('div');
+    let div = document.createElement('div');
+    let button = document.createElement('button');
+    let span = document.createElement('span');
+    this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
+    div.className = 'mapboxgl-ctrl';
+    span.className = 'mapboxgl-ctrl-icon';
+    span.style.backgroundImage = `url(${teleportIcon})`;
+    span.style.backgroundPosition = 'center';
+    div.appendChild(button);
+    button.appendChild(span);
+    button.classList.add(this.teleport ? 'teleport-active' : null);
 
-//     //rerender map
-//     drawMap(this.start, this.nearest);
-//     // note map.setStyle() doesn't rerender all layers (line for route
-//     // ) etc so whole map rerender is needed (there may be some solutions but not really needed here)
-//   }
+    button.addEventListener('click', () => {
+      !this.active &&
+        showTempModal('click anywhere on the map to teleport', 1000);
+      button.classList.toggle('teleport-active');
+      this.active = !this.active;
+      this.toggleTeleport();
+    });
+    this._container.appendChild(button);
+    return this._container;
+  }
 
-//   onAdd(map) {
-//     this._map = map;
-//     this._container = document.createElement('div');
-//     let div = document.createElement('div');
-//     let button = document.createElement('button');
-//     let span = document.createElement('span');
-
-//     this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
-//     div.className = 'mapboxgl-ctrl';
-//     span.className = 'mapboxgl-ctrl-icon';
-
-//     span.style.backgroundImage = darkMode
-//       ? `url(${sunIcon})`
-//       : `url(${moonIcon})`;
-//     // span.style.backgroundSize = "contain";
-//     // span.style.backgroundOrigin = "padding-box";
-//     span.style.backgroundPosition = 'center';
-//     div.appendChild(button);
-//     button.appendChild(span);
-
-//     button.addEventListener('click', (e) => {
-//       this.toggleDarkMode();
-//     });
-//     this._container.appendChild(button);
-//     return this._container;
-//   }
-
-//   onRemove() {
-//     this._container.parentNode.removeChild(this._container);
-//     this._map = undefined;
-//   }
-// }
+  onRemove() {
+    this._container.parentNode.removeChild(this._container);
+    this._map = undefined;
+  }
+}
 
 export {
   ToggleDarkModeControl,
