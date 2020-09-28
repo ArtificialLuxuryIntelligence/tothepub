@@ -78,6 +78,7 @@ router.get('/tags', async (req, res) => {
     res.json({ doc });
   } catch (err) {
     console.error(err);
+    next(err);
   }
 });
 

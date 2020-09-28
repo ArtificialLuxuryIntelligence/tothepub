@@ -5,8 +5,8 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const errorHandler = require('./middleware/errorHandler');
-const notFound = require('./middleware/notFound');
+const errorHandler = require('./middleware/notFound');
+const notFound = require('./middleware/errorHandler');
 
 const locationsRouter = require('./API/locations');
 const adminRouter = require('./API/admin');
@@ -14,6 +14,7 @@ const adminRouter = require('./API/admin');
 mongoose.set('useCreateIndex', true); // stops 'DeprecationWarning: collection.ensureIndex is deprecated.' error (from definining indexes in schema)
 
 mongoose.connect(process.env.MONGO_CONNECT_URI, {
+  // mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
