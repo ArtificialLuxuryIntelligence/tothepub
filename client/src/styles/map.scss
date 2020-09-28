@@ -119,6 +119,7 @@ $dark-text: rgb(17, 35, 55);
 
 .mapboxgl-popup {
   max-width: 200px;
+  min-width: 200px;
 
   .mapboxgl-popup-content {
     // max-width: 60vw; //max view width for lots of tags?
@@ -137,13 +138,28 @@ $dark-text: rgb(17, 35, 55);
     .popup-info {
       display: block;
     }
-    .editToggle {
+
+    .editToggle,
+    .infoToggle {
       display: block;
       // margin-left: auto;
       // margin-top: 0.4em;
       float: right;
       // background-image: "edit image URL"; // TODO
     }
+    form,
+    .infoContainer {
+      overflow: hidden;
+      // height: auto;
+      transition: all 0.5s ease;
+    }
+    form {
+      max-height: 90vh; //hack for height transition to work
+    }
+    .infoContainer {
+      max-height: 15rem;
+    }
+
     form {
       .input-group {
         display: flex;
@@ -278,5 +294,8 @@ $dark-text: rgb(17, 35, 55);
 
 // ---helpers
 .hidden {
-  display: none;
+  // transition: max-height 1s ease;
+  max-height: 0 !important;
+  // height: 0;
+  // display: none;
 }

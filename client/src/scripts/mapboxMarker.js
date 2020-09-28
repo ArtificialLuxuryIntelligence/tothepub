@@ -20,12 +20,23 @@ function locationEditForm(
   //title
   let h3 = createEC('h3', pub.properties.name);
   content.appendChild(h3);
-  //tags
+  // --- tags
   pub.properties.tags.forEach((tag) => {
     let p = createEC('p', tag, 'popup-tag');
     content.appendChild(p);
   });
-  //additional information
+  // -----additional location information
+
+  //toggle locations info open
+  let infoToggle = createEC('button', 'more info', 'infoToggle');
+  infoToggle.addEventListener('click', (e) => {
+    e.target.nextElementSibling.classList.toggle('hidden');
+  });
+  content.appendChild(infoToggle);
+  let infoContainer = createEC('div', null, 'hidden');
+  infoContainer.classList.add('infoContainer');
+  //add to this classlist?
+
   Object.keys(pub.properties)
     .filter(function (key) {
       return allLocationInfoDisplay.includes(key); //filters information to display
@@ -37,24 +48,33 @@ function locationEditForm(
           let website = pub.properties[key].replace(/(^\w+:|^)\/\//, '');
           let a = createEC('a', `${website}`, 'popup-info');
           a.href = ` ${pub.properties[key]}`;
-          content.appendChild(a);
+          infoContainer.appendChild(a);
         } else {
           let p = createEC(
             'p',
             `${key} : ${pub.properties[key]}`,
             'popup-info'
           );
-          content.appendChild(p);
+          infoContainer.appendChild(p);
         }
       }
     });
-  let toggle = createEC('button', 'x', 'editToggle');
-  toggle.addEventListener('click', (e) => {
+  // if no info available
+
+  if (infoContainer.textContent === '') {
+    let p = createEC('p', 'no information available');
+    infoContainer.appendChild(p);
+  }
+
+  content.appendChild(infoContainer);
+  // ----------------------- EDIT FORM
+
+  //toggle edit form open
+  let editToggle = createEC('button', 'edit info', 'editToggle');
+  editToggle.addEventListener('click', (e) => {
     e.target.nextElementSibling.classList.toggle('hidden');
   });
-  content.appendChild(toggle);
-
-  // ----------------------- EDIT FORM
+  content.appendChild(editToggle);
 
   let form = createEC('form', null, 'hidden');
   // ----  doc id
