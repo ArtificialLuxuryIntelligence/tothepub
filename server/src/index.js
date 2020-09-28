@@ -20,12 +20,16 @@ mongoose.connect(process.env.MONGO_CONNECT_URI, {
 });
 
 const app = express();
-app.use(morgan('common'));
+app.use(morgan());
 app.use(helmet());
 
+console.log(process.env.CORS_ORIGIN);
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? process.env.CORS_ORIGIN_PROD
+        : process.env.CORS_ORIGIN,
   })
 );
 app.use(express.json());

@@ -15,7 +15,7 @@ const router = Router();
 const SEARCH_RADIUS = 3000;
 const MAX_RESULTS = 25;
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   const { long, lat, tag } = req.query;
 
   try {
@@ -52,6 +52,7 @@ router.get('/', async (req, res) => {
 
     // console.log(doc);
   } catch (err) {
+    next(err);
     console.error(err);
   }
 
@@ -73,7 +74,7 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.get('/tags', async (req, res) => {
+router.get('/tags', async (req, res, next) => {
   try {
     const doc = await TagCategory.find();
     res.json({ doc });
@@ -96,7 +97,6 @@ router.post('/edit', upload.array(), async (req, res, next) => {
     'opening-hours': openingHours,
   } = req.body;
 
-  console.log(id);
   try {
     // ----------get original document that request is proposing to an update to
     const original = await PointLocation.findOne({

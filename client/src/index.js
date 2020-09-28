@@ -1,5 +1,6 @@
 import 'normalize.css';
 import './styles.scss';
+import { baseUrl } from './config/url';
 import regeneratorRuntime from 'regenerator-runtime'; // makes async await etc work
 import geolocate from './scripts/geolocate';
 import findNearest from './scripts/findNearest';
@@ -53,7 +54,10 @@ takeMeButton.addEventListener('click', () => takeMeToThePub(25)); //note: server
 
 // helper
 async function getallTags() {
-  let url = `http://localhost:5000/api/location/tags`;
+  let url =
+    process.env == 'production'
+      ? `${baseUrl}/api/location/tags`
+      : `http://localhost:5000/api/location/tags`;
   let response = await fetch(url);
   let result = await response.json();
   return result.doc;

@@ -2,6 +2,7 @@ import './styles.scss';
 import regeneratorRuntime, { async } from 'regenerator-runtime'; // makes async await etc work
 import { addPropertiesEdit, locationEditForm } from './../scripts/mapboxMarker';
 import allLocationInfo from './../data/allLocationInfo';
+import { baseUrl } from './../config/url';
 
 const root = document.getElementById('root');
 (async () => {
@@ -22,7 +23,11 @@ const root = document.getElementById('root');
       pair.edit,
       allTags,
       allLocationInfo,
-      'http://localhost:5000/api/admin/edit',
+
+      process.env == 'production'
+        ? `${baseUrl}/api/admin/edit`
+        : `http://localhost:5000/api/admin/edit`,
+
       pair.original._id
     );
     edited.classList.add('edited-form');
@@ -67,7 +72,11 @@ const root = document.getElementById('root');
     delForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       try {
-        let url = `http://localhost:5000/api/admin/deleteedit?id=${e.target.id.value}`;
+        let url =
+          process.env == 'production'
+            ? `${baseUrl}/api/admin/deleteedit?id=${e.target.id.value}`
+            : `http://localhost:5000/api/admin/deleteedit?id=${e.target.id.value}`;
+
         let res = await fetch(url, { method: 'post' });
         let json = await res.json();
         console.log(res.status, json);
@@ -90,14 +99,20 @@ const root = document.getElementById('root');
 
 // helper
 async function getTagData() {
-  let url = `http://localhost:5000/api/location/tags`;
+  let url =
+    process.env == 'production'
+      ? `${baseUrl}/api/location/tags`
+      : `http://localhost:5000/api/location/tags`;
   let response = await fetch(url);
   let result = await response.json();
   return result.doc;
 }
 
 async function getEditData(page) {
-  const url = `http://localhost:5000/api/admin/edits?page=${page}`;
+  let url =
+    process.env == 'production'
+      ? `${baseUrl}/api/admin/edits?page=${page}`
+      : `http://localhost:5000/api/admin/edits?page=${page}`;
   let response = await fetch(url);
   let json = await response.json();
   return json.response;

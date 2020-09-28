@@ -233,7 +233,9 @@ export default function drawMap(start, nearest, allTags, tag) {
                 pub,
                 allTags,
                 allLocationInfo,
-                `http://localhost:5000/api/location/edit`,
+                process.env == 'production'
+                  ? `${baseUrl}/api/location/edit`
+                  : `http://localhost:5000/api/location/edit`,
                 pub._id,
                 true
               )

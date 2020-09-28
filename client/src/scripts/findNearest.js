@@ -29,7 +29,11 @@ const { MAPBOX_TOKEN } = process.env;
 const findNearestDist = async (start, tag, num_results) => {
   let [s_long, s_lat] = start;
 
-  let url = `http://localhost:5000/api/location?long=${s_long}&lat=${s_lat}`;
+  let url =
+    process.env == 'production'
+      ? `${baseUrl}/api/location?long=${s_long}&lat=${s_lat}`
+      : `http://localhost:5000/api/location?long=${s_long}&lat=${s_lat}`;
+
   tag ? (url += `&tag=${tag}`) : null;
 
   let response = await fetch(url);
@@ -37,7 +41,7 @@ const findNearestDist = async (start, tag, num_results) => {
   let nearest = await response.json();
 
   //return nearest
-  return nearest.doc.slice(0, num_results); //API sends all this data back... (the results are also  filtered servside by range) 
+  return nearest.doc.slice(0, num_results); //API sends all this data back... (the results are also  filtered servside by range)
 };
 
 //find nearest in travel time from collection of location objects (pubs) - pubs currently loaded clientside (API might be better if functionality/locations extended)
