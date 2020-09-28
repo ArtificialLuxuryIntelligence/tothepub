@@ -8,6 +8,6 @@ const allLocationInfo = [
   { value: 'website', type: 'text', display: true },
   { value: 'opening-hours', type: 'text', display: true },
   { value: 'comments', display: false },
-];
+];  
 
 export default allLocationInfo;

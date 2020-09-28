@@ -34,7 +34,8 @@ function locationEditForm(
       if (pub.properties[key] !== '') {
         console.log(key);
         if (key == 'website') {
-          let a = createEC('a', ` ${pub.properties[key]}`, 'popup-info');
+          let website = pub.properties[key].replace(/(^\w+:|^)\/\//, '');
+          let a = createEC('a', `${website}`, 'popup-info');
           a.href = ` ${pub.properties[key]}`;
           content.appendChild(a);
         } else {
@@ -53,8 +54,10 @@ function locationEditForm(
   });
   content.appendChild(toggle);
 
-  // ----------------------- EDIT FORM DEFAULT HIDDEN CONTENT (doc id)
+  // ----------------------- EDIT FORM
+
   let form = createEC('form', null, 'hidden');
+  // ----  doc id
   let id = createEC('input', null, null, 'docId', 'hidden', 'id', pubId);
   form.appendChild(id);
   // --------------------edit location tags
@@ -85,12 +88,6 @@ function locationEditForm(
 
   // ------------------------addition comments//
 
-  if (comments) {
-    let comment = createEC('p', 'Other tag suggestions or comments? :');
-    form.appendChild(comment);
-    let textarea = createEC('textarea', null, null, null, null, 'comments');
-    form.appendChild(textarea);
-  }
   if (submitURL) {
     //-------------------------  submit
     let submit = createEC('input', 'submit', null, null, 'submit', 'submitb');
@@ -188,18 +185,40 @@ function addPropertiesEdit(properties = {}, parent, allLocationInfo) {
   allLocationInfo.forEach((info) => {
     //currently only allows for types of input ()
     //TODO: allow for dropdowns?
-    let group = createEC('div', null, 'input-group');
-    let i = createEC(
-      'input',
-      null,
-      null,
-      info.value,
-      info.type,
-      info.value,
-      properties[info.value]
-    );
 
-    // pub.properties.tags.includes(tag) ? (i.checked = true) : null;
+    let group = createEC('div', null, 'input-group');
+
+    if (info.value == 'comments') {
+      // let comment = createEC('p', 'Other tag suggestions or comments? :');
+      // group.appendChild(comment);
+      // let textarea = createEC('textarea', null, null, null, null, 'comments');
+      // group.appendChild(textarea);
+      // parent.appendChild(group);
+      // return;
+    }
+    let i;
+    if (info.value == 'comments') {
+      i = createEC(
+        'textarea',
+        null,
+        null,
+        info.value,
+        info.type,
+        info.value,
+        properties[info.value]
+      );
+    } else {
+      i = createEC(
+        'input',
+        null,
+        null,
+        info.value,
+        info.type,
+        info.value,
+        properties[info.value]
+      );
+    }
+
     let l = createEC(
       'label',
       info.value,

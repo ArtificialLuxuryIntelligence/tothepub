@@ -81,7 +81,7 @@ router.get('/tags', async (req, res) => {
   }
 });
 
-router.post('/edit', upload.array(), async (req, res) => {
+router.post('/edit', upload.array(), async (req, res, next) => {
   //  this is probably overly complicated. it would be easier to create template json clientside
   //  and fill it in using the form data before sending it here
 
@@ -94,6 +94,7 @@ router.post('/edit', upload.array(), async (req, res) => {
     'opening-hours': openingHours,
   } = req.body;
 
+  console.log(id);
   try {
     // ----------get original document that request is proposing to an update to
     const original = await PointLocation.findOne({
@@ -145,6 +146,7 @@ router.post('/edit', upload.array(), async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(504); // service unavailable..? deal with it clientside
+    next(err);
   }
 });
 module.exports = router;
