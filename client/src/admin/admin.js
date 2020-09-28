@@ -94,7 +94,7 @@ const root = document.getElementById('root');
 
 // helper
 async function getTagData() {
-  `${baseUrl}/api/location/tags`;
+  let url = `${baseUrl}/api/location/tags`;
   let response = await fetch(url);
   let result = await response.json();
   return result.doc;
