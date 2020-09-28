@@ -15,6 +15,7 @@ const TAGS = ['Wetherspoons', "Samuel Smith's"]; // TODO :autodetect --->
 
 // in async function below pull in sanitize data and extract accepted tag data
 
+// this is async no?
 mongoose.connect('mongodb://localhost/tothepub', {
   useNewUrlParser: true,
   useUnifiedTopology: true,

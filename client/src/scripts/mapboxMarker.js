@@ -47,7 +47,7 @@ function locationEditForm(
         }
       }
     });
-  let toggle = createEC('button', 'edit');
+  let toggle = createEC('button', 'x', 'editToggle');
   toggle.addEventListener('click', (e) => {
     e.target.nextElementSibling.classList.toggle('hidden');
   });

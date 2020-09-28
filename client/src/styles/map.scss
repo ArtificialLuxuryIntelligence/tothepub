@@ -124,7 +124,7 @@ $dark-text: rgb(17, 35, 55);
     // max-width: 60vw; //max view width for lots of tags?
     // text-align: center;
     font-family: 'Open Sans', sans-serif;
-    padding: 6px;
+    padding: 1rem;
 
     h3 {
       margin: 0.3rem;
@@ -136,19 +136,38 @@ $dark-text: rgb(17, 35, 55);
     }
     .popup-info {
     }
-    .input-group {
-      display: flex;
-      justify-content: space-between;
-      padding: 0rem 1rem;
-      label {
-        margin-right: 1rem;
-        width: 20%;
+    .editToggle {
+      display: block;
+      // margin-left: auto;
+      // margin-top: 0.4em;
+      float: right;
+      // background-image: "edit image URL"; // TODO
+    }
+    form {
+      .input-group {
+        display: flex;
+        justify-content: space-between;
+        margin: 0.2em 0;
+        // padding: 0rem 1rem;
+        label {
+          margin-right: 1rem;
+          width: 20%;
+        }
+        input[type='text'],
+        input[type='tel'] {
+          width: 65%;
+        }
+        input[type='checkbox'] {
+          // margin-right: 60%;
+        }
       }
-      input[type='text'] {
-        // min-width: 50%;
+      textarea {
+        // margin: 0 1rem;
+        width: 100%;
       }
-      input[type='checkbox'] {
+      input[type='submit'] {
         // margin-right: 60%;
+        display: block;
       }
     }
   }

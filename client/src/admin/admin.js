@@ -1,6 +1,7 @@
 import './styles.scss';
 import regeneratorRuntime, { async } from 'regenerator-runtime'; // makes async await etc work
 import { addPropertiesEdit, locationEditForm } from './../scripts/mapboxMarker';
+import allLocationInfo from './../data/allLocationInfo';
 
 const root = document.getElementById('root');
 (async () => {
@@ -48,11 +49,10 @@ const root = document.getElementById('root');
           o.previousSibling.classList.add('diff');
         }
       });
-    //add new tags for dropdowns
-    // debugger;
+    //input to add new tag in edit form for dropdowns
     optionsE.forEach((s) => addOption(s));
 
-    // Delete edit without updating button:
+    // Button: Delete edit without updating db:
     let delForm = document.createElement('form');
     let hidden = document.createElement('input');
     hidden.name = 'id';
@@ -103,14 +103,6 @@ async function getEditData(page) {
   return json.response;
 }
 
-const allLocationInfo = [
-  { value: 'name', type: 'text', display: false }, //already displayed as title
-  { value: 'phone', type: 'tel', display: true },
-  { value: 'website', type: 'text', display: true },
-  { value: 'opening-hours', type: 'text', display: true },
-  { value: 'comments', display: false },
-];
-
 //note: mutates objects
 function getDifferences(original, edited) {
   const { tags: originalTags } = original.properties;
@@ -152,9 +144,9 @@ function addOption(selectNODE) {
     e.preventDefault();
     let option = document.createElement('option');
     option.innerText = input.value;
+    option.selected = 'true';
     input.value = '';
     selectNODE.appendChild(option);
-    console.log(selectNODE);
   });
   newOption.appendChild(t);
   newOption.appendChild(input);

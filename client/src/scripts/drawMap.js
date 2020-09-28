@@ -6,6 +6,8 @@ import moonIcon from './../assets/icons/brightness_3-24px.svg';
 import sunIcon from './../assets/icons/wb_sunny-24px.svg';
 
 import { locationEditForm } from './mapboxMarker';
+import allLocationInfo from './../data/allLocationInfo.js';
+
 const { MAPBOX_TOKEN } = process.env;
 
 let darkMode = true;
@@ -45,12 +47,12 @@ const colourScheme = {
 //for this data to be searchable it could be possible add extra tags for the existence of this info] (or just use mongo query)
 
 //NOTE: this data coincides with the OSM properties
-const allLocationInfo = [
-  { value: 'name', type: 'text', display: false }, //already displayed as title
-  { value: 'phone', type: 'tel', display: true },
-  { value: 'website', type: 'text', display: true },
-  { value: 'opening-hours', type: 'text', display: true },
-];
+// const allLocationInfo = [
+//   { value: 'name', type: 'text', display: false }, //already displayed as title
+//   { value: 'phone', type: 'tel', display: true },
+//   { value: 'website', type: 'text', display: true },
+//   { value: 'opening-hours', type: 'text', display: true },
+// ];
 
 // "rgb(192, 17, 17)"
 

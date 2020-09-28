@@ -13,7 +13,7 @@ const adminRouter = require('./API/admin');
 
 mongoose.set('useCreateIndex', true); // stops 'DeprecationWarning: collection.ensureIndex is deprecated.' error (from definining indexes in schema)
 
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect(process.env.MONGO_CONNECT_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
