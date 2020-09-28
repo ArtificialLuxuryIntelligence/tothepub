@@ -2,6 +2,7 @@
 
 import beerPic from './../assets/beer_destination.png';
 import findNearest from './../scripts/findNearest';
+import { baseUrl } from './../config/url';
 
 import { locationEditForm } from './mapboxMarker';
 import {
