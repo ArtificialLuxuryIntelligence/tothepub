@@ -24,7 +24,7 @@ const root = document.getElementById('root');
       allTags,
       allLocationInfo,
 
-      process.env == 'production'
+      process.env.ENVIRONMENT == 'production'
         ? `${baseUrl}/api/admin/edit`
         : `http://localhost:5000/api/admin/edit`,
 
@@ -73,7 +73,7 @@ const root = document.getElementById('root');
       e.preventDefault();
       try {
         let url =
-          process.env == 'production'
+          process.env.ENVIRONMENT == 'production'
             ? `${baseUrl}/api/admin/deleteedit?id=${e.target.id.value}`
             : `http://localhost:5000/api/admin/deleteedit?id=${e.target.id.value}`;
 
@@ -100,7 +100,7 @@ const root = document.getElementById('root');
 // helper
 async function getTagData() {
   let url =
-    process.env == 'production'
+    process.env.ENVIRONMENT == 'production'
       ? `${baseUrl}/api/location/tags`
       : `http://localhost:5000/api/location/tags`;
   let response = await fetch(url);
@@ -110,7 +110,7 @@ async function getTagData() {
 
 async function getEditData(page) {
   let url =
-    process.env == 'production'
+    process.env.ENVIRONMENT == 'production'
       ? `${baseUrl}/api/admin/edits?page=${page}`
       : `http://localhost:5000/api/admin/edits?page=${page}`;
   let response = await fetch(url);

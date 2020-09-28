@@ -55,7 +55,7 @@ takeMeButton.addEventListener('click', () => takeMeToThePub(25)); //note: server
 // helper
 async function getallTags() {
   let url =
-    process.env == 'production'
+    process.env.ENVIRONMENT == 'production'
       ? `${baseUrl}/api/location/tags`
       : `http://localhost:5000/api/location/tags`;
   let response = await fetch(url);

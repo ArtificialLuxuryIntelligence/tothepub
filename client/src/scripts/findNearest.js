@@ -30,7 +30,7 @@ const findNearestDist = async (start, tag, num_results) => {
   let [s_long, s_lat] = start;
 
   let url =
-    process.env == 'production'
+    process.env.ENVIRONMENT == 'production'
       ? `${baseUrl}/api/location?long=${s_long}&lat=${s_lat}`
       : `http://localhost:5000/api/location?long=${s_long}&lat=${s_lat}`;
 
