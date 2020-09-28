@@ -6,12 +6,15 @@ import geolocate from './scripts/geolocate';
 import findNearest from './scripts/findNearest';
 import drawMap from './scripts/drawMap';
 
-const DEV = true;
-// const DEV = false;
+// categories to include in drop down (of allTags [from database])
+// some tags are good to have but there are too few to be a search filter (for now..)
+const dropDownTags = ['operator', 'food'];
+
+// const DEV = true;
+const DEV = false;
 
 const dropDown = document.getElementById('tag-dropdown');
 const takeMeButton = document.getElementById('take-me');
-const dropDownTags = ['operator', 'food'];
 let allTags;
 
 (async () => {
