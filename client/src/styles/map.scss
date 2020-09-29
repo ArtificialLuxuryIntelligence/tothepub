@@ -267,6 +267,13 @@ $dark-text: rgb(17, 35, 55);
       }
     }
   }
+  .mapboxgl-ctrl-group {
+    color: $light-text;
+    background-color: rgba($color: $dark-bg, $alpha: 0.8);
+    span {
+      filter: invert(1);
+    }
+  }
 }
 
 .page-container.dark {
@@ -286,6 +293,10 @@ $dark-text: rgb(17, 35, 55);
       .popup-info {
       }
     }
+  }
+  .mapboxgl-ctrl-group {
+    color: $dark-text;
+    background-color: rgba($color: $light-bg, $alpha: 0.8);
   }
 }
 
