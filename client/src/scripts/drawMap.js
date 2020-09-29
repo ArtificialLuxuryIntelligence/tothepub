@@ -17,6 +17,7 @@ const pageCont = document.querySelector('.page-container');
 
 let darkMode = true;
 let teleport = false;
+let map;
 
 pageCont.classList.add(darkMode ? 'dark' : 'light');
 
@@ -46,11 +47,15 @@ export default function drawMap(start, nearest, allTags, tag) {
   //'nearest' is sorted array of nearest pubs
   console.log(nearest);
   if (nearest.length == 0) {
+    //  if home page
     const takeMeButton = document.getElementById('take-me');
     takeMeButton.classList.toggle('animate');
     const errorBox = document.getElementById('error');
     const dropDown = document.getElementById('tag-dropdown');
     errorBox.innerText = `No ${dropDown.value} nearby 😢`;
+
+    // if already on map page (teleported)
+    // TODO
     return;
   }
 
@@ -63,7 +68,10 @@ export default function drawMap(start, nearest, allTags, tag) {
     alert('Your browser does not support Mapbox GL');
     return;
   }
-  let map = new mapboxgl.Map({
+  // Clear old map from previous render: WARNING this doesn't remove event listeners  so
+  //  we want to avoid too many rerenders. currently triggered darktheme is toggled and teleport is used
+  document.querySelector('#map').innerHTML = '';
+  map = new mapboxgl.Map({
     container: 'map',
     style: darkMode
       ? 'mapbox://styles/mapbox/dark-v10'
@@ -80,99 +88,14 @@ export default function drawMap(start, nearest, allTags, tag) {
   map.setMaxBounds(bounds);
   // initialize the map canvas to interact with later
   let canvas = map.getCanvasContainer();
-  const getRoute = async (start, end, location_name = '') => {
-    // make a directions request using walking profile
-    let url =
-      'https://api.mapbox.com/directions/v5/mapbox/walking/' +
-      start[0] +
-      ',' +
-      start[1] +
-      ';' +
-      end[0] +
-      ',' +
-      end[1] +
-      '?steps=true&geometries=geojson&access_token=' +
-      mapboxgl.accessToken;
-
-    let response = await fetch(url);
-    let json = await response.json();
-    // console.log('JSON', json);
-    let data = json.routes[0]; //quickest route
-    let route = data.geometry.coordinates;
-    let geojson = {
-      type: 'Feature',
-      properties: {},
-      geometry: {
-        type: 'LineString',
-        coordinates: route,
-      },
-    };
-    // if the route already exists on the map, reset it using setData
-    if (map.getSource('route')) {
-      map.getSource('route').setData(geojson);
-    } else {
-      // otherwise, make a new request
-      map.addLayer({
-        id: 'route',
-        type: 'line',
-        source: {
-          type: 'geojson',
-          data: {
-            type: 'Feature',
-            properties: {},
-            geometry: {
-              type: 'LineString',
-              coordinates: geojson,
-            },
-          },
-        },
-        layout: {
-          'line-join': 'round',
-          'line-cap': 'round',
-        },
-        paint: {
-          'line-color': darkMode
-            ? colourScheme.dark.lineColour
-            : colourScheme.light.lineColour,
-          'line-width': 6,
-          'line-opacity': 0.75,
-        },
-      });
-    }
-
-    // get the sidebar and add the instructions
-    let instructions = document.getElementById('instructions-content');
-
-    let steps = data.legs[0].steps;
-    let tripInstructions = [];
-    for (let i = 0; i < steps.length; i++) {
-      let symbolType = '';
-      if (steps[i].maneuver.type == 'depart') {
-        symbolType = 'depart';
-      } else if (steps[i].maneuver.type == 'arrive') {
-        symbolType = 'arrive';
-      } else {
-        symbolType = steps[i].maneuver.modifier.replace(/\s/g, ''); //remove spaces for css class
-      }
-
-      tripInstructions.push(
-        `<br><li class="${symbolType}">` + steps[i].maneuver.instruction
-      ) + '</li>';
-      instructions.innerHTML =
-        `<h1>${location_name}</h1><span class="duration">Trip duration: ` +
-        Math.floor(data.duration / 60) +
-        ' min  </span>' +
-        tripInstructions;
-    }
-  };
 
   map.on('load', async function () {
     // console.log("map loaded!!! (time to hide loader/button)");
     toggleMapView();
     // make an initial directions request that
     // starts and ends at the same location
-    await getRoute(start, start); //seems to be neccessary for the API to init..(?)
-    await getRoute(start, end, location_name);
+    await getRoute(start, start, map); //seems to be neccessary for the API to init..(?)
+    await getRoute(start, end, map, location_name);
 
     // Add starting point to the map
     map.addSource('start', {
@@ -257,7 +180,7 @@ export default function drawMap(start, nearest, allTags, tag) {
       let coords = pub.geometry.coordinates;
       let name = pub.properties.name;
       canvas.style.cursor = '';
-      getRoute(start, coords, name);
+      getRoute(start, coords, map, name);
     }
   });
 
@@ -275,7 +198,7 @@ export default function drawMap(start, nearest, allTags, tag) {
     teleport = !teleport;
   }
 
-  // Geolocate button
+  //  ----------------------------------- Map controls
   map.addControl(
     new mapboxgl.GeolocateControl({
       positionOptions: {
@@ -309,4 +232,92 @@ export default function drawMap(start, nearest, allTags, tag) {
     //Draw route to pub
     drawMap(start, nearest, allTags, tag);
   });
+
+  // controlsAdded = true;
+}
+
+async function getRoute(start, end, map, location_name = '') {
+  // make a directions request using walking profile
+  let url =
+    'https://api.mapbox.com/directions/v5/mapbox/walking/' +
+    start[0] +
+    ',' +
+    start[1] +
+    ';' +
+    end[0] +
+    ',' +
+    end[1] +
+    '?steps=true&geometries=geojson&access_token=' +
+    mapboxgl.accessToken;
+
+  let response = await fetch(url);
+  let json = await response.json();
+  // console.log('JSON', json);
+  let data = json.routes[0]; //quickest route
+  let route = data.geometry.coordinates;
+  let geojson = {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'LineString',
+      coordinates: route,
+    },
+  };
+  // if the route already exists on the map, reset it using setData
+  if (map.getSource('route')) {
+    map.getSource('route').setData(geojson);
+  } else {
+    // otherwise, make a new request
+    map.addLayer({
+      id: 'route',
+      type: 'line',
+      source: {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'LineString',
+            coordinates: geojson,
+          },
+        },
+      },
+      layout: {
+        'line-join': 'round',
+        'line-cap': 'round',
+      },
+      paint: {
+        'line-color': darkMode
+          ? colourScheme.dark.lineColour
+          : colourScheme.light.lineColour,
+        'line-width': 6,
+        'line-opacity': 0.75,
+      },
+    });
+  }
+
+  // get the sidebar and add the instructions
+  let instructions = document.getElementById('instructions-content');
+
+  let steps = data.legs[0].steps;
+  let tripInstructions = [];
+  for (let i = 0; i < steps.length; i++) {
+    let symbolType = '';
+    if (steps[i].maneuver.type == 'depart') {
+      symbolType = 'depart';
+    } else if (steps[i].maneuver.type == 'arrive') {
+      symbolType = 'arrive';
+    } else {
+      symbolType = steps[i].maneuver.modifier.replace(/\s/g, ''); //remove spaces for css class
+    }
+
+    tripInstructions.push(
+      `<br><li class="${symbolType}">` + steps[i].maneuver.instruction
+    ) + '</li>';
+    instructions.innerHTML =
+      `<h1>${location_name}</h1><span class="duration">Trip duration: ` +
+      Math.floor(data.duration / 60) +
+      ' min  </span>' +
+      tripInstructions;
+  }
 }
