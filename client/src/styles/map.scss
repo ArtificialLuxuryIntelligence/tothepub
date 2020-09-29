@@ -233,8 +233,10 @@ $dark-text: rgb(17, 35, 55);
 
 //---------------------------------------  map controls
 
-.teleport-active {
-  animation: teleport 0.7s linear alternate infinite;
+.teleport {
+  #teleport-button {
+    animation: teleport 0.7s linear alternate infinite;
+  }
 }
 
 // --------------------------------------- light and dark themes

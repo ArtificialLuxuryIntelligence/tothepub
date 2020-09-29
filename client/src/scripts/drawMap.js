@@ -70,7 +70,9 @@ export default function drawMap(start, nearest, allTags, tag) {
   }
   // Clear old map from previous render: WARNING this doesn't remove event listeners  so
   //  we want to avoid too many rerenders. currently triggered darktheme is toggled and teleport is used
+  // could use map.removeControl()
   document.querySelector('#map').innerHTML = '';
+
   map = new mapboxgl.Map({
     container: 'map',
     style: darkMode
@@ -94,10 +96,27 @@ export default function drawMap(start, nearest, allTags, tag) {
     toggleMapView();
     // make an initial directions request that
     // starts and ends at the same location
-    await getRoute(start, start, map); //seems to be neccessary for the API to init..(?)
-    await getRoute(start, end, map, location_name);
+    let route = await getRoute(start, start, map, ''); //seems to be neccessary for the API to init..(?)
+    renderRoute(route, location_name, map);
+    route = await getRoute(start, end, map, location_name);
+    renderRoute(route, location_name, map);
 
     // Add starting point to the map
+
+    addStartingPoint(start, map);
+
+    //create and addmarkers for nearest pubs //alternative option is add all pubs as a feature collection
+    // see: https://docs.mapbox.com/mapbox-gl-js/example/popup-on-click/ [current way works fine though]
+    // may be useful in future if all added in a single layer (can then toggle layer for sam smith's pubs for example)
+
+    addMarkers(nearest, map);
+  });
+
+  function addStartingPoint(start, map) {
+    if (map.getLayer('point_start')) {
+      map.removeLayer('point_start');
+      map.removeSource('start');
+    }
     map.addSource('start', {
       type: 'geojson',
       data: {
@@ -123,12 +142,10 @@ export default function drawMap(start, nearest, allTags, tag) {
         'circle-opacity': 1,
       },
     });
+  }
 
-    //create and addmarkers for nearest pubs //alternative option is add all pubs as a feature collection
-    // see: https://docs.mapbox.com/mapbox-gl-js/example/popup-on-click/ [current way works fine though]
-    // may be useful in future if all added in a single layer (can then toggle layer for sam smith's pubs for example)
-
-    nearest.forEach((pub) => {
+  function addMarkers(pubs, map) {
+    pubs.forEach((pub) => {
       //fill in any empty properties:
       pub.properties.name = pub.properties.name
         ? pub.properties.name
@@ -145,7 +162,9 @@ export default function drawMap(start, nearest, allTags, tag) {
       // el.dataset.name = pub.properties.name;
       // console.log(pub);
       el.dataset.id = pub._id;
-      el.addEventListener('click', (e) => markerListener(e));
+      el.addEventListener('click', (e, pub, nearest) =>
+        markerListener(e, pubs, map)
+      );
 
       new mapboxgl.Marker(el, { anchor: 'bottom' })
         .setLngLat(pub.geometry.coordinates)
@@ -165,24 +184,25 @@ export default function drawMap(start, nearest, allTags, tag) {
         )
         .addTo(map);
     });
+  }
 
-    function markerListener(e) {
-      console.log(e.target);
-      let id = e.target.dataset.id;
-      console.log(id);
-      console.log(pub);
-      let pub = nearest.filter((p) => p._id == id)[0];
-      // console.log(nearest); //!!! TODO use this instead of saving all data in dataset - only save id in dataset and find object in nearest
-      // e.target.style.opacity = '0.4';
-      // setTimeout(() => (e.target.style.opacity = '1'), 2000);
-      // let coords = e.target.dataset.coords.split(',').map((n) => parseFloat(n));
-      // let name = e.target.dataset.name;
-      let coords = pub.geometry.coordinates;
-      let name = pub.properties.name;
-      canvas.style.cursor = '';
-      getRoute(start, coords, map, name);
-    }
-  });
+  async function markerListener(e, pubs, map) {
+    console.log(e.target);
+    let id = e.target.dataset.id;
+    console.log(id);
+    console.log(pub);
+    let pub = pubs.filter((p) => p._id == id)[0];
+    // console.log(nearest); //!!! TODO use this instead of saving all data in dataset - only save id in dataset and find object in nearest
+    // e.target.style.opacity = '0.4';
+    // setTimeout(() => (e.target.style.opacity = '1'), 2000);
+    // let coords = e.target.dataset.coords.split(',').map((n) => parseFloat(n));
+    // let name = e.target.dataset.name;
+    let coords = pub.geometry.coordinates;
+    let name = pub.properties.name;
+    canvas.style.cursor = '';
+    let data = await getRoute(start, coords, map, name);
+    renderRoute(data, name, map);
+  }
 
   function toggleDarkMode() {
     darkMode = !darkMode;
@@ -190,13 +210,35 @@ export default function drawMap(start, nearest, allTags, tag) {
     pageCont.classList.toggle('light');
 
     //rerender map
-    drawMap(start, nearest, allTags);
+    // drawMap(start, nearest, allTags);
+    map.setStyle('mapbox://styles/mapbox/streets-v11');
     // note map.setStyle() doesn't rerender all layers (line for route
-    // ) etc so whole map rerender is needed (there may be some solutions but not really needed here)
+    // ) etc so whole map rerender is needed (there may be some solutions but not really needed here?)
   }
   function toggleTeleport() {
     teleport = !teleport;
+    pageCont.classList.toggle('teleport');
   }
+  map.on('click', async (e) => {
+    if (!teleport) {
+      return;
+    }
+    teleport = false;
+    pageCont.classList.remove('teleport');
+
+    const { lng, lat } = e.lngLat;
+    start = [lng, lat];
+    const nearest = await findNearest(start, tag, 25);
+    let end = nearest[0].geometry.coordinates;
+    let location_name = nearest[0].properties.name;
+    addStartingPoint(start, map);
+    addMarkers(nearest, map);
+    let data = await getRoute(start, end, map, location_name);
+    renderRoute(data, name, map);
+
+    //Draw route to pub
+    // drawMap(start, nearest, allTags, tag);
+  });
 
   //  ----------------------------------- Map controls
   map.addControl(
@@ -218,20 +260,6 @@ export default function drawMap(start, nearest, allTags, tag) {
     new ToggleTeleportControl(toggleTeleport, teleport),
     'bottom-right'
   );
-  map.on('click', async (e) => {
-    if (!teleport) {
-      return;
-    }
-    console.log(e);
-    const { lng, lat } = e.lngLat;
-    let start = [lng, lat];
-    console.log(start);
-    const nearest = await findNearest(start, tag, 25);
-
-    teleport = false;
-    //Draw route to pub
-    drawMap(start, nearest, allTags, tag);
-  });
 
   // controlsAdded = true;
 }
@@ -254,6 +282,12 @@ async function getRoute(start, end, map, location_name = '') {
   let json = await response.json();
   // console.log('JSON', json);
   let data = json.routes[0]; //quickest route
+
+  return data;
+}
+
+//renders route and displays directions
+function renderRoute(data, location_name, map) {
   let route = data.geometry.coordinates;
   let geojson = {
     type: 'Feature',

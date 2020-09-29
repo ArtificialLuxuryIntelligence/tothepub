@@ -37,8 +37,8 @@ async function takeMeToThePub(maxResults) {
     const { latitude, longitude } = coords;
 
     const start =
-      process.env.MODE === 'dev'  
-        ? [-0.13703469999999998, 51.510621633333336]
+      process.env.MODE === 'dev'
+        ? [-0.13703469999999998, 51.520621633333336]
         : [longitude, latitude]; //API format - production
     const tag = dropDown.value;
     //Find nearest pubs

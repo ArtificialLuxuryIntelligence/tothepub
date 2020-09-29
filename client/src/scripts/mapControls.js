@@ -69,7 +69,7 @@ class ToggleDarkModeControl {
     this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
     // div.className = 'mapboxgl-ctrl';
     span.className = 'mapboxgl-ctrl-icon';
-    span.id="dark-mode"
+    span.id = 'dark-mode';
 
     // span.style.backgroundImage = this.darkMode
     //   ? `url(${sunIcon})`
@@ -112,16 +112,16 @@ class ToggleTeleportControl {
     div.className = 'mapboxgl-ctrl';
     span.className = 'mapboxgl-ctrl-icon';
     span.id = 'teleport';
+    button.id = 'teleport-button';
     span.style.backgroundImage = `url(${teleportIcon})`;
     span.style.backgroundPosition = 'center';
     div.appendChild(button);
     button.appendChild(span);
-    button.classList.add(this.teleport ? 'teleport-active' : null);
+    // button.classList.add(this.teleport ? 'teleport-active' : null);
 
     button.addEventListener('click', () => {
       !this.active &&
         showTempModal('click anywhere on the map to teleport', 1000);
-      button.classList.toggle('teleport-active');
       this.active = !this.active;
       this.toggleTeleport();
     });

@@ -20,7 +20,7 @@ mongoose.connect(process.env.MONGO_CONNECT_URI, {
 });
 
 const app = express();
-app.use(morgan());
+app.use(morgan('dev'));
 app.use(helmet());
 
 console.log(process.env.CORS_ORIGIN);
