@@ -11,7 +11,7 @@ const TagCategory = require('../../models/tagCategory');
 
 const router = Router();
 //  set high to ensure some results - the point of the query is to sort by distance
-const SEARCH_RADIUS = 2501;
+const SEARCH_RADIUS = 4000;
 const MAX_RESULTS = 25;
 
 router.get('/', async (req, res, next) => {
@@ -135,7 +135,6 @@ router.post('/edit', upload.array(), async (req, res, next) => {
     updatedDoc.properties.tags = updatedTags;
     // res.json(updatedDropdowns);
 
- 
     // ----------------------- save proposal to pointLocationEdit collection for review
     const edit = await pointLocationEdit.create(updatedDoc);
     res.status(200).json({ edit });

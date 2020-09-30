@@ -36,10 +36,11 @@ async function takeMeToThePub(maxResults) {
     const { coords } = await geolocate();
     const { latitude, longitude } = coords;
 
-    const start =
-      process.env.MODE === 'dev'
-        ? [-0.13703469999999998, 51.520621633333336]
-        : [longitude, latitude]; //API format - production
+    // const start =
+    //   process.env.MODE === 'dev'
+    //     ? [-0.13703469999999998, 51.520621633333336]
+    //     : [longitude, latitude]; //API format - production
+    const start = [longitude, latitude];
     const tag = dropDown.value;
     //Find nearest pubs
     const nearest = await findNearest(start, tag, maxResults);

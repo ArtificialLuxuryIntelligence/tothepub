@@ -32,6 +32,7 @@ const accepetedTagData = [
   //  key: someValue : will only look for regex match in that specific property
 
   // ------------------ operators
+  // ---------- see node file getOps for seeing all operators (or any other) property
   {
     key: 'ANY',
     regex: new RegExp('samuel s', 'gi'),

@@ -5,6 +5,7 @@ import findNearest from './../scripts/findNearest';
 import { baseUrl } from './../config/url';
 
 import { locationEditForm } from './mapboxMarker';
+import { showTempModal } from './helpers';
 import {
   ToggleDarkModeControl,
   ToggleDirectionsControl,
@@ -46,7 +47,7 @@ function toggleMapView() {
 
 export default function drawMap(start, nearest, allTags, tag) {
   //'nearest' is sorted array of nearest pubs
-  console.log(nearest);
+  console.log(tag, nearest);
   if (nearest.length == 0) {
     //  if home page
     const takeMeButton = document.getElementById('take-me');
@@ -55,8 +56,6 @@ export default function drawMap(start, nearest, allTags, tag) {
     const dropDown = document.getElementById('tag-dropdown');
     errorBox.innerText = `No ${dropDown.value} nearby 😢`;
 
-    // if already on map page (teleported)
-    // TODO
     return;
   }
 
@@ -188,10 +187,10 @@ export default function drawMap(start, nearest, allTags, tag) {
   }
 
   async function markerListener(e, pubs, map) {
-    console.log(e.target);
+    // console.log(e.target);
     let id = e.target.dataset.id;
-    console.log(id);
-    console.log(pub);
+    // console.log(id);
+    // console.log(pub);
     let pub = pubs.filter((p) => p._id == id)[0];
     // console.log(nearest); //!!! TODO use this instead of saving all data in dataset - only save id in dataset and find object in nearest
     // e.target.style.opacity = '0.4';
@@ -211,7 +210,7 @@ export default function drawMap(start, nearest, allTags, tag) {
     pageCont.classList.toggle('light');
 
     //rerender map
-    drawMap(start, nearest, allTags);
+    drawMap(start, nearest, allTags, tag);
     // map.setStyle('mapbox://styles/mapbox/streets-v11');
     // note map.setStyle() doesn't rerender all layers (line for route
     // ) etc so whole map rerender is needed (there may be some solutions but not really needed here?)
@@ -220,7 +219,8 @@ export default function drawMap(start, nearest, allTags, tag) {
     teleport = !teleport;
     pageCont.classList.toggle('teleport');
   }
-  map.on('click', async (e) => {
+  map.on('click', async function (e) {
+    console.log(tag);
     if (!teleport) {
       return;
     }
@@ -230,6 +230,10 @@ export default function drawMap(start, nearest, allTags, tag) {
     const { lng, lat } = e.lngLat;
     start = [lng, lat];
     const nearest = await findNearest(start, tag, 25);
+    if (nearest.length == 0) {
+      showTempModal('Sorry, no results nearby', 1200);
+      return;
+    }
     let end = nearest[0].geometry.coordinates;
     let location_name = nearest[0].properties.name;
     addStartingPoint(start, map);
