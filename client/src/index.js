@@ -7,7 +7,7 @@ import findNearest from './scripts/findNearest';
 import drawMap from './scripts/drawMap';
 
 // categories to include in drop down (of allTags [from database])
-// some tags are good to have but there are too few to be a search filter (for now..)
+// some tags are good to have on map but there are too few to be a search filter (for now..)
 const dropDownTags = ['operator', 'food'];
 
 // const DEV = true;
@@ -68,10 +68,6 @@ async function getallTags() {
 function populateDropDown(allTags, dropDownTags) {
   //call api for list of tags
 
-  function capitalise(word) {
-    return word.charAt(0).toUpperCase() + word.slice(1);
-  }
-
   console.log(allTags);
   let ddallTags = allTags.filter((o) => dropDownTags.includes(o.category));
   ddallTags.forEach((cat) => {
@@ -80,10 +76,16 @@ function populateDropDown(allTags, dropDownTags) {
     op.innerText = capitalise(cat.category);
     dropDown.appendChild(op);
     cat.tags.forEach((tag) => {
-      let op = document.createElement('option');
-      op.value = tag;
-      op.innerText = tag;
-      dropDown.appendChild(op);
+      if (tag.count > 20) {
+        let op = document.createElement('option');
+        op.value = tag.tag;
+        op.innerText = tag.tag;
+        dropDown.appendChild(op);
+      }
     });
   });
+}
+
+function capitalise(word) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
 }

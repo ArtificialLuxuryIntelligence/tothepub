@@ -262,14 +262,12 @@ let result = [];
   //  ********note: these are starting values. if new tags are added that aren't in 'accepted tag data' then
   //  this list will be outdated and shouldn't overwrite the tags in the database!
   //  depends on whether or not I make a route to add new tags...
-  fs.writeFile(
-    'tagCategories.json',
-    JSON.stringify(formattedTagData),
-    function (err) {
-      if (err) throw err;
-      console.log('Saved!');
-    }
-  );
+  fs.writeFile('tagCategory.json', JSON.stringify(formattedTagData), function (
+    err
+  ) {
+    if (err) throw err;
+    console.log('Saved!');
+  });
 })();
 
 //---------------------------------------------------

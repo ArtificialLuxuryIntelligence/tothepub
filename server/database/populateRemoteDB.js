@@ -24,7 +24,7 @@ async function run() {
     });
 
     // insert all locations
-    const locationJSON = await readFile('./../../data/pointLocations.json');
+    const locationJSON = await readFile('./../../data/pointLocation.json');
     const locations = JSON.parse(locationJSON);
 
     PointLocation.insertMany(locations, (err, docs) => {
@@ -38,7 +38,7 @@ async function run() {
     });
 
     // insert all tags
-    const tagCatsJSON = await readFile('./../../data/tagCategories.json');
+    const tagCatsJSON = await readFile('./../../data/tagCategory.json');
     const tagCategories = JSON.parse(tagCatsJSON);
 
     TagCategory.insertMany(tagCategories, (err, doc) => {

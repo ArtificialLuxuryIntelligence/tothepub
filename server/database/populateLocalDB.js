@@ -22,7 +22,7 @@ mongoose.connect('mongodb://localhost/tothepub', {
 });
 
 (async () => {
-  const locationJSON = await readFile('./../../data/pointLocations.json');
+  const locationJSON = await readFile('./../../data/pointLocation.json');
   const locations = JSON.parse(locationJSON);
 
   PointLocation.insertMany(locations, (err, docs) => {
@@ -35,7 +35,7 @@ mongoose.connect('mongodb://localhost/tothepub', {
     }
   });
 
-  const tagCatsJSON = await readFile('./../../data/tagCategories.json');
+  const tagCatsJSON = await readFile('./../../data/tagCategory.json');
   const tagCategories = JSON.parse(tagCatsJSON);
 
   // Tags.create({ tags: TAGS }, (err, doc) => {
