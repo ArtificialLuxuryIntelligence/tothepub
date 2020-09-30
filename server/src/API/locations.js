@@ -7,7 +7,6 @@ const upload = multer();
 const PointLocation = require('../../models/pointLocation');
 const pointLocationEdit = require('../../models/pointLocationEdit');
 const PointLocationEdit = require('../../models/pointLocationEdit');
-
 const TagCategory = require('../../models/tagCategory');
 
 const router = Router();
@@ -74,19 +73,10 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.get('/tags', async (req, res, next) => {
-  try {
-    const doc = await TagCategory.find();
-    res.json({ doc });
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-});
-
 router.post('/edit', upload.array(), async (req, res, next) => {
   //  this is probably overly complicated. it would be easier to create template json clientside
   //  and fill it in using the form data before sending it here
+  //  note: we do need to know the category so an array of tags won't work
 
   const {
     id,
@@ -129,6 +119,7 @@ router.post('/edit', upload.array(), async (req, res, next) => {
 
     // now left with just tags:
     const updatedTags = [];
+    const updatedDropdowns = [];
     Object.keys(req.body).forEach((key) => {
       // add booleans
       if (req.body[key] === 'false') {
@@ -138,10 +129,13 @@ router.post('/edit', upload.array(), async (req, res, next) => {
       // add string keys (from dropdowns)
       else if (req.body[key] !== '') {
         updatedTags.push(req.body[key]);
+        updatedDropdowns.push({ [key]: req.body[key] });
       }
     });
     updatedDoc.properties.tags = updatedTags;
+    // res.json(updatedDropdowns);
 
+ 
     // ----------------------- save proposal to pointLocationEdit collection for review
     const edit = await pointLocationEdit.create(updatedDoc);
     res.status(200).json({ edit });
@@ -151,4 +145,23 @@ router.post('/edit', upload.array(), async (req, res, next) => {
     next(err);
   }
 });
+
+router.get('/tags', async (req, res, next) => {
+  try {
+    const doc = await TagCategory.find();
+    res.json({ doc });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.post('/tags', async (req, res, next) => {
+  try {
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
 module.exports = router;

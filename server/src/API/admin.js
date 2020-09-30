@@ -43,7 +43,6 @@ router.get('/edits', async (req, res) => {
     console.error(err);
   }
 });
-module.exports = router;
 
 router.post('/edit', upload.array(), async (req, res) => {
   //  this is probably overly complicated. it would be easier to create template json clientside
@@ -57,6 +56,8 @@ router.post('/edit', upload.array(), async (req, res) => {
     website,
     'opening-hours': openingHours,
   } = req.body;
+
+  console.log('hi');  
 
   try {
     // ----------get original document that request is proposing to an update to
@@ -88,6 +89,8 @@ router.post('/edit', upload.array(), async (req, res) => {
 
     // now left with just tags:
     const updatedTags = [];
+    const updatedDropdowns = [];
+
     Object.keys(req.body).forEach((key) => {
       // add booleans
       if (req.body[key] === 'false') {
@@ -97,10 +100,35 @@ router.post('/edit', upload.array(), async (req, res) => {
       // add string keys (from dropdowns)
       else if (req.body[key] !== '') {
         updatedTags.push(req.body[key]);
+        updatedDropdowns.push({ [key]: req.body[key] });
       }
     });
     updatedDoc.properties.tags = updatedTags;
-    console.log(updatedDoc);
+
+    //  ------------------------ Deal with new tags --------------------
+    // ! ! better solution: mark newly added tags clientside
+    //  find if any new tags have been added
+    //  only check to see if new options have been added to dropdowns
+    //  (new boolean isn't implemented -TODO?)
+
+    console.log(updatedTags);
+
+    if (updatedDropdowns.length !== 0) {
+      await Promise.all(
+        updatedDropdowns.map(async (tagCat) => {
+          const originalTagCat = await TagCategory.findOne({
+            category: Object.keys(tagCat)[0],
+          });
+
+          if (originalTagCat.tags.includes(Object.values(tagCat)[0])) {
+          } else {
+            await TagCategory.findByIdAndUpdate(originalTagCat._id, {
+              tags: [...originalTagCat.tags, Object.values(tagCat)[0]],
+            });
+          }
+        })
+      );
+    }
 
     // ----------------------- save proposal to pointLocationEdit collection for review
     const updated = await PointLocation.findOneAndUpdate(
@@ -130,3 +158,5 @@ router.post('/deleteedit', upload.array(), async (req, res, next) => {
     console.error(err);
   }
 });
+
+module.exports = router;

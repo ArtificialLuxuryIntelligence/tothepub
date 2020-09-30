@@ -8,7 +8,7 @@ const TagCategory = require('../models/tagCategory');
 
 require('dotenv').config();
 
-const TAGS = ['Wetherspoons', "Samuel Smith's"]; // TODO :autodetect --->
+// const TAGS = ['Wetherspoons', "Samuel Smith's"]; // TODO :autodetect --->
 
 //  see drawMap.js hardcoded allTags and allLocationInfo
 //  change Tags model to take format of allTags
