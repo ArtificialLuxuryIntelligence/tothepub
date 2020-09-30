@@ -90,12 +90,13 @@ function locationEditForm(
   allTags.forEach((cat) => {
     // let h = createEC('h5', cat.category);
     // form.appendChild(h);
+    let tags = cat.tags.map((t) => t.tag);
     switch (cat.editDisplay) {
       case 'dropdown':
-        addDropdown(pub, cat.category, cat.tags, form);
+        addDropdown(pub, cat.category, tags, form);
         break;
       case 'boolean':
-        addBoolean(pub, cat.category, cat.tags[0], form);
+        addBoolean(pub, cat.category, tags[0], form);
         null;
         break;
       default:
