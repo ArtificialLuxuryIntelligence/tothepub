@@ -57,7 +57,7 @@ router.post('/edit', upload.array(), async (req, res) => {
     'opening-hours': openingHours,
   } = req.body;
 
-  console.log('hi');  
+  console.log('hi');
 
   try {
     // ----------get original document that request is proposing to an update to
@@ -103,9 +103,10 @@ router.post('/edit', upload.array(), async (req, res) => {
         updatedDropdowns.push({ [key]: req.body[key] });
       }
     });
+    
     updatedDoc.properties.tags = updatedTags;
 
-    //  ------------------------ Deal with new tags --------------------
+    //  ------------------------ Deal with new tags and tag counts--------------------
     // ! ! better solution: mark newly added tags clientside
     //  find if any new tags have been added
     //  only check to see if new options have been added to dropdowns
@@ -114,20 +115,46 @@ router.post('/edit', upload.array(), async (req, res) => {
     console.log(updatedTags);
 
     if (updatedDropdowns.length !== 0) {
+      //  add new tag or increment count for added tags
       await Promise.all(
         updatedDropdowns.map(async (tagCat) => {
           const originalTagCat = await TagCategory.findOne({
             category: Object.keys(tagCat)[0],
           });
-
-          if (originalTagCat.tags.includes(Object.values(tagCat)[0])) {
+          if (
+            originalTagCat.tags
+              .map((t) => t.tag)
+              .includes(Object.values(tagCat)[0])
+          ) {
+            // add one to tag count
+            originalTagCat.tags.filter(
+              (t) => t.tag === Object.values(tagCat)[0]
+            )[0].count += 1;
+            await TagCategory.findOneAndUpdate(
+              { _id: originalTagCat._id },
+              {
+                tags: originalTagCat.tags,
+              }
+            );
+            // res.json({ r });
           } else {
-            await TagCategory.findByIdAndUpdate(originalTagCat._id, {
-              tags: [...originalTagCat.tags, Object.values(tagCat)[0]],
-            });
+            //  create new tag
+            await TagCategory.findOneAndUpdate(
+              { _id: originalTagCat._id },
+              {
+                tags: [
+                  ...originalTagCat.tags,
+                  { tag: Object.values(tagCat)[0], count: 1 },
+                ],
+              }
+            );
+            // res.json({ r });
           }
         })
       );
+
+      //  decrement tag counts for all removed tags
+      // TODO
     }
 
     // ----------------------- save proposal to pointLocationEdit collection for review
@@ -143,6 +170,7 @@ router.post('/edit', upload.array(), async (req, res) => {
     res.status(200).json({ updated });
   } catch (err) {
     console.error(err);
+    next(err);
     res.status(504); // service unavailable..? deal with it clientside
   }
 });
