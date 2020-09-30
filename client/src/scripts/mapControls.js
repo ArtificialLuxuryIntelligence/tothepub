@@ -135,8 +135,35 @@ class ToggleTeleportControl {
   }
 }
 
+class NavigateHomeControl {
+  constructor() {}
+
+  onAdd(map) {
+    this._map = map;
+    this._container = document.createElement('div');
+    let button = document.createElement('button');
+    let span = document.createElement('span');
+
+    this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
+    span.className = 'mapboxgl-ctrl-icon';
+    span.id = 'nav-home';
+
+    span.style.backgroundPosition = 'center';
+    button.appendChild(span);
+
+    button.addEventListener('click', (e) => {
+      location.reload();
+    });
+    this._container.appendChild(button);
+    return this._container;
+  }
+
+  onRemove() {}
+}
+
 export {
   ToggleDarkModeControl,
   ToggleDirectionsControl,
   ToggleTeleportControl,
+  NavigateHomeControl,
 };

@@ -9,6 +9,7 @@ import {
   ToggleDarkModeControl,
   ToggleDirectionsControl,
   ToggleTeleportControl,
+  NavigateHomeControl,
 } from './mapControls';
 import allLocationInfo from './../data/allLocationInfo.js';
 
@@ -210,8 +211,8 @@ export default function drawMap(start, nearest, allTags, tag) {
     pageCont.classList.toggle('light');
 
     //rerender map
-    // drawMap(start, nearest, allTags);
-    map.setStyle('mapbox://styles/mapbox/streets-v11');
+    drawMap(start, nearest, allTags);
+    // map.setStyle('mapbox://styles/mapbox/streets-v11');
     // note map.setStyle() doesn't rerender all layers (line for route
     // ) etc so whole map rerender is needed (there may be some solutions but not really needed here?)
   }
@@ -260,6 +261,7 @@ export default function drawMap(start, nearest, allTags, tag) {
     new ToggleTeleportControl(toggleTeleport, teleport),
     'bottom-right'
   );
+  map.addControl(new NavigateHomeControl(), 'bottom-right');
 
   // controlsAdded = true;
 }
