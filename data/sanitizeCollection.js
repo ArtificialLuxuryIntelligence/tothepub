@@ -74,14 +74,6 @@ const accepetedTagData = [
   },
   {
     key: 'operator',
-    regex: new RegExp('samuel s', 'gi'),
-    tag: `Samuel Smith`,
-    category: 'operator',
-    editDisplay: 'dropdown',
-    homeDropdown: true,
-  },
-  {
-    key: 'operator',
     regex: new RegExp('Shepherd Neame', 'gi'),
     tag: `Shepherd Neame`,
     category: 'operator',

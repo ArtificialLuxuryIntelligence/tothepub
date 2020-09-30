@@ -64,7 +64,6 @@ router.post('/edit', upload.array(), async (req, res) => {
     const original = await PointLocation.findOne({
       _id: id,
     }).exec();
-    console.log(original);
 
     // ------------ create a proposal update object (clone original and update)
 
@@ -90,12 +89,15 @@ router.post('/edit', upload.array(), async (req, res) => {
     // now left with just tags:
     const updatedTags = [];
     const updatedDropdowns = [];
+    const updatedBooleans = [];
 
     Object.keys(req.body).forEach((key) => {
       // add booleans
       if (req.body[key] === 'false') {
+        updatedBooleans.push({ [key]: req.body[key] });
       } else if (req.body[key] === 'true') {
         updatedTags.push(key);
+        updatedBooleans.push({ [key]: req.body[key] });
       }
       // add string keys (from dropdowns)
       else if (req.body[key] !== '') {
@@ -103,8 +105,11 @@ router.post('/edit', upload.array(), async (req, res) => {
         updatedDropdowns.push({ [key]: req.body[key] });
       }
     });
-    
+
     updatedDoc.properties.tags = updatedTags;
+    console.log(updatedBooleans);
+    // return res.json({ updatedBooleans, ts: original.properties.tags });
+    console.log(updatedDropdowns);
 
     //  ------------------------ Deal with new tags and tag counts--------------------
     // ! ! better solution: mark newly added tags clientside
@@ -136,7 +141,6 @@ router.post('/edit', upload.array(), async (req, res) => {
                 tags: originalTagCat.tags,
               }
             );
-            // res.json({ r });
           } else {
             //  create new tag
             await TagCategory.findOneAndUpdate(
@@ -148,13 +152,12 @@ router.post('/edit', upload.array(), async (req, res) => {
                 ],
               }
             );
-            // res.json({ r });
           }
         })
       );
 
-      //  decrement tag counts for all removed tags
-      // TODO
+      // (TODO) NOTE: there is a separate admin command to recount all
+      // tags and update the tagCategories accordingly
     }
 
     // ----------------------- save proposal to pointLocationEdit collection for review
