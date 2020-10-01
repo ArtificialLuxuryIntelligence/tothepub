@@ -20,6 +20,10 @@ const acceptedTagProps = [
   'camra',
   'amenity',
   'food',
+  'craft',
+  'craft_keg',
+  'craft_beer',
+  'outdoor_seating',
 ]; //properties to be manipulated/searched through and turned into tags property (array)
 
 //NOTE display and  category are used clientside
@@ -140,8 +144,8 @@ const accepetedTagData = [
   // },
   {
     key: 'operator',
-    regex: new RegExp('free house', 'gi'),
-    tag: `Free House`,
+    regex: new RegExp('free house|freehouse', 'gi'),
+    tag: `Independent`,
     category: 'operator',
     editDisplay: 'dropdown',
     homeDropdown: true,
@@ -154,14 +158,14 @@ const accepetedTagData = [
     editDisplay: 'dropdown',
     homeDropdown: true,
   },
-  {
-    key: 'NONE',
-    // regex: new RegExp('bar', 'gi'),
-    tag: 'Independent',
-    category: 'operator',
-    editDisplay: 'dropdown',
-    homeDropdown: false,
-  },
+  // {
+  //   key: 'NONE',
+  //   // regex: new RegExp('bar', 'gi'),
+  //   tag: 'Independent',
+  //   category: 'operator',
+  //   editDisplay: 'dropdown',
+  //   homeDropdown: false,
+  // },
   // ------------------ amenity
   {
     key: 'amenity',
@@ -180,7 +184,14 @@ const accepetedTagData = [
     homeDropdown: true,
   },
   // ------------------ booleans
-
+  {
+    key: 'outdoor_seating',
+    regex: new RegExp(`^(?!no).*$`, 'gi'), //anything but starting with no
+    tag: 'outdoor seating',
+    category: 'outdoor_seating',
+    editDisplay: 'boolean',
+    homeDropdown: true,
+  },
   {
     key: 'food',
     regex: new RegExp(`yes`, 'gi'),
@@ -218,6 +229,22 @@ const accepetedTagData = [
     regex: new RegExp('yes', 'gi'),
     tag: 'CAMRA',
     category: 'camra',
+    editDisplay: 'boolean',
+    homeDropdown: true,
+  },
+  {
+    key: 'craft_beer',
+    regex: new RegExp('yes', 'gi'),
+    tag: 'craft beer',
+    category: 'craft_beer',
+    editDisplay: 'boolean',
+    homeDropdown: true,
+  },
+  {
+    key: 'craft_keg',
+    regex: new RegExp('yes', 'gi'),
+    tag: 'craft beer',
+    category: 'craft_beer',
     editDisplay: 'boolean',
     homeDropdown: true,
   },
@@ -410,15 +437,16 @@ function formatTagData(accepetedTagData) {
   return result;
 }
 
-function addTagInstancesCount(formattedData, allFeatures) {
-  // do this for all categories // here just operat
-  let operators = allFeatures
-    .map((f) => f.properties.operator)
-    .filter((r) => r !== undefined);
-  console.log(operators);
-  let count = {};
-  operators.forEach((op) => {
-    count[op] ? (count[op] += 1) : (count[op] = 1);
-  });
-  console.log(count);
-}
+// now redundant - completed in extract tags function
+// function addTagInstancesCount(formattedData, allFeatures) {
+//   // do this for all categories // here just operat
+//   let operators = allFeatures
+//     .map((f) => f.properties.operator)
+//     .filter((r) => r !== undefined);
+//   console.log(operators);
+//   let count = {};
+//   operators.forEach((op) => {
+//     count[op] ? (count[op] += 1) : (count[op] = 1);
+//   });
+//   console.log(count);
+// }
