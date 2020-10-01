@@ -10,7 +10,7 @@ const [, , ...read] = process.argv; //
 // *************** this coincides with allLocationInfo in drawMap.js (plus tags)
 const acceptedProps = ['name', 'phone', 'website', 'opening_hours', 'tags']; //properties not deleted and displayed as general location info (except for tags) ('tags' extra prop added)
 
-//
+////properties to be searched through (and manipulated) and turned into tag
 const acceptedTagProps = [
   'operator',
   'brand',
@@ -24,7 +24,9 @@ const acceptedTagProps = [
   'craft_keg',
   'craft_beer',
   'outdoor_seating',
-]; //properties to be manipulated/searched through and turned into tags property (array)
+  'live_music',
+  'live_music_venue',
+];
 
 //NOTE display and  category are used clientside
 
@@ -112,7 +114,7 @@ const accepetedTagData = [
   {
     key: 'operator',
     regex: new RegExp('antic', 'gi'),
-    tag: `Antic London`,
+    tag: `Antic`,
     category: 'operator',
     editDisplay: 'dropdown',
     homeDropdown: true,
@@ -245,6 +247,22 @@ const accepetedTagData = [
     regex: new RegExp('yes', 'gi'),
     tag: 'craft beer',
     category: 'craft_beer',
+    editDisplay: 'boolean',
+    homeDropdown: true,
+  },
+  {
+    key: 'live_music',
+    regex: new RegExp(`^(?!\s*$).+`, 'gi'), //anything at least one non space char
+    tag: 'live music',
+    category: 'live_music',
+    editDisplay: 'boolean',
+    homeDropdown: true,
+  },
+  {
+    key: 'live_music_venue',
+    regex: new RegExp(`yes`, 'gi'), //anything at least one non space char
+    tag: 'live music',
+    category: 'live_music',
     editDisplay: 'boolean',
     homeDropdown: true,
   },

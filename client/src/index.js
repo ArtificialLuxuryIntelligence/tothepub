@@ -10,9 +10,6 @@ import drawMap from './scripts/drawMap';
 // some tags are good to have on map but there are too few to be a search filter (for now..)
 const dropDownTags = ['operator', 'food', 'amenity', 'real-ale'];
 
-// const DEV = true;
-const DEV = false;
-
 const dropDown = document.getElementById('tag-dropdown');
 const takeMeButton = document.getElementById('take-me');
 let allTags;
@@ -22,7 +19,8 @@ let longitude, latitude;
   const { coords } = await geolocate();
   latitude = coords.latitude;
   longitude = coords.longitude;
-  // let { latitude, longitude } = coords;
+  // longitude = -0.13703469999999998;
+  // latitude = 51.520621633333336;
   allTags = await getallTags();
   let localTags = await getLocalTags(longitude, latitude);
   console.log(localTags);
@@ -41,10 +39,6 @@ async function takeMeToThePub(maxResults) {
   try {
     //Get current position
 
-    // const start =
-    //   process.env.MODE === 'dev'
-    //     ? [-0.13703469999999998, 51.520621633333336]
-    //     : [longitude, latitude]; //API format - production
     const start = [longitude, latitude];
     const tag = dropDown.value;
     //Find nearest pubs
@@ -83,7 +77,8 @@ function populateDropDown(allTags, localTags, dropDownTags) {
 
   console.log(allTags);
   //dropDownTags is hardcoded array of accepted categories for dropdown
-  let ddallTags = allTags.filter((o) => dropDownTags.includes(o.category));
+  // let ddallTags = allTags.filter((o) => dropDownTags.includes(o.category));
+  let ddallTags = allTags;
   console.log('at', ddallTags);
   ddallTags.forEach((cat) => {
     if (!cat.tags.some((tag) => localTags.includes(tag.tag))) {
