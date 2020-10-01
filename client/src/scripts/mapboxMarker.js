@@ -48,9 +48,11 @@ function locationEditForm(
       if (pub.properties[key] !== '') {
         console.log(key);
         if (key == 'website') {
-          let website = pub.properties[key].replace(/(^\w+:|^)\/\//, '');
+          let website = pub.properties[key].replace(/(^\w+:|^)\/\//, '').trim();
           let a = createEC('a', `${website}`, 'popup-info');
-          a.href = ` ${pub.properties[key]}`;
+          let site = setHttp(`${pub.properties[key]}`);
+          a.href = site;
+          console.log(site);
           a.target = '_blank';
           a.rel = `noopener noreferrer`;
 
@@ -260,3 +262,10 @@ function addPropertiesEdit(properties = {}, parent, allLocationInfo) {
 }
 
 export { addPropertiesEdit, locationEditForm, showTempModal };
+
+function setHttp(link) {
+  if (link.search(/^http[s]?\:\/\//) == -1) {
+    link = 'http://' + link;
+  }
+  return link;
+}
