@@ -16,10 +16,17 @@ const DEV = false;
 const dropDown = document.getElementById('tag-dropdown');
 const takeMeButton = document.getElementById('take-me');
 let allTags;
+let longitude, latitude;
 
 (async () => {
+  const { coords } = await geolocate();
+  latitude = coords.latitude;
+  longitude = coords.longitude;
+  // let { latitude, longitude } = coords;
   allTags = await getallTags();
-  populateDropDown(allTags, dropDownTags);
+  let localTags = await getLocalTags(longitude, latitude);
+  console.log(localTags);
+  populateDropDown(allTags, localTags, dropDownTags);
 })();
 
 function toggleLoading() {
@@ -33,8 +40,6 @@ async function takeMeToThePub(maxResults) {
   toggleLoading();
   try {
     //Get current position
-    const { coords } = await geolocate();
-    const { latitude, longitude } = coords;
 
     // const start =
     //   process.env.MODE === 'dev'
@@ -65,20 +70,32 @@ async function getallTags() {
   let result = await response.json();
   return result.doc;
 }
+async function getLocalTags(lon, lat) {
+  let url = `${baseUrl}/api/location/tags/local?lon=${lon}&lat=${lat}`;
 
-function populateDropDown(allTags, dropDownTags) {
+  let response = await fetch(url);
+  let result = await response.json();
+  return result.localTags;
+}
+
+function populateDropDown(allTags, localTags, dropDownTags) {
   //call api for list of tags
 
   console.log(allTags);
+  //dropDownTags is hardcoded array of accepted categories for dropdown
   let ddallTags = allTags.filter((o) => dropDownTags.includes(o.category));
+  console.log('at', ddallTags);
   ddallTags.forEach((cat) => {
+    if (!cat.tags.some((tag) => localTags.includes(tag.tag))) {
+      return; //no local tags in this category (assuming there will be at least one over the count limit)
+    }
     let op = document.createElement('option');
     op.disabled = 'disabled';
     op.innerText = '---------------------';
     // capitalise(cat.category);
     dropDown.appendChild(op);
     cat.tags.forEach((tag) => {
-      if (tag.count > 20) {
+      if (localTags.includes(tag.tag)) {
         let op = document.createElement('option');
         op.value = tag.tag;
         op.innerText = tag.tag;
