@@ -155,6 +155,32 @@ router.get('/tags', async (req, res, next) => {
   }
 });
 
+router.get('/tags/local', async (req, res, next) => {
+  const { lon, lat } = req.query;
+
+  try {
+    const locations = await PointLocation.find({
+      geometry: {
+        $near: {
+          $maxDistance: SEARCH_RADIUS,
+          $geometry: {
+            type: 'Point',
+            coordinates: [lon, lat],
+          },
+        },
+      },
+    });
+    // .limit(MAX_RESULTS);
+
+    const localTags = [
+      ...new Set(locations.map((l) => l.properties.tags).flat()),
+    ];
+
+    res.json({ coords: [lon, lat], localTags });
+  } catch (err) {
+    next(err);
+  }
+});
 router.post('/tags', async (req, res, next) => {
   try {
   } catch (err) {
