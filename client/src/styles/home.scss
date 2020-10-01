@@ -59,14 +59,17 @@ $transition-time: 1.3s;
           z-index: -1;
           background-color: orangered;
           border: 1rem solid red;
+          // box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.9);
         }
         &:focus,
         &:active,
         &:hover {
           outline: none;
-          border: 0.4rem solid red;
           // background-color: none;
-          transition: border 0.2s ease;
+          
+          transition: all 0.2s ease;
+          border: 0.4rem solid red;
+          // box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.9);
         }
       }
     }

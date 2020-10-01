@@ -235,7 +235,7 @@ export default function drawMap(start, nearest, allTags, tag) {
     start = [lng, lat];
     const nearest = await findNearest(start, tag, 25);
     if (nearest.length == 0) {
-      showTempModal('Sorry, no results nearby', 1200);
+      showTempModal(`Sorry, no ${tag} results nearby`, 1200);
       return;
     }
     let end = nearest[0].geometry.coordinates;

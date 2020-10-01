@@ -8,7 +8,7 @@ import drawMap from './scripts/drawMap';
 
 // categories to include in drop down (of allTags [from database])
 // some tags are good to have on map but there are too few to be a search filter (for now..)
-const dropDownTags = ['operator', 'food'];
+const dropDownTags = ['operator', 'food', 'amenity', 'real-ale'];
 
 // const DEV = true;
 const DEV = false;
@@ -74,7 +74,8 @@ function populateDropDown(allTags, dropDownTags) {
   ddallTags.forEach((cat) => {
     let op = document.createElement('option');
     op.disabled = 'disabled';
-    op.innerText = capitalise(cat.category);
+    op.innerText = '---------------------';
+    // capitalise(cat.category);
     dropDown.appendChild(op);
     cat.tags.forEach((tag) => {
       if (tag.count > 20) {

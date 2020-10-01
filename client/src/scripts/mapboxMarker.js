@@ -213,14 +213,7 @@ function addPropertiesEdit(properties = {}, parent, allLocationInfo) {
 
     let group = createEC('div', null, 'input-group');
 
-    if (info.value == 'comments') {
-      // let comment = createEC('p', 'Other tag suggestions or comments? :');
-      // group.appendChild(comment);
-      // let textarea = createEC('textarea', null, null, null, null, 'comments');
-      // group.appendChild(textarea);
-      // parent.appendChild(group);
-      // return;
-    }
+    
     let i;
     if (info.value == 'comments') {
       i = createEC(

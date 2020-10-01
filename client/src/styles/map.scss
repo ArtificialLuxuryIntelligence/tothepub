@@ -135,11 +135,17 @@ $dark-text: rgb(17, 35, 55);
     .popup-tag {
       display: inline-block;
       padding: 0.2em 0.5em;
-      margin: 0 0.2em;
+      margin: 0.2em 0.2em;
       border-radius: 0.3em;
+      letter-spacing: 0.1em;
     }
     .popup-info {
+      margin: 0.4em 0;
       display: block;
+    }
+    a.popup-info {
+      color: inherit !important;
+      text-decoration: none;
     }
 
     .editToggle,
@@ -151,6 +157,8 @@ $dark-text: rgb(17, 35, 55);
       border-radius: 50%;
       outline: none;
       padding: 0;
+      margin: 0.4em 0.2em;
+
       // margin-left: auto;
       // margin-top: 0.4em;
       float: right;
@@ -175,7 +183,6 @@ $dark-text: rgb(17, 35, 55);
       }
     }
     .editToggle {
-      margin-left: 0.2em;
       span {
         background-image: url('./assets/icons/edit.svg');
       }
@@ -187,6 +194,7 @@ $dark-text: rgb(17, 35, 55);
       transition: all 0.5s ease;
     }
     form {
+      width: 100%;
       max-height: 90vh; //hack for height transition to work
     }
     .infoContainer {
@@ -259,6 +267,7 @@ $dark-text: rgb(17, 35, 55);
   }
   h3 {
     background-color: white;
+    border-radius: 2rem;
     color: orangered;
     text-align: center;
     padding: 2rem;
