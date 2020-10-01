@@ -172,7 +172,6 @@ export default function drawMap(start, nearest, allTags, tag) {
           new mapboxgl.Popup({
             offset: 25,
             closeButton: false,
-            closeOnMove: true,
           }) // add popup
             // .setHTML('<h3>' + pub.properties.name + '</h3>')
             .setDOMContent(

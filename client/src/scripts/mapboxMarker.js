@@ -213,9 +213,15 @@ function addPropertiesEdit(properties = {}, parent, allLocationInfo) {
 
     let group = createEC('div', null, 'input-group');
 
-    
     let i;
     if (info.value == 'comments') {
+      let p = createEC(
+        'p',
+        'Missing operator? Tag idea? Please comment below:',
+        'comment-prompt'
+      );
+      parent.appendChild(p);
+
       i = createEC(
         'textarea',
         null,
