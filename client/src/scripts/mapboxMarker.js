@@ -51,6 +51,9 @@ function locationEditForm(
           let website = pub.properties[key].replace(/(^\w+:|^)\/\//, '');
           let a = createEC('a', `${website}`, 'popup-info');
           a.href = ` ${pub.properties[key]}`;
+          a.target = '_blank';
+          a.rel = `noopener noreferrer`;
+
           infoContainer.appendChild(a);
         } else {
           let p = createEC(
