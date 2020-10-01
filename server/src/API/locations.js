@@ -12,7 +12,7 @@ const TagCategory = require('../../models/tagCategory');
 const router = Router();
 //  set high to ensure some results - the point of the query is to sort by distance
 const SEARCH_RADIUS = 4000;
-const MAX_RESULTS = 25;
+const MAX_RESULTS = 24;
 
 router.get('/', async (req, res, next) => {
   const { long, lat, tag } = req.query;
