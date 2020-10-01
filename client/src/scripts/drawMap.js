@@ -169,7 +169,11 @@ export default function drawMap(start, nearest, allTags, tag) {
       new mapboxgl.Marker(el, { anchor: 'bottom' })
         .setLngLat(pub.geometry.coordinates)
         .setPopup(
-          new mapboxgl.Popup({ offset: 25 }) // add popup
+          new mapboxgl.Popup({
+            offset: 25,
+            closeButton: false,
+            closeOnMove: true,
+          }) // add popup
             // .setHTML('<h3>' + pub.properties.name + '</h3>')
             .setDOMContent(
               locationEditForm(

@@ -30,14 +30,15 @@ function locationEditForm(
   // -----additional location information
 
   //toggle locations info open
-  let infoToggle = createEC('button', 'more info', 'infoToggle');
-  infoToggle.addEventListener('click', (e) => {
-    e.target.nextElementSibling.classList.toggle('hidden');
-  });
-  content.appendChild(infoToggle);
+  let infoToggle = createEC('button', '', 'infoToggle');
+  infoToggle.appendChild(createEC('span', '', ''));
+
   let infoContainer = createEC('div', null, 'hidden');
   infoContainer.classList.add('infoContainer');
-  //add to this classlist?
+
+  infoToggle.addEventListener('click', (e) => {
+    infoContainer.classList.toggle('hidden');
+  });
 
   Object.keys(pub.properties)
     .filter(function (key) {
@@ -68,17 +69,16 @@ function locationEditForm(
     infoContainer.appendChild(p);
   }
 
-  content.appendChild(infoContainer);
   // ----------------------- EDIT FORM
 
   //toggle edit form open
-  let editToggle = createEC('button', 'edit info', 'editToggle');
-  editToggle.addEventListener('click', (e) => {
-    e.target.nextElementSibling.classList.toggle('hidden');
-  });
-  content.appendChild(editToggle);
-
+  let editToggle = createEC('button', '', 'editToggle');
+  editToggle.appendChild(createEC('span', '', ''));
   let form = createEC('form', null, 'hidden');
+  editToggle.addEventListener('click', (e) => {
+    form.classList.toggle('hidden');
+  });
+
   // ----  doc id
   let id = createEC('input', null, null, 'docId', 'hidden', 'id', pubId);
   form.appendChild(id);
@@ -152,6 +152,11 @@ function locationEditForm(
       }
     });
   }
+
+  // add content
+  content.appendChild(editToggle);
+  content.appendChild(infoToggle);
+  content.appendChild(infoContainer);
   content.appendChild(form);
   return content;
 }

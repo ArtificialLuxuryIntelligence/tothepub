@@ -124,8 +124,10 @@ $dark-text: rgb(17, 35, 55);
   .mapboxgl-popup-content {
     // max-width: 60vw; //max view width for lots of tags?
     // text-align: center;
-    font-family: 'Open Sans', sans-serif;
+    // font-family: 'Open Sans', sans-serif;
+
     padding: 1rem;
+    border-radius: 1.2em;
 
     h3 {
       margin: 0.3rem;
@@ -134,6 +136,7 @@ $dark-text: rgb(17, 35, 55);
       display: inline-block;
       padding: 0.2em 0.5em;
       margin: 0 0.2em;
+      border-radius: 0.3em;
     }
     .popup-info {
       display: block;
@@ -142,10 +145,40 @@ $dark-text: rgb(17, 35, 55);
     .editToggle,
     .infoToggle {
       display: block;
+      width: 24px;
+      height: 24px;
+      background-color: rgba(0, 0, 0, 0);
+      border-radius: 50%;
+      outline: none;
+      padding: 0;
       // margin-left: auto;
       // margin-top: 0.4em;
       float: right;
+
       // background-image: "edit image URL"; // TODO
+      span {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 15px 15px;
+      }
+      &:hover,
+      &:focus {
+        border-color: 1px solid grey;
+      }
+    }
+    .infoToggle {
+      span {
+        background-image: url('./assets/icons/info.svg');
+      }
+    }
+    .editToggle {
+      margin-left: 0.2em;
+      span {
+        background-image: url('./assets/icons/edit.svg');
+      }
     }
     form,
     .infoContainer {
@@ -164,12 +197,14 @@ $dark-text: rgb(17, 35, 55);
       .input-group {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         margin: 0.2em 0;
         // padding: 0rem 1rem;
         label {
-          margin-right: 1rem;
-          width: 20%;
+          margin-right: 0.8rem;
+          width: 30%;
         }
+        select,
         input[type='text'],
         input[type='tel'],
         textarea {
@@ -268,6 +303,10 @@ $dark-text: rgb(17, 35, 55);
         border: 1px solid $light-text;
         background-color: $dark-bg;
       }
+      .editToggle,
+      .infoToggle {
+        filter: invert(1);
+      }
       .popup-info {
       }
     }
@@ -297,6 +336,10 @@ $dark-text: rgb(17, 35, 55);
         color: $dark-text;
         border: 1px solid $dark-text;
         background-color: $light-bg;
+      }
+      .editToggle,
+      .infoToggle {
+        filter: invert(0);
       }
       .popup-info {
       }
