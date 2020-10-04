@@ -1,4 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Work+Sans&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sansita+Swashed&display=swap');
+
 * {
   box-sizing: border-box;
 }
@@ -6,7 +8,7 @@
 html,
 body {
   height: 100%; //100vh fix for mobile?
-  font-family: "Work Sans", sans-serif;
+  font-family: 'Work Sans', sans-serif;
 }
 
 body {

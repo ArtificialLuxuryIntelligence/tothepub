@@ -70,7 +70,7 @@ function locationEditForm(
   // if no info available
 
   if (infoContainer.textContent === '') {
-    let p = createEC('p', 'no information available');
+    let p = createEC('p', 'no information yet');
     infoContainer.appendChild(p);
   }
 
@@ -158,9 +158,14 @@ function locationEditForm(
     });
   }
 
+  //  toggle button container
+
+  let toggleContainer = createEC('div', '', 'toggleContainer');
+  toggleContainer.appendChild(editToggle);
+  toggleContainer.appendChild(infoToggle);
+
   // add content
-  content.appendChild(editToggle);
-  content.appendChild(infoToggle);
+  content.appendChild(toggleContainer);
   content.appendChild(infoContainer);
   content.appendChild(form);
   return content;

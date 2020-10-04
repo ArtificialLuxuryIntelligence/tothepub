@@ -130,7 +130,7 @@ $dark-text: rgb(17, 35, 55);
     border-radius: 1.2em;
 
     h3 {
-      margin: 0.3rem;
+      margin: 0.7rem 0.3rem;
     }
     .popup-tag {
       display: inline-block;
@@ -148,45 +148,51 @@ $dark-text: rgb(17, 35, 55);
       text-decoration: none;
     }
 
-    .editToggle,
-    .infoToggle {
-      display: block;
-      width: 24px;
-      height: 24px;
-      background-color: rgba(0, 0, 0, 0);
-      border-radius: 50%;
-      outline: none;
-      padding: 0;
-      margin: 0.4em 0.2em;
+    .toggleContainer {
+      display: flex;
+      justify-content: flex-end;
 
-      // margin-left: auto;
-      // margin-top: 0.4em;
-      float: right;
-
-      // background-image: "edit image URL"; // TODO
-      span {
+      .infoToggle {
+        span {
+          background-image: url('./assets/icons/info-24px.svg');
+        }
+      }
+      .editToggle {
+        span {
+          background-image: url('./assets/icons/edit.svg');
+        }
+      }
+      .editToggle,
+      .infoToggle {
         display: block;
-        width: 100%;
-        height: 100%;
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: 15px 15px;
-      }
-      &:hover,
-      &:focus {
-        border-color: 1px solid grey;
+        width: 24px;
+        height: 24px;
+        background-color: rgba(0, 0, 0, 0);
+        border-radius: 50%;
+        outline: none;
+        padding: 0;
+        margin: 0.4em 0.2em;
+
+        // margin-left: auto;
+        // margin-top: 0.4em;
+        // float: right;
+
+        // background-image: "edit image URL"; // TODO
+        span {
+          display: block;
+          width: 100%;
+          height: 100%;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: 15px 15px;
+        }
+        &:hover,
+        &:focus {
+          border-color: 1px solid grey;
+        }
       }
     }
-    .infoToggle {
-      span {
-        background-image: url('./assets/icons/info-24px.svg');
-      }
-    }
-    .editToggle {
-      span {
-        background-image: url('./assets/icons/edit.svg');
-      }
-    }
+
     form,
     .infoContainer {
       overflow: hidden;

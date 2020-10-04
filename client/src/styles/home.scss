@@ -50,9 +50,10 @@ $transition-time: 1.3s;
       align-items: center;
 
       button {
+        font-family: 'Sansita Swashed', cursive;
         box-sizing: content-box;
         line-height: 1.25;
-        font-size: 1.6em;
+        font-size: 1.3em;
         font-weight: 600;
         letter-spacing: 0.06em;
         text-align: center;
@@ -179,7 +180,7 @@ $transition-time: 1.3s;
     #content {
       .button-container {
         button {
-          font-size: 1.8em;
+          font-size: 1.7em;
           width: 9rem;
           height: 9rem;
         }
