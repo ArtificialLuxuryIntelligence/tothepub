@@ -161,8 +161,8 @@ function locationEditForm(
   //  toggle button container
 
   let toggleContainer = createEC('div', '', 'toggleContainer');
-  toggleContainer.appendChild(editToggle);
   toggleContainer.appendChild(infoToggle);
+  toggleContainer.appendChild(editToggle);
 
   // add content
   content.appendChild(toggleContainer);

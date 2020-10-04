@@ -123,9 +123,10 @@ $transition-time: 1.3s;
       justify-self: center;
 
       z-index: 1;
-    
+
       text-align: center;
       select {
+        font-family: 'Sansita Swashed', cursive;
         cursor: pointer;
         padding: 0.7em;
         border-radius: 0.3em;

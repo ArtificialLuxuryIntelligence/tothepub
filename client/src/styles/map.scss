@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------------------------------------------------------
 $dark-bg: rgb(17, 35, 55);
-$light-bg: rgb(255, 255, 255);
+$light-bg: rgb(250, 250, 250);
 
-$light-text: rgb(255, 255, 255);
+$light-text: rgb(250, 250, 250);
 $dark-text: rgb(17, 35, 55);
 
 /* ---------------------------------------  map page ---------------------------------------*/
@@ -17,6 +17,12 @@ $dark-text: rgb(17, 35, 55);
   max-height: 100%;
   width: 100vw;
   max-width: 100%;
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: 'Sansita Swashed', cursive;
+  }
 }
 
 #map {
@@ -130,7 +136,8 @@ $dark-text: rgb(17, 35, 55);
     border-radius: 1.2em;
 
     h3 {
-      margin: 0.7rem 0.3rem;
+      margin: 0.8em 0.15em;
+      font-size: 1.75em;
     }
     .popup-tag {
       display: inline-block;
@@ -149,9 +156,10 @@ $dark-text: rgb(17, 35, 55);
     }
 
     .toggleContainer {
-      display: flex;
-      justify-content: flex-end;
-
+      // display: flex;
+      // justify-content: flex-end;
+      float: right;
+      // margin: 0 0.3em;
       .infoToggle {
         span {
           background-image: url('./assets/icons/info-24px.svg');
@@ -171,7 +179,7 @@ $dark-text: rgb(17, 35, 55);
         border-radius: 50%;
         outline: none;
         padding: 0;
-        margin: 0.4em 0.2em;
+        margin: 0.3em 0;
 
         // margin-left: auto;
         // margin-top: 0.4em;
@@ -236,8 +244,12 @@ $dark-text: rgb(17, 35, 55);
         width: 100%;
       }
       input[type='submit'] {
-        // margin-right: 60%;
         display: block;
+        padding: 0.3em 0.7em;
+        border-radius: 0.6em;
+        border: 1px solid black;
+        float: right;
+        margin-top: 1em;
       }
     }
   }
@@ -313,6 +325,10 @@ $dark-text: rgb(17, 35, 55);
     .mapboxgl-popup-content {
       color: $light-text;
       background-color: rgba($color: $dark-bg, $alpha: 0.8);
+      background: linear-gradient(
+        rgba($color: $dark-bg, $alpha: 0.8),
+        rgba($color: $dark-bg, $alpha: 0.6)
+      );
 
       .popup-tag {
         // color: $light-text;
@@ -352,6 +368,11 @@ $dark-text: rgb(17, 35, 55);
     .mapboxgl-popup-content {
       color: $dark-text;
       background-color: rgba($color: $light-bg, $alpha: 0.8);
+      background: linear-gradient(
+        rgba($color: $light-bg, $alpha: 0.8),
+        rgba($color: $light-bg, $alpha: 0.6)
+      );
+
       .popup-tag {
         // color: $dark-text;
         // border: 1px solid $dark-text;
