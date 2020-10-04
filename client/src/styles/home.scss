@@ -53,6 +53,9 @@ $transition-time: 1.3s;
         box-sizing: content-box;
         line-height: 1.25;
         font-size: 1.6em;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-align: center;
         cursor: pointer;
         overflow: visible;
         position: relative;
@@ -119,7 +122,7 @@ $transition-time: 1.3s;
       justify-self: center;
 
       z-index: 1;
-      margin-top: 2.4rem;
+    
       text-align: center;
       select {
         cursor: pointer;

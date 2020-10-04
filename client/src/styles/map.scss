@@ -309,9 +309,13 @@ $dark-text: rgb(17, 35, 55);
       background-color: rgba($color: $dark-bg, $alpha: 0.8);
 
       .popup-tag {
+        // color: $light-text;
+        // border: 1px solid $light-text;
+        // background-color: $dark-bg;
+
         color: $light-text;
         border: 1px solid $light-text;
-        background-color: $dark-bg;
+        background-color: lighten($color: orangered, $amount: 6);
       }
       .editToggle,
       .infoToggle {
@@ -343,9 +347,13 @@ $dark-text: rgb(17, 35, 55);
       color: $dark-text;
       background-color: rgba($color: $light-bg, $alpha: 0.8);
       .popup-tag {
-        color: $dark-text;
-        border: 1px solid $dark-text;
-        background-color: $light-bg;
+        // color: $dark-text;
+        // border: 1px solid $dark-text;
+        // background-color: $light-bg;
+
+        color: $light-text;
+        border: 1px solid $light-text;
+        background-color: lighten($color: orangered, $amount: 6);
       }
       .editToggle,
       .infoToggle {

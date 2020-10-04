@@ -29,7 +29,7 @@ const colourScheme = {
     startCircleColour: 'rgb(17, 35, 55)',
   },
   dark: {
-    lineColour: 'rgb(255,255,255)',
+    lineColour: '#ff5b1f',
     startCircleColour: 'rgb(255,255,255)',
   },
 };
