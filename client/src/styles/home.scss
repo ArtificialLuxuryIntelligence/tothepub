@@ -22,18 +22,34 @@ $transition-time: 1.3s;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background: radial-gradient(circle, white, rgb(223, 212, 193));
+
+    &::before {
+      z-index: 0;
+      content: '';
+
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: url('./assets/andrea-mininni-6xHyLtoHnm4-unsplash.jpg');
+      background-size: cover;
+      background-position: center;
+      filter: brightness(70%) blur(3px);
+
+      // background-color: rgba($color: #000000, $alpha: 0.7);
+    }
 
     .button-container {
       z-index: 1;
       position: relative;
-      padding: 1rem;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 16rem;
 
       button {
         box-sizing: content-box;
+        line-height: 1.25;
+        font-size: 1.6em;
         cursor: pointer;
         overflow: visible;
         position: relative;
@@ -43,9 +59,13 @@ $transition-time: 1.3s;
         border-radius: 50%;
         border: 0px solid red;
         background-color: orangered;
+        background: radial-gradient(orangered, red);
         color: white;
         transition: border 0.2s ease;
-        font-size: 1.3rem;
+
+        transition: all 0.1s;
+        box-shadow: 5px 3px 0px rgba(255, 0, 0, 0.9),
+          inset 2px 2px 5px rgba(0, 0, 0, 0.5);
 
         &::after {
           position: absolute;
@@ -58,24 +78,48 @@ $transition-time: 1.3s;
           border-radius: 50%;
           z-index: -1;
           background-color: orangered;
-          border: 1rem solid red;
+          // border: 0rem solid red;
           // box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.9);
+        }
+
+        &:focus,
+        &:hover {
+          background: lighten($color: orangered, $amount: 6);
+          background: radial-gradient(
+            lighten($color: orangered, $amount: 6),
+            lighten($color: red, $amount: 6)
+          );
+
+          // box-shadow: 20px 30px 0px rgba(99, 9, 9, 0.9);
+          box-shadow: 5px 3px 0px lighten(rgba(255, 0, 0, 0.9), $amount: 6),
+            inset 2px 2px 5px rgba(0, 0, 0, 0.5);
         }
         &:focus,
         &:active,
         &:hover {
-          outline: none;
-          // background-color: none;
-          
           transition: all 0.2s ease;
-          border: 0.4rem solid red;
-          // box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.9);
+          outline: none;
+          // border: 0.4rem solid red;
+        }
+        &:active {
+          // transform: scaleX(0.9) translateY(4px);
+          // border: 0.4rem solid red;
+          transform: scale(0.95) translate(5px, 3px);
+          box-shadow: 0px 0px 0px rgba(161, 18, 18, 0.9);
         }
       }
     }
     .dropdown-container {
+      z-index: 1;
       margin-top: 2.4rem;
       text-align: center;
+      select {
+        padding: 0.3em;
+        border-radius: 0.3em;
+        option {
+          padding: 0.25em;
+        }
+      }
     }
 
     @keyframes pulse {
@@ -122,4 +166,18 @@ $transition-time: 1.3s;
 
 .fade {
   animation: fade $transition-time + 0.2s ease; //overlaps the display none at 1s so there is no flash of opacity 1
+}
+
+@media only screen and (min-width: 600px) {
+  #welcome-page {
+    #content {
+      .button-container {
+        button {
+          font-size: 1.8em;
+          width: 9rem;
+          height: 9rem;
+        }
+      }
+    }
+  }
 }

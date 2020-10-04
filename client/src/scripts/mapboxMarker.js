@@ -50,7 +50,8 @@ function locationEditForm(
         if (key == 'website') {
           let website = pub.properties[key].replace(/(^\w+:|^)\/\//, '').trim();
           let a = createEC('a', `${website}`, 'popup-info');
-          let site = setHttp(`${pub.properties[key]}`);
+          let site = setHttp(`cd ..
+          ${pub.properties[key]}`);
           a.href = site;
           console.log(site);
           a.target = '_blank';

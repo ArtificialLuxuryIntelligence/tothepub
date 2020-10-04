@@ -59,7 +59,7 @@ $dark-text: rgb(17, 35, 55);
   }
 
   #instructions-content {
-    padding: 20px;
+    padding: 2em;
     h1 {
       margin-top: 0;
     }
@@ -126,7 +126,7 @@ $dark-text: rgb(17, 35, 55);
     // text-align: center;
     // font-family: 'Open Sans', sans-serif;
 
-    padding: 1rem;
+    padding: 1em;
     border-radius: 1.2em;
 
     h3 {
@@ -192,6 +192,7 @@ $dark-text: rgb(17, 35, 55);
       overflow: hidden;
       // height: auto;
       transition: all 0.5s ease;
+      padding-left: 0.6em;
     }
     form {
       width: 100%;

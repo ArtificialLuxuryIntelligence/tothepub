@@ -28,7 +28,7 @@ let longitude, latitude;
 })();
 
 function toggleLoading() {
-  takeMeButton.classList.toggle('animate');
+  takeMeButton.classList.add('animate');
   //toggle map display block to give it a size to load into;
   // const mapPage = document.getElementById('map-page');
   // mapPage.style.display = 'block'; // so that map loads to size
