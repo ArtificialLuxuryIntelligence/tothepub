@@ -42,7 +42,7 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.json({
     message: 'Welcome to the API - please see docs for more information',
-  }); // TODO docs
+  }); // TO DO docs
 });
 
 app.use('/api/location', locationsRouter);

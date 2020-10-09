@@ -1,10 +1,11 @@
 //note: currently 5 mapbox API directions requests on page load
 
 import beerPic from './../assets/beer_destination.png';
-import findNearest from './../scripts/findNearest';
+import findNearest from './findNearest';
+import getRoute from './getRoute';
 import { baseUrl } from './../config/url';
 
-import { locationEditForm } from './mapboxMarker';
+import { locationEditForm } from './locationEditForm';
 import { showTempModal } from './helpers';
 import {
   ToggleDarkModeControl,
@@ -96,9 +97,9 @@ export default function drawMap(start, nearest, allTags, tag) {
     toggleMapView();
     // make an initial directions request that
     // starts and ends at the same location
-    let route = await getRoute(start, start, map, ''); //seems to be neccessary for the API to init..(?)
+    let route = await getRoute(start, start,  ''); //seems to be neccessary for the API to init..(?)
     renderRoute(route, location_name, map);
-    route = await getRoute(start, end, map, location_name);
+    route = await getRoute(start, end, location_name);
     renderRoute(route, location_name, map);
 
     // Add starting point to the map
@@ -203,7 +204,7 @@ export default function drawMap(start, nearest, allTags, tag) {
     let coords = pub.geometry.coordinates;
     let name = pub.properties.name;
     canvas.style.cursor = '';
-    let data = await getRoute(start, coords, map, name);
+    let data = await getRoute(start, coords,name);
     renderRoute(data, name, map);
   }
 
@@ -241,7 +242,7 @@ export default function drawMap(start, nearest, allTags, tag) {
     let location_name = nearest[0].properties.name;
     addStartingPoint(start, map);
     addMarkers(nearest, map);
-    let data = await getRoute(start, end, map, location_name);
+    let data = await getRoute(start, end, location_name);
     renderRoute(data, name, map);
 
     //Draw route to pub
@@ -271,28 +272,6 @@ export default function drawMap(start, nearest, allTags, tag) {
   map.addControl(new NavigateHomeControl(), 'bottom-right');
 
   // controlsAdded = true;
-}
-
-async function getRoute(start, end, map, location_name = '') {
-  // make a directions request using walking profile
-  let url =
-    'https://api.mapbox.com/directions/v5/mapbox/walking/' +
-    start[0] +
-    ',' +
-    start[1] +
-    ';' +
-    end[0] +
-    ',' +
-    end[1] +
-    '?steps=true&geometries=geojson&access_token=' +
-    mapboxgl.accessToken;
-
-  let response = await fetch(url);
-  let json = await response.json();
-  // console.log('JSON', json);
-  let data = json.routes[0]; //quickest route
-
-  return data;
 }
 
 //renders route and displays directions

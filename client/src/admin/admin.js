@@ -1,6 +1,6 @@
 import './styles.scss';
 import regeneratorRuntime, { async } from 'regenerator-runtime'; // makes async await etc work
-import { addPropertiesEdit, locationEditForm } from './../scripts/mapboxMarker';
+import { addPropertiesEdit, locationEditForm } from '../scripts/locationEditForm';
 import allLocationInfo from './../data/allLocationInfo';
 import { baseUrl } from './../config/url';
 
@@ -130,7 +130,6 @@ function getDifferences(original, edited) {
     }
   });
 
-  // return [changedProperties, changedTags];
   return [...changedProperties, ...changedTags];
 }
 

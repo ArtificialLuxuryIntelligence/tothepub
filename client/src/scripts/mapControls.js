@@ -2,7 +2,7 @@ import directionsArrow from './../assets/arrows/directions-arrow.svg';
 import moonIcon from './../assets/icons/brightness_3-24px.svg';
 import sunIcon from './../assets/icons/wb_sunny-24px.svg';
 import teleportIcon from './../assets/icons/teleport.svg';
-import { showTempModal } from './../scripts/mapboxMarker';
+import { showTempModal } from './locationEditForm';
 
 // custom mapbox-gl buttons
 class ToggleDirectionsControl {
@@ -54,32 +54,19 @@ class ToggleDarkModeControl {
   constructor(toggleDarkMode, darkMode) {
     this.toggleDarkMode = toggleDarkMode;
     this.darkMode = darkMode;
-
-    // this.toggled = true;
-    // this.directions = document.getElementById("instructions");
   }
 
   onAdd(map) {
     this._map = map;
     this._container = document.createElement('div');
-    // let div = document.createElement('div');
     let button = document.createElement('button');
     let span = document.createElement('span');
 
     this._container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
-    // div.className = 'mapboxgl-ctrl';
     span.className = 'mapboxgl-ctrl-icon';
     span.id = 'dark-mode';
 
-    // span.style.backgroundImage = this.darkMode
-    //   ? `url(${sunIcon})`
-    //   : `url(${moonIcon})`;
-
-    //background image set in css (dark theme/class chages image)
-    // span.style.backgroundSize = "contain";
-    // span.style.backgroundOrigin = "padding-box";
     span.style.backgroundPosition = 'center';
-    // div.appendChild(button);
     button.appendChild(span);
 
     button.addEventListener('click', (e) => {
@@ -117,11 +104,10 @@ class ToggleTeleportControl {
     span.style.backgroundPosition = 'center';
     div.appendChild(button);
     button.appendChild(span);
-    // button.classList.add(this.teleport ? 'teleport-active' : null);
 
     button.addEventListener('click', () => {
       !this.active &&
-        showTempModal('click anywhere on the map to teleport', 1000);
+        showTempModal('click anywhere on the map to teleport', 850);
       this.active = !this.active;
       this.toggleTeleport();
     });

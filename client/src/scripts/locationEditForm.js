@@ -216,7 +216,7 @@ function addBoolean(pub, category, tag, parent = form) {
 function addPropertiesEdit(properties = {}, parent, allLocationInfo) {
   allLocationInfo.forEach((info) => {
     //currently only allows for types of input ()
-    //TODO: allow for dropdowns?
+    //TO DO: allow for dropdowns?
 
     let group = createEC('div', null, 'input-group');
 

@@ -1,4 +1,4 @@
-const { Router, response } = require('express');
+const { Router } = require('express');
 
 const multer = require('multer');
 
@@ -10,7 +10,7 @@ const TagCategory = require('../../models/tagCategory');
 
 const router = Router();
 
-// TODO AUTH middleware
+// TO DO AUTH middleware
 
 router.get('/', (req, res, next) => {
   res.json({ welcome: 'to the admin server' });
@@ -56,8 +56,6 @@ router.post('/edit', upload.array(), async (req, res) => {
     website,
     'opening-hours': openingHours,
   } = req.body;
-
-  console.log('hi');
 
   try {
     // ----------get original document that request is proposing to an update to
@@ -112,12 +110,10 @@ router.post('/edit', upload.array(), async (req, res) => {
     console.log(updatedDropdowns);
 
     //  ------------------------ Deal with new tags and tag counts--------------------
-    // ! ! better solution: mark newly added tags clientside
+    // ! ! better solution? : mark newly added tags clientside
     //  find if any new tags have been added
     //  only check to see if new options have been added to dropdowns
     //  (new boolean isn't implemented -TODO?)
-
-    console.log(updatedTags);
 
     if (updatedDropdowns.length !== 0) {
       //  add new tag or increment count for added tags
@@ -156,7 +152,7 @@ router.post('/edit', upload.array(), async (req, res) => {
         })
       );
 
-      // (TODO) NOTE: there is a separate admin command to recount all
+      //  NOTE: there is a separate admin/scheduled command (TODO) to recount all
       // tags and update the tagCategories accordingly
     }
 
@@ -167,9 +163,6 @@ router.post('/edit', upload.array(), async (req, res) => {
       { new: true }
     );
     await PointLocationEdit.findOneAndDelete({ refId: id });
-    // find.. editdoc (refId: updatedDoc.id) ???
-    // and delete
-
     res.status(200).json({ updated });
   } catch (err) {
     console.error(err);
