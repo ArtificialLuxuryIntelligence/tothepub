@@ -1,0 +1,23 @@
+{
+  "name": "tothepub",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently 'cd ./client && npm run dev' 'cd ./server && npm run dev'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArtificialLuxuryIntelligence/tothepub.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ArtificialLuxuryIntelligence/tothepub/issues"
+  },
+  "homepage": "https://github.com/ArtificialLuxuryIntelligence/tothepub#readme",
+  "dependencies": {
+    "concurrently": "^5.3.0"
+  }
+}

@@ -37,13 +37,12 @@ const colourScheme = {
 
 function toggleMapView() {
   const home = document.getElementById('welcome-page');
-  home.classList.add('fade');
   const mapPage = document.getElementById('map-page');
-  // mapPage.style.visibility = "visible"; // visibility used  so that map loads to size ()
+  home.classList.add('fade');
   setTimeout(() => {
     const welcomePage = document.getElementById('welcome-page');
     welcomePage.style.display = 'none';
-  }, 1300); // hide after fade animation has finished
+  }, 1300); // remove/hide after fade animation has finished
 }
 
 export default function drawMap(start, nearest, allTags, tag) {
@@ -93,11 +92,9 @@ export default function drawMap(start, nearest, allTags, tag) {
   let canvas = map.getCanvasContainer();
 
   map.on('load', async function () {
-    // console.log("map loaded!!! (time to hide loader/button)");
-    toggleMapView();
     // make an initial directions request that
     // starts and ends at the same location
-    let route = await getRoute(start, start,  ''); //seems to be neccessary for the API to init..(?)
+    let route = await getRoute(start, start, ''); //seems to be neccessary for the API to init..(?)
     renderRoute(route, location_name, map);
     route = await getRoute(start, end, location_name);
     renderRoute(route, location_name, map);
@@ -111,6 +108,9 @@ export default function drawMap(start, nearest, allTags, tag) {
     // may be useful in future if all added in a single layer (can then toggle layer for sam smith's pubs for example)
 
     addMarkers(nearest, map);
+
+    // show map after all content is loaded
+    toggleMapView();
   });
 
   function addStartingPoint(start, map) {
@@ -204,7 +204,7 @@ export default function drawMap(start, nearest, allTags, tag) {
     let coords = pub.geometry.coordinates;
     let name = pub.properties.name;
     canvas.style.cursor = '';
-    let data = await getRoute(start, coords,name);
+    let data = await getRoute(start, coords, name);
     renderRoute(data, name, map);
   }
 

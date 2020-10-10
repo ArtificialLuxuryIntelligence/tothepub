@@ -49,10 +49,8 @@ router.get('/', async (req, res, next) => {
     // console.log(doc);
     res.json({ doc });
 
-    // console.log(doc);
   } catch (err) {
     next(err);
-    console.error(err);
   }
 
   // console.log(long, lat);
@@ -150,7 +148,6 @@ router.get('/tags', async (req, res, next) => {
     const doc = await TagCategory.find();
     res.json({ doc });
   } catch (err) {
-    console.error(err);
     next(err);
   }
 });
