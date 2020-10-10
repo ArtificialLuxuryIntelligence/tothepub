@@ -46,13 +46,11 @@ function locationEditForm(
     })
     .forEach((key) => {
       if (pub.properties[key] !== '') {
-        console.log(key);
         if (key == 'website') {
           let website = pub.properties[key].replace(/(^\w+:|^)\/\//, '').trim();
           let a = createEC('a', `${website}`, 'popup-info');
           let site = setHttp(`${pub.properties[key]}`);
           a.href = site;
-          console.log(site);
           a.target = '_blank';
           a.rel = `noopener noreferrer`;
 
@@ -125,9 +123,7 @@ function locationEditForm(
       e.preventDefault();
       e.target.submitb.disabled = true;
       const formdata = new FormData(e.target);
-      // Testing: display the values
-      console.log('FORM DATA CLIENTSIDE');
-      console.log('data', ...formdata);
+
       try {
         let response = await fetch(submitURL, {
           method: 'post',
@@ -137,7 +133,6 @@ function locationEditForm(
           // },
         });
         let json = await response.json();
-        console.log(json);
 
         if (response.status === 200) {
           e.target.submitb.disabled = false;
@@ -153,7 +148,6 @@ function locationEditForm(
 
         //HANDLE ERROR!
         //TODP -display some text at bottom of form
-        console.error(err);
       }
     });
   }

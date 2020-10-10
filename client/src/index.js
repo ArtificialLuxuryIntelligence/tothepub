@@ -28,7 +28,7 @@ let longitude, latitude;
 
   allTags = await getAllTags();
   let localTags = await getLocalTags(longitude, latitude);
-  console.log(localTags);
+  // console.log(localTags);
   populateDropDown(allTags, localTags, dropDownTags);
 })();
 
@@ -60,7 +60,7 @@ takeMeButton.addEventListener('click', () => takeMeToThePub(25)); //note: server
 function populateDropDown(allTags, localTags, dropDownTags) {
   //call api for list of tags
 
-  console.log(allTags);
+  // console.log(allTags);
   //dropDownTags is hardcoded array of accepted categories for dropdown
   // let ddallTags = allTags.filter((o) => dropDownTags.includes(o.category));
   let ddallTags = allTags;
