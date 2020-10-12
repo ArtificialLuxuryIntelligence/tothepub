@@ -32,4 +32,10 @@ function showTempModal(message, time) {
   setTimeout(() => body.removeChild(tm), time + 500);
 }
 
-export { showTempModal, createEC };
+
+function showError(message) {
+  const errorBox = document.getElementById('error');
+  errorBox.innerText = message;
+}
+
+export { showTempModal, createEC,showError };

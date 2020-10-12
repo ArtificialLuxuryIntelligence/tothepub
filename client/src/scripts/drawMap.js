@@ -6,7 +6,7 @@ import getRoute from './getRoute';
 import { baseUrl } from './../config/url';
 
 import { locationEditForm } from './locationEditForm';
-import { showTempModal } from './helpers';
+import { showTempModal, showError } from './helpers';
 import {
   ToggleDarkModeControl,
   ToggleDirectionsControl,
@@ -19,10 +19,9 @@ const { MAPBOX_TOKEN } = process.env;
 const pageCont = document.querySelector('.page-container');
 
 let darkMode = true;
+pageCont.classList.add(darkMode ? 'dark' : 'light');
 let teleport = false;
 let map;
-
-pageCont.classList.add(darkMode ? 'dark' : 'light');
 
 const colourScheme = {
   light: {
@@ -35,33 +34,22 @@ const colourScheme = {
   },
 };
 
-function toggleMapView() {
-  const home = document.getElementById('welcome-page');
-  const mapPage = document.getElementById('map-page');
-  home.classList.add('fade');
-  setTimeout(() => {
-    const welcomePage = document.getElementById('welcome-page');
-    welcomePage.style.display = 'none';
-  }, 1300); // remove/hide after fade animation has finished
-}
-
 export default function drawMap(start, nearest, allTags, tag) {
   //'nearest' is sorted array of nearest pubs
-  console.log(tag, nearest);
   if (nearest.length == 0) {
     //  if home page
     const takeMeButton = document.getElementById('take-me');
     takeMeButton.classList.toggle('animate');
-    const errorBox = document.getElementById('error');
     const dropDown = document.getElementById('tag-dropdown');
-    errorBox.innerText = `No ${dropDown.value} nearby 😢`;
+
+    //  shouldn't be needed with local tags
+    showError(`No ${dropDown.value} nearby 😢`);
 
     return;
   }
 
   let end = nearest[0].geometry.coordinates;
   let location_name = nearest[0].properties.name;
-  console.log(location_name);
   //
   mapboxgl.accessToken = MAPBOX_TOKEN;
   if (!mapboxgl.supported()) {
@@ -82,174 +70,36 @@ export default function drawMap(start, nearest, allTags, tag) {
     zoom: 15,
     // pitch: 60, //pitched angle of view
   });
-  // set the bounds of the map //this could be fixed (to bounds on london pubs) and not dynamic as it currently is
+  // set the bounds of the map
   const bounds = [
     [start[0] - 0.3, start[1] - 0.3],
     [start[0] + 0.3, start[1] + 0.3],
   ];
   map.setMaxBounds(bounds);
-  // initialize the map canvas to interact with later
   let canvas = map.getCanvasContainer();
 
   map.on('load', async function () {
     // make an initial directions request that
     // starts and ends at the same location
-    let route = await getRoute(start, start, ''); //seems to be neccessary for the API to init..(?)
+    let route = await getRoute(start, start, ''); //seems to be neccessary to init..(?) from docs
     renderRoute(route, location_name, map);
     route = await getRoute(start, end, location_name);
     renderRoute(route, location_name, map);
 
     // Add starting point to the map
-
     addStartingPoint(start, map);
 
     //create and addmarkers for nearest pubs //alternative option is add all pubs as a feature collection
     // see: https://docs.mapbox.com/mapbox-gl-js/example/popup-on-click/ [current way works fine though]
     // may be useful in future if all added in a single layer (can then toggle layer for sam smith's pubs for example)
-
-    addMarkers(nearest, map);
+    addMarkers(nearest, start, allTags, map);
 
     // show map after all content is loaded
     toggleMapView();
   });
 
-  function addStartingPoint(start, map) {
-    if (map.getLayer('point_start')) {
-      map.removeLayer('point_start');
-      map.removeSource('start');
-    }
-    map.addSource('start', {
-      type: 'geojson',
-      data: {
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: start,
-        },
-        properties: {
-          title: 'start',
-        },
-      },
-    });
-    map.addLayer({
-      id: 'point_start',
-      type: 'circle',
-      source: 'start',
-      paint: {
-        'circle-radius': 8,
-        'circle-color': darkMode
-          ? colourScheme.dark.startCircleColour
-          : colourScheme.light.startCircleColour,
-        'circle-opacity': 1,
-      },
-    });
-  }
-
-  function addMarkers(pubs, map) {
-    pubs.forEach((pub) => {
-      //fill in any empty properties:
-      pub.properties.name = pub.properties.name
-        ? pub.properties.name
-        : '...name unavailable';
-      //
-      // pub.properties?.tags?.map((n) => console.log(n)); //only maps if tags exists
-
-      let el = document.createElement('div');
-      el.className = 'marker';
-      el.style.backgroundImage = `url(${beerPic})`;
-      el.style.width = '60px';
-      el.style.height = '60px';
-      // el.dataset.coords = pub.geometry.coordinates;
-      // el.dataset.name = pub.properties.name;
-      // console.log(pub);
-      el.dataset.id = pub._id;
-      el.addEventListener('click', (e, pub, nearest) =>
-        markerListener(e, pubs, map)
-      );
-
-      new mapboxgl.Marker(el, { anchor: 'bottom' })
-        .setLngLat(pub.geometry.coordinates)
-        .setPopup(
-          new mapboxgl.Popup({
-            offset: 25,
-            closeButton: false,
-          }) // add popup
-            // .setHTML('<h3>' + pub.properties.name + '</h3>')
-            .setDOMContent(
-              locationEditForm(
-                pub,
-                allTags,
-                allLocationInfo,
-                `${baseUrl}/api/location/edit`,
-                pub._id,
-                true
-              )
-            )
-        )
-        .addTo(map);
-    });
-  }
-
-  async function markerListener(e, pubs, map) {
-    // console.log(e.target);
-    let id = e.target.dataset.id;
-    // console.log(id);
-    // console.log(pub);
-    let pub = pubs.filter((p) => p._id == id)[0];
-    // console.log(nearest); //!!! TODO use this instead of saving all data in dataset - only save id in dataset and find object in nearest
-    // e.target.style.opacity = '0.4';
-    // setTimeout(() => (e.target.style.opacity = '1'), 2000);
-    // let coords = e.target.dataset.coords.split(',').map((n) => parseFloat(n));
-    // let name = e.target.dataset.name;
-    let coords = pub.geometry.coordinates;
-    let name = pub.properties.name;
-    canvas.style.cursor = '';
-    let data = await getRoute(start, coords, name);
-    renderRoute(data, name, map);
-  }
-
-  function toggleDarkMode() {
-    darkMode = !darkMode;
-    pageCont.classList.toggle('dark');
-    pageCont.classList.toggle('light');
-
-    //rerender map
-    drawMap(start, nearest, allTags, tag);
-    // map.setStyle('mapbox://styles/mapbox/streets-v11');
-    // note map.setStyle() doesn't rerender all layers (line for route
-    // ) etc so whole map rerender is needed (there may be some solutions but not really needed here?)
-  }
-  function toggleTeleport() {
-    teleport = !teleport;
-    pageCont.classList.toggle('teleport');
-  }
-  map.on('click', async function (e) {
-    console.log(tag);
-    if (!teleport) {
-      return;
-    }
-    teleport = false;
-    pageCont.classList.remove('teleport');
-
-    const { lng, lat } = e.lngLat;
-    start = [lng, lat];
-    const nearest = await findNearest(start, tag, 25);
-    if (nearest.length == 0) {
-      showTempModal(`Sorry, no ${tag} results nearby`, 1200);
-      return;
-    }
-    let end = nearest[0].geometry.coordinates;
-    let location_name = nearest[0].properties.name;
-    addStartingPoint(start, map);
-    addMarkers(nearest, map);
-    let data = await getRoute(start, end, location_name);
-    renderRoute(data, name, map);
-
-    //Draw route to pub
-    // drawMap(start, nearest, allTags, tag);
-  });
-
   //  ----------------------------------- Map controls
+
   map.addControl(
     new mapboxgl.GeolocateControl({
       positionOptions: {
@@ -271,7 +121,52 @@ export default function drawMap(start, nearest, allTags, tag) {
   );
   map.addControl(new NavigateHomeControl(), 'bottom-right');
 
-  // controlsAdded = true;
+  function toggleDarkMode() {
+    darkMode = !darkMode;
+    pageCont.classList.toggle('dark');
+    pageCont.classList.toggle('light');
+
+    //rerender map
+    drawMap(start, nearest, allTags, tag);
+    // map.setStyle('mapbox://styles/mapbox/streets-v11');
+    // note map.setStyle() doesn't rerender all layers (line for route
+    // ) etc so whole map rerender is needed (there may be some solutions but not really needed here?)
+  }
+  function toggleTeleport() {
+    teleport = !teleport;
+    pageCont.classList.toggle('teleport');
+  }
+  map.on('click', async function (e) {
+    if (!teleport) {
+      return;
+    }
+    teleport = false;
+    pageCont.classList.remove('teleport');
+
+    const { lng, lat } = e.lngLat;
+    start = [lng, lat];
+    const nearest = await findNearest(start, tag, 25);
+    if (nearest.length == 0) {
+      showTempModal(`Sorry, no ${tag} results nearby`, 1200);
+      return;
+    }
+    let end = nearest[0].geometry.coordinates;
+    let location_name = nearest[0].properties.name;
+    addStartingPoint(start, map);
+    addMarkers(nearest, start, allTags, map);
+    let data = await getRoute(start, end, location_name);
+    renderRoute(data, name, map);
+  });
+}
+
+function toggleMapView() {
+  const home = document.getElementById('welcome-page');
+  const mapPage = document.getElementById('map-page');
+  home.classList.add('fade');
+  setTimeout(() => {
+    const welcomePage = document.getElementById('welcome-page');
+    welcomePage.style.display = 'none';
+  }, 1300); // remove/hide after fade animation has finished
 }
 
 //renders route and displays directions
@@ -342,4 +237,88 @@ function renderRoute(data, location_name, map) {
       ' min  </span>' +
       tripInstructions;
   }
+}
+
+function addStartingPoint(start, map) {
+  if (map.getLayer('point_start')) {
+    map.removeLayer('point_start');
+    map.removeSource('start');
+  }
+  map.addSource('start', {
+    type: 'geojson',
+    data: {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: start,
+      },
+      properties: {
+        title: 'start',
+      },
+    },
+  });
+  map.addLayer({
+    id: 'point_start',
+    type: 'circle',
+    source: 'start',
+    paint: {
+      'circle-radius': 8,
+      'circle-color': darkMode
+        ? colourScheme.dark.startCircleColour
+        : colourScheme.light.startCircleColour,
+      'circle-opacity': 1,
+    },
+  });
+}
+
+function addMarkers(pubs, start, allTags, map) {
+  pubs.forEach((pub) => {
+    //fill in any empty properties:
+    pub.properties.name = pub.properties.name
+      ? pub.properties.name
+      : '...name unavailable';
+    //
+    // pub.properties?.tags?.map((n) => console.log(n)); //only maps if tags exists
+
+    let el = document.createElement('div');
+    el.className = 'marker';
+    el.style.backgroundImage = `url(${beerPic})`;
+    el.style.width = '60px';
+    el.style.height = '60px';
+    el.dataset.id = pub._id;
+    el.addEventListener('click', (e) => {
+      markerListener(e, pubs, start, map);
+    });
+
+    new mapboxgl.Marker(el, { anchor: 'bottom' })
+      .setLngLat(pub.geometry.coordinates)
+      .setPopup(
+        new mapboxgl.Popup({
+          offset: 25,
+          closeButton: false,
+        }) // add popup
+          // .setHTML('<h3>' + pub.properties.name + '</h3>')
+          .setDOMContent(
+            locationEditForm(
+              pub,
+              allTags,
+              allLocationInfo,
+              `${baseUrl}/api/location/edit`,
+              pub._id,
+              true
+            )
+          )
+      )
+      .addTo(map);
+  });
+}
+
+async function markerListener(e, pubs, start, map) {
+  let id = e.target.dataset.id;
+  let pub = pubs.filter((p) => p._id == id)[0];
+  let coords = pub.geometry.coordinates;
+  let name = pub.properties.name;
+  // canvas.style.cursor = '';
+  let data = await getRoute(start, coords, name);
+  renderRoute(data, name, map);
 }

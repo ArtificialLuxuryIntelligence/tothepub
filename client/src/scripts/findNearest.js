@@ -64,8 +64,6 @@ const getRouteTime = async (start, end) => {
 export default async function findNearest(start, tag, num_results) {
   let pubs_dist = await findNearestDist(start, tag, num_results);
 
-  // return pubs_dist;
-
   //sort nearest 3 to find actual nearest by time
   //this saves unneccessary mapbox api calls
   let nearest3 = await findNearestTime(start, pubs_dist.slice(0, 3));

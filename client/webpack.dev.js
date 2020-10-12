@@ -27,7 +27,6 @@ module.exports = {
               '@babel/preset-env',
               {
                 useBuiltIns: 'entry',
-                // sourceMaps: true,
               },
             ],
           ],
@@ -54,7 +53,7 @@ module.exports = {
               sourceMap: true,
             },
           },
-        ], //use postcss-loader?
+        ],
       },
       {
         test: /\.(png|jpe?g|gif|svg)$/i,
