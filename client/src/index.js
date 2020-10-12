@@ -46,7 +46,7 @@ let longitude, latitude;
     removeLoader(300);
   }
   takeMeButton.addEventListener('click', () => takeMeToThePub(25)); //note: server limit is currently 25 results
-  removeLoader(200);
+  removeLoader(0);
 })();
 
 // -----------------

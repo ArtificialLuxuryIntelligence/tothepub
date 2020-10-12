@@ -4,26 +4,76 @@
   position: absolute;
   top: 0;
   left: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   height: 100vh;
   max-height: 100%;
   width: 100vw;
   max-width: 100%;
 
-  background: linear-gradient(red, orangered);
-  
+  background: radial-gradient(orangered, red);
+}
+
+// number of dots
+$n: 9;
+
+.spinner {
+  position: relative;
+  max-width: 40vw;
+  max-height: 40vw;
+  width: 100px;
+  height: 100px;
+}
+
+.dot {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: rotate(45deg);
+
+  &::before {
+    content: '';
+    display: block;
+    width: 1.6rem;
+    height: 1.6rem;
+    background-color: red;
+    border-radius: 50%;
+  }
+
+  @for $i from 1 through $n {
+    &:nth-child(#{$i}) {
+      // padding: 40%;
+      transform: rotate(#{$i * 360 / $n}deg);
+      animation: bloop 1s ease infinite;
+      animation-delay: #{-$i * 1 / $n}s;
+    }
+  }
 }
 
 .unload {
-  animation: unload 0.8s ease-in forwards;
+  animation: unload 0.3s ease-in forwards;
+}
+
+@keyframes bloop {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 @keyframes unload {
   from {
-    transform: scale(1);
+    // transform: scale(1);
     opacity: 1;
   }
   to {
-    transform: scale(4);
+    // transform: scale(4);
     opacity: 0;
   }
 }
