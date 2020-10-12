@@ -2,7 +2,7 @@ import directionsArrow from './../assets/arrows/directions-arrow.svg';
 import moonIcon from './../assets/icons/brightness_3-24px.svg';
 import sunIcon from './../assets/icons/wb_sunny-24px.svg';
 import teleportIcon from './../assets/icons/teleport.svg';
-import { showTempModal } from './locationEditForm';
+import { showTempModal } from './locationInfoAndEdit';
 
 // custom mapbox-gl buttons
 class ToggleDirectionsControl {

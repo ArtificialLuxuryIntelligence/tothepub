@@ -1,10 +1,10 @@
 // note: actually more accurately should be called popup content..
 
 //call this something more generic (used in admin page too but with a different submit url)
-// function locationEditForm(pub,allTags,allLocationInfo, submitURL=null) [if ===null then don't include submitbutton or comments box]
+// function locationInfoAndEdit(pub,allTags,allLocationInfo, submitURL=null) [if ===null then don't include submitbutton or comments box]
 import { showTempModal, createEC } from './helpers';
 
-function locationEditForm(
+function locationInfoAndEdit(
   pub,
   allTags,
   allLocationInfo,
@@ -260,7 +260,7 @@ function addPropertiesEdit(properties = {}, parent, allLocationInfo) {
   });
 }
 
-export { addPropertiesEdit, locationEditForm, showTempModal };
+export { addPropertiesEdit, locationInfoAndEdit, showTempModal };
 
 function setHttp(link) {
   if (link.search(/^http[s]?\:\/\//) == -1) {

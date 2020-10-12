@@ -5,7 +5,7 @@ import findNearest from './findNearest';
 import getRoute from './getRoute';
 import { baseUrl } from './../config/url';
 
-import { locationEditForm } from './locationEditForm';
+import { locationInfoAndEdit } from './locationInfoAndEdit';
 import { showTempModal, showError } from './helpers';
 import {
   ToggleDarkModeControl,
@@ -67,7 +67,7 @@ export default function drawMap(start, nearest, allTags, tag) {
       ? 'mapbox://styles/mapbox/dark-v10'
       : 'mapbox://styles/mapbox/streets-v10',
     center: start, // starting position
-    zoom: 15,
+    zoom: 16,
     // pitch: 60, //pitched angle of view
   });
   // set the bounds of the map
@@ -297,9 +297,8 @@ function addMarkers(pubs, start, allTags, map) {
           offset: 25,
           closeButton: false,
         }) // add popup
-          // .setHTML('<h3>' + pub.properties.name + '</h3>')
           .setDOMContent(
-            locationEditForm(
+            locationInfoAndEdit(
               pub,
               allTags,
               allLocationInfo,

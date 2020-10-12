@@ -1,6 +1,9 @@
 import './styles.scss';
 import regeneratorRuntime, { async } from 'regenerator-runtime'; // makes async await etc work
-import { addPropertiesEdit, locationEditForm } from '../scripts/locationEditForm';
+import {
+  addPropertiesEdit,
+  locationInfoAndEdit,
+} from '../scripts/locationInfoAndEdit';
 import allLocationInfo from './../data/allLocationInfo';
 import { baseUrl } from './../config/url';
 
@@ -15,11 +18,11 @@ const root = document.getElementById('root');
     console.log(pair);
     let cont = document.createElement('div');
     cont.classList.add('compare-container');
-    let original = locationEditForm(pair.original, allTags, allLocationInfo);
+    let original = locationInfoAndEdit(pair.original, allTags, allLocationInfo);
     original.classList.add('original-form');
     cont.appendChild(original);
 
-    let edited = locationEditForm(
+    let edited = locationInfoAndEdit(
       pair.edit,
       allTags,
       allLocationInfo,
