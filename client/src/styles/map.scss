@@ -273,6 +273,7 @@ $dark-text: rgb(17, 35, 55);
 
 //---------------------------------------  temp modal
 .temp-modal {
+  pointer-events: none;
   position: absolute;
   width: 100vw;
   height: 100vh;
