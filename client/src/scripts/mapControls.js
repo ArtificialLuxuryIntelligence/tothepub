@@ -106,11 +106,10 @@ class ToggleTeleportControl {
     button.appendChild(span);
 
     button.addEventListener('click', () => {
-      !this.active &&
-        showTempModal('click anywhere on the map to teleport', 850);
       this.active = !this.active;
       this.toggleTeleport();
     });
+
     this._container.appendChild(button);
     return this._container;
   }
@@ -118,6 +117,7 @@ class ToggleTeleportControl {
   onRemove() {
     this._container.parentNode.removeChild(this._container);
     this._map = undefined;
+    // TO DO remove event listener!
   }
 }
 

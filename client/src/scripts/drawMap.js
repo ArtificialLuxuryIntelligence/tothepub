@@ -133,6 +133,7 @@ export default function drawMap(start, nearest, allTags, tag) {
     // ) etc so whole map rerender is needed (there may be some solutions but not really needed here?)
   }
   function toggleTeleport() {
+    !teleport && showTempModal('click anywhere on the map to teleport', 850);
     teleport = !teleport;
     pageCont.classList.toggle('teleport');
   }

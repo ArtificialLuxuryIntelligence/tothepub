@@ -64,6 +64,7 @@ async function takeMeToThePub(maxResults) {
     drawMap(start, nearest, allTags, tag);
     //add button to choose next pub in list of nearest
   } catch (error) {
+    // probably either render or mapbox error
     showError('Server errror - please refresh page or try again later');
   }
 }
