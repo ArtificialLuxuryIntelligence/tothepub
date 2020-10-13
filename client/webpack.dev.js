@@ -6,7 +6,8 @@ const Dotenv = require('dotenv-webpack');
 const webpack = require('webpack');
 
 module.exports = {
-  // mode: 'development',
+  mode: 'development',
+  devtool: 'inline-source-map',
 
   entry: {
     main: './src/index.js',
