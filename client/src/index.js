@@ -79,7 +79,7 @@ function removeLoader(delay) {
     loader.classList.add('unload');
     setTimeout(() => {
       loader.parentNode.removeChild(loader);
-    }, 2000);
+    }, 350);
   }, delay);
 }
 
