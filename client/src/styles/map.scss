@@ -11,12 +11,9 @@ $dark-text: rgb(17, 35, 55);
   position: absolute;
   top: 0;
   left: 0;
-  //   display: none;
-  //   visibility: hidden;
+
   height: 100vh;
-  max-height: 100%;
   width: 100vw;
-  max-width: 100%;
   h1,
   h2,
   h3,
@@ -39,17 +36,13 @@ $dark-text: rgb(17, 35, 55);
   display: block;
   overflow: hidden;
   transition: height ease 0.4s;
-  // margin: 20px;
   position: absolute;
 
-  // width: 29px;
   width: auto;
   right: 10px !important;
   left: 10px !important;
-  // top: 50%;
-  // height: 29px;
+
   height: 0px;
-  // bottom: 50px; //to do breakpoint at 960px
   bottom: 1rem;
   border-radius: 1rem;
   overflow-y: scroll;
@@ -420,5 +413,13 @@ $dark-text: rgb(17, 35, 55);
     // opacity: 0;
     // hue-rotate: (100deg);
     filter: invert(1);
+  }
+}
+
+
+//   --------------------------------------- media queries
+@media only screen and (min-width: 600px) {
+  #instructions {
+    max-width: 400px;
   }
 }
