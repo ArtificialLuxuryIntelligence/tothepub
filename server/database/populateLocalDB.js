@@ -8,13 +8,6 @@ const TagCategory = require('../models/tagCategory');
 
 require('dotenv').config();
 
-// const TAGS = ['Wetherspoons', "Samuel Smith's"]; // TODO :autodetect --->
-
-//  see drawMap.js hardcoded allTags and allLocationInfo
-//  change Tags model to take format of allTags
-
-// in async function below pull in sanitize data and extract accepted tag data
-
 // this is async no?
 mongoose.connect('mongodb://localhost/tothepub', {
   useNewUrlParser: true,
