@@ -157,6 +157,15 @@ $transition-time: 1.3s;
   }
 }
 
+
+
+
+
+//  animations
+.fade {
+  animation: fade $transition-time + 0.2s ease; //overlaps the display none at 1s so there is no flash of opacity 1
+}
+
 @keyframes fade {
   from {
     opacity: 1;
@@ -168,9 +177,7 @@ $transition-time: 1.3s;
   }
 }
 
-.fade {
-  animation: fade $transition-time + 0.2s ease; //overlaps the display none at 1s so there is no flash of opacity 1
-}
+
 
 @media only screen and (min-width: 600px) {
   #welcome-page {

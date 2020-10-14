@@ -7,12 +7,12 @@ import findNearest from './scripts/findNearest';
 import drawMap from './scripts/drawMap';
 import { showError } from './scripts/helpers';
 
-// categories to include in drop down (of allTags [from database])
-// reason: some tags are good to have on map but not in search
-// DEPRECATED dropDownTags  -- now dropdown only shows available local tags
-const dropDownTags = ['operator', 'food', 'amenity', 'real-ale'];
+
+const dropDownTags = ['operator', 'food', 'amenity', 'real-ale']; // DEPRECATED dropDownTags  -- now dropdown only shows available local tags
 const dropDown = document.getElementById('tag-dropdown');
 const takeMeButton = document.getElementById('take-me');
+
+
 let allTags, localTags;
 let longitude, latitude;
 

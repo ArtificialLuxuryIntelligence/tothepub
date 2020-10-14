@@ -16,19 +16,8 @@ body {
   padding: 0;
   overflow: hidden;
   .page-container {
-    background-color: transparent;
-    // display: flex;
-    // width: 100%;
+    background-color: transparent; 
     max-width: 1200px;
     margin: 0 auto;
-    // height: 100%;
   }
 }
-
-// #welcome-page, #map-page{
-//   position: absolute;
-//   width: 100vw;
-//   height: 100vh;
-//   top:0;
-//   left:0;
-// }

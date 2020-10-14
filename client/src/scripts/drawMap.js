@@ -18,10 +18,11 @@ import allLocationInfo from './../data/allLocationInfo.js';
 const { MAPBOX_TOKEN } = process.env;
 const pageCont = document.querySelector('.page-container');
 
-let darkMode = true;
-pageCont.classList.add(darkMode ? 'dark' : 'light');
-let teleport = false;
 let map;
+
+// initial config
+let darkMode = true;
+let teleport = false;
 
 const colourScheme = {
   light: {
@@ -34,9 +35,17 @@ const colourScheme = {
   },
 };
 
+pageCont.classList.add(darkMode ? 'dark' : 'light');
+
 export default function drawMap(start, nearest, allTags, tag) {
-  //'nearest' is sorted array of nearest pubs
+  mapboxgl.accessToken = MAPBOX_TOKEN;
+  if (!mapboxgl.supported()) {
+    alert('Your browser does not support Mapbox GL'); //
+    return;
+  }
+
   if (nearest.length == 0) {
+    //'nearest' is sorted array of nearest pubs
     //  if home page
     const takeMeButton = document.getElementById('take-me');
     takeMeButton.classList.toggle('animate');
@@ -51,14 +60,8 @@ export default function drawMap(start, nearest, allTags, tag) {
   let end = nearest[0].geometry.coordinates;
   let location_name = nearest[0].properties.name;
   //
-  mapboxgl.accessToken = MAPBOX_TOKEN;
-  if (!mapboxgl.supported()) {
-    alert('Your browser does not support Mapbox GL');
-    return;
-  }
-  // Clear old map from previous render: WARNING this doesn't remove event listeners  so
-  //  we want to avoid too many rerenders. currently triggered darktheme is toggled and teleport is used
-  // could use map.removeControl()
+
+  // Clear old map from previous render: NOT: this doesn't remove event listeners // could use map.removeControl()
   document.querySelector('#map').innerHTML = '';
 
   map = new mapboxgl.Map({
@@ -81,9 +84,9 @@ export default function drawMap(start, nearest, allTags, tag) {
   map.on('load', async function () {
     // make an initial directions request that
     // starts and ends at the same location
-    let route = await getRoute(start, start, ''); //seems to be neccessary to init..(?) from docs
+    let route = await getRoute(start, start); //seems to be neccessary to init..(?) from docs
     renderRoute(route, location_name, map);
-    route = await getRoute(start, end, location_name);
+    route = await getRoute(start, end);
     renderRoute(route, location_name, map);
 
     // Add starting point to the map
@@ -155,10 +158,12 @@ export default function drawMap(start, nearest, allTags, tag) {
     let location_name = nearest[0].properties.name;
     addStartingPoint(start, map);
     addMarkers(nearest, start, allTags, map);
-    let data = await getRoute(start, end, location_name);
+    let data = await getRoute(start, end);
     renderRoute(data, name, map);
   });
 }
+
+/// -------------------------------------------
 
 function toggleMapView() {
   const home = document.getElementById('welcome-page');
@@ -319,6 +324,6 @@ async function markerListener(e, pubs, start, map) {
   let coords = pub.geometry.coordinates;
   let name = pub.properties.name;
   // canvas.style.cursor = '';
-  let data = await getRoute(start, coords, name);
+  let data = await getRoute(start, coords);
   renderRoute(data, name, map);
 }

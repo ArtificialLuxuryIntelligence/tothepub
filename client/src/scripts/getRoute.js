@@ -1,4 +1,4 @@
-export default async function getRoute(start, end, location_name = '') {
+export default async function getRoute(start, end) {
   // make a directions request using walking profile
   let url =
     'https://api.mapbox.com/directions/v5/mapbox/walking/' +
