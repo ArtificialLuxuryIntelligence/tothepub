@@ -2,7 +2,7 @@
 
 A pub finding web application. Using the current location of the user, the application finds local drinking establishments which are then presented to the user on an interactive map.
 
-[Live demo](booze.netlify.app) (requires geolocation and UK only)
+[Live demo](https://booze.netlify.app/) (requires geolocation and UK only)
 
 ## Features
 
